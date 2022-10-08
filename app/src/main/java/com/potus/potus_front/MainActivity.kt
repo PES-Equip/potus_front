@@ -9,6 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.potus.potus_front.ui.theme.Potus_frontTheme
 
@@ -20,7 +21,9 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    // color = MaterialTheme.colors.background
+                    color = Color(0xB0DD7F)
+
                 ) {
                     Greeting("Android")
                 }
