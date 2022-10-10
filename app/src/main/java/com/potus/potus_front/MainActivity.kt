@@ -11,6 +11,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.potus.potus_front.ui.theme.BraveGreen
@@ -51,14 +54,14 @@ fun BaseApp() {
 
 @Composable
 fun CenterArea() {
-    Column {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.height(128.dp))
         Image(painter = painterResource(id = R.drawable.basic), "",
             modifier = Modifier
-                // Set image size to 40 dp
-                .size(40.dp))
-                // Clip image to be shaped as a circle
-                //.clip(CircleShape))
+                .size(360.dp)
+                .align(CenterHorizontally))
     }
+
 }
 
 @Composable
