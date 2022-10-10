@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.potus.potus_front.ui.theme.BraveGreen
@@ -46,12 +47,15 @@ fun BaseApp() {
     Column(Modifier.background(color = SoothingGreen)){
         TopBar()
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
-
-            // Potus in the middle
-
+            CenterArea()
         }
         BottomBar()
     }
+}
+
+@Composable
+fun CenterArea() {
+    //Image(painterResource(id = R.drawable.))
 }
 
 @Composable
