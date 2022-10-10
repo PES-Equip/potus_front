@@ -51,7 +51,7 @@ fun BaseApp() {
 
 @Composable
 fun CenterArea() {
-    Column() {
+    Column {
         Image(painter = painterResource(id = R.drawable.basic), "",
             modifier = Modifier
                 // Set image size to 40 dp
