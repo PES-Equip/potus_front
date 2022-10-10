@@ -12,20 +12,23 @@ private val DarkColorPalette = darkColors(
     secondary = Teal200
 )
 
-private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
+private val LightColorPalette by lazy {
+    lightColors(
+        primary = Purple500,
+        primaryVariant = BraveGreen,
+        secondary = Teal200,
+        background = SoothingGreen
 
-    /* Other default colors to override
-    background = Color.White,
+        /* Other default colors to override
+    ,
     surface = Color.White,
     onPrimary = Color.White,
     onSecondary = Color.Black,
     onBackground = Color.Black,
     onSurface = Color.Black,
     */
-)
+    )
+}
 
 @Composable
 fun Potus_frontTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
