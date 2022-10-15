@@ -1,13 +1,13 @@
 Potus Front-End
 ---
 
-Repositori del desenvolupament del Frontend a mans de:
+Frontend developing repository by:
 
 - Berta Fitó
 - Marc Heras
 - Max Vives
 
-Tasques del Sprint 1:
+Underway Sprint 1 tasks:
 
 - Inici de sessió [#56, MV]
 - Rega de la planta [#101, MH]
