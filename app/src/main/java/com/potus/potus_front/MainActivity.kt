@@ -108,5 +108,7 @@ fun BottomBar() {
         .fillMaxWidth()
         .height(128.dp)) {
 
+        // Aquí cal afegir els nous botons de podar i regar que afectin al valor que mostren "leaves" i "water"
+
     }
 }
