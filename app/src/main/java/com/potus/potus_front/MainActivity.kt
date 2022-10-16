@@ -76,7 +76,7 @@ fun TopBar() {
                 .fillMaxWidth()
                 .height(64.dp)) {
             //DropdownMenu(expanded = false, onDismissRequest = { /*TODO*/ }) {}
-            Spacer(modifier = Modifier.weight(1f));
+            Spacer(modifier = Modifier.weight(1f))
             Box(modifier = Modifier
                 .align(CenterVertically)
                 .width(64.dp)
@@ -87,7 +87,7 @@ fun TopBar() {
                     .align(Center),
                     text = "water")
             }
-            Spacer(modifier = Modifier.weight(0.02f));
+            Spacer(modifier = Modifier.weight(0.02f))
             Box(modifier = Modifier
                 .align(CenterVertically)
                 .width(64.dp)
@@ -98,15 +98,52 @@ fun TopBar() {
                     .align(Center),
                     text = "leaves")
             }
-            Spacer(modifier = Modifier.weight(0.075f));
+            Spacer(modifier = Modifier.weight(0.075f))
         }
 }
 
 @Composable
 fun BottomBar() {
-    Surface(color = BraveGreen, modifier = Modifier
-        .fillMaxWidth()
-        .height(128.dp)) {
-
+    Row(
+        Modifier
+            //Surface(color = BraveGreen, modifier = Modifier
+            .background(color = BraveGreen)
+            .fillMaxWidth()
+            .height(192.dp)) {
+        Surface(modifier = Modifier
+            .align(CenterVertically)
+            .width(140.dp)
+            .height(125.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = SoothingGreen)){
+            //Image(painter = painterResource(id = R.drawable.icona_podar)
+            //    modifier = Modifier
+            //        .size(100.dp)
+            //        .align(CenterHorizontally))
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Surface(modifier = Modifier
+            .align(CenterVertically)
+            .width(100.dp)
+            .height(100.dp)
+            .clip(RoundedCornerShape(100.dp))
+            .background(color = SoothingGreen)){
+            //Image(painter = painterResource(id = R.drawable.icona_jardi)
+            //    modifier = Modifier
+            //        .size(100.dp)
+            //        .align(CenterHorizontally))
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Surface(modifier = Modifier
+            .align(CenterVertically)
+            .width(140.dp)
+            .height(125.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = SoothingGreen)){
+            //Image(painter = painterResource(id = R.drawable.icona_regadora)
+            //        modifier = Modifier
+            //        .size(100.dp)
+            //    .align(CenterHorizontally))
+        }
     }
 }
