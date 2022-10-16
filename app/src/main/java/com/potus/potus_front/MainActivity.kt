@@ -11,10 +11,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,16 +62,36 @@ fun BaseApp() {
 fun CenterArea() {
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(128.dp))
-        Image(painter = painterResource(id = R.drawable.basic), "",
-            modifier = Modifier
-                .size(360.dp)
-                .align(CenterHorizontally))
+        Box(modifier = Modifier
+            .align(CenterHorizontally))
+            {
+                Image(
+                    painter = painterResource(id = R.drawable.test_basic),
+                    "",
+                    modifier = Modifier
+                        .size(360.dp)
+                        .align(Center)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.planta_basic_tiges),
+                    "",
+                    modifier = Modifier
+                        .size(360.dp)
+                        .align(Center)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.planta_basic_fulles),
+                    "",
+                    modifier = Modifier
+                        .size(360.dp)
+                        .align(Center)
+                )
+            }
     }
 
 }
 
 // En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
-//@Preview
 @Composable
 fun TopBar() {
         Row(
@@ -83,7 +106,7 @@ fun TopBar() {
                 .width(64.dp)
                 .height(30.dp)
                 .clip(RoundedCornerShape(15.dp))
-                .background(color = Color(0xCCFFFFFF))){
+                .background(color = Color(0x0CFFFFFF))){
                 Text(modifier = Modifier
                     .align(Center),
                     text = "water")
@@ -94,7 +117,7 @@ fun TopBar() {
                 .width(64.dp)
                 .height(30.dp)
                 .clip(RoundedCornerShape(15.dp))
-                .background(color = Color(0xCCFFFFFF))){
+                .background(color = Color(0x0CFFFFFF))){
                 Text(modifier = Modifier
                     .align(Center),
                     text = "leaves")
@@ -103,14 +126,80 @@ fun TopBar() {
         }
 }
 
-//@Preview
 @Composable
 fun BottomBar() {
-    Surface(color = BraveGreen, modifier = Modifier
+    val heightBottomBar = 192.dp
+    val heightCircle = 125.dp
+    val heightTotal = heightBottomBar+heightCircle/2
+    val heightButton = 125.dp
+    val widthButton = 140.dp
+    Box(modifier = Modifier
         .fillMaxWidth()
-        .height(128.dp)) {
-
-        // Aquí cal afegir els nous botons de podar i regar que afectin al valor que mostren "leaves" i "water"
-
+        .height(heightTotal)) {
+        BoxWithConstraints(
+            modifier = Modifier
+                .align(BottomCenter)
+                .fillMaxWidth()
+                .height(heightBottomBar)
+                .background(BraveGreen)
+        )
+        {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(heightTotal)
+            ) {
+                Surface(
+                    color = SoothingGreen,
+                    modifier = Modifier
+                        .align(CenterVertically)
+                        .width(widthButton)
+                        .height(heightButton)
+                        .clip(RoundedCornerShape(10.dp))
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.icona_podar),
+                        "",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(heightButton)
+                            .align(CenterVertically))
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Surface(
+                    color = SoothingGreen,
+                    modifier = Modifier
+                        .align(CenterVertically)
+                        .width(widthButton)
+                        .height(heightButton)
+                        .clip(RoundedCornerShape(10.dp))
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.icona_regadora),
+                        "",
+                        modifier = Modifier
+                            .size(heightButton)
+                            .align(CenterVertically))
+                }
+            }
+        }
+        Surface(
+            color = BraveGreen,
+            modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle/2))
+                .align(TopCenter)
+                .size(heightCircle)
+                .clip(CircleShape)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.icona_jardi),
+                "",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .size(heightCircle)
+                    .align(Center)
+                    .clip(CircleShape)
+                    .background(color = SoothingGreen))
+        }
     }
 }
