@@ -68,6 +68,7 @@ fun CenterArea() {
 }
 
 // En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
+//@Preview
 @Composable
 fun TopBar() {
         Row(
@@ -76,7 +77,7 @@ fun TopBar() {
                 .fillMaxWidth()
                 .height(64.dp)) {
             //DropdownMenu(expanded = false, onDismissRequest = { /*TODO*/ }) {}
-            Spacer(modifier = Modifier.weight(1f));
+            Spacer(modifier = Modifier.weight(1f))
             Box(modifier = Modifier
                 .align(CenterVertically)
                 .width(64.dp)
@@ -87,7 +88,7 @@ fun TopBar() {
                     .align(Center),
                     text = "water")
             }
-            Spacer(modifier = Modifier.weight(0.02f));
+            Spacer(modifier = Modifier.weight(0.02f))
             Box(modifier = Modifier
                 .align(CenterVertically)
                 .width(64.dp)
@@ -98,10 +99,11 @@ fun TopBar() {
                     .align(Center),
                     text = "leaves")
             }
-            Spacer(modifier = Modifier.weight(0.075f));
+            Spacer(modifier = Modifier.weight(0.075f))
         }
 }
 
+//@Preview
 @Composable
 fun BottomBar() {
     Surface(color = BraveGreen, modifier = Modifier
