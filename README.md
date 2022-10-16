@@ -13,4 +13,4 @@ Underway Sprint 1 tasks:
 - Rega de la planta [#101, MH]
 - Poda de la planta [#103, BF]
 
-[This is the develop branch]
+[This is the Pruning development branch]
