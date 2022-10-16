@@ -11,10 +11,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,10 +62,31 @@ fun BaseApp() {
 fun CenterArea() {
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(128.dp))
-        Image(painter = painterResource(id = R.drawable.basic), "",
-            modifier = Modifier
-                .size(360.dp)
-                .align(CenterHorizontally))
+        Box(modifier = Modifier
+            .align(CenterHorizontally))
+            {
+                Image(
+                    painter = painterResource(id = R.drawable.test_basic),
+                    "",
+                    modifier = Modifier
+                        .size(360.dp)
+                        .align(Center)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.planta_basic_tiges),
+                    "",
+                    modifier = Modifier
+                        .size(360.dp)
+                        .align(Center)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.planta_basic_fulles),
+                    "",
+                    modifier = Modifier
+                        .size(360.dp)
+                        .align(Center)
+                )
+            }
     }
 
 }
@@ -82,7 +106,7 @@ fun TopBar() {
                 .width(64.dp)
                 .height(30.dp)
                 .clip(RoundedCornerShape(15.dp))
-                .background(color = Color(0xCCFFFFFF))){
+                .background(color = Color(0x0CFFFFFF))){
                 Text(modifier = Modifier
                     .align(Center),
                     text = "water")
@@ -93,7 +117,7 @@ fun TopBar() {
                 .width(64.dp)
                 .height(30.dp)
                 .clip(RoundedCornerShape(15.dp))
-                .background(color = Color(0xCCFFFFFF))){
+                .background(color = Color(0x0CFFFFFF))){
                 Text(modifier = Modifier
                     .align(Center),
                     text = "leaves")
@@ -104,46 +128,78 @@ fun TopBar() {
 
 @Composable
 fun BottomBar() {
-    Row(
-        Modifier
-            //Surface(color = BraveGreen, modifier = Modifier
-            .background(color = BraveGreen)
-            .fillMaxWidth()
-            .height(192.dp)) {
-        Surface(modifier = Modifier
-            .align(CenterVertically)
-            .width(140.dp)
-            .height(125.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(color = SoothingGreen)){
-            //Image(painter = painterResource(id = R.drawable.icona_podar)
-            //    modifier = Modifier
-            //        .size(100.dp)
-            //        .align(CenterHorizontally))
+    val heightBottomBar = 192.dp
+    val heightCircle = 125.dp
+    val heightTotal = heightBottomBar+heightCircle/2
+    val heightButton = 125.dp
+    val widthButton = 140.dp
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(heightTotal)) {
+        BoxWithConstraints(
+            modifier = Modifier
+                .align(BottomCenter)
+                .fillMaxWidth()
+                .height(heightBottomBar)
+                .background(BraveGreen)
+        )
+        {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(heightTotal)
+            ) {
+                Surface(
+                    color = SoothingGreen,
+                    modifier = Modifier
+                        .align(CenterVertically)
+                        .width(widthButton)
+                        .height(heightButton)
+                        .clip(RoundedCornerShape(10.dp))
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.icona_podar),
+                        "",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(heightButton)
+                            .align(CenterVertically))
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Surface(
+                    color = SoothingGreen,
+                    modifier = Modifier
+                        .align(CenterVertically)
+                        .width(widthButton)
+                        .height(heightButton)
+                        .clip(RoundedCornerShape(10.dp))
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.icona_regadora),
+                        "",
+                        modifier = Modifier
+                            .size(heightButton)
+                            .align(CenterVertically))
+                }
+            }
         }
-        Spacer(modifier = Modifier.weight(1f))
-        Surface(modifier = Modifier
-            .align(CenterVertically)
-            .width(100.dp)
-            .height(100.dp)
-            .clip(RoundedCornerShape(100.dp))
-            .background(color = SoothingGreen)){
-            //Image(painter = painterResource(id = R.drawable.icona_jardi)
-            //    modifier = Modifier
-            //        .size(100.dp)
-            //        .align(CenterHorizontally))
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        Surface(modifier = Modifier
-            .align(CenterVertically)
-            .width(140.dp)
-            .height(125.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(color = SoothingGreen)){
-            //Image(painter = painterResource(id = R.drawable.icona_regadora)
-            //        modifier = Modifier
-            //        .size(100.dp)
-            //    .align(CenterHorizontally))
+        Surface(
+            color = BraveGreen,
+            modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle/2))
+                .align(TopCenter)
+                .size(heightCircle)
+                .clip(CircleShape)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.icona_jardi),
+                "",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .size(heightCircle)
+                    .align(Center)
+                    .clip(CircleShape)
+                    .background(color = SoothingGreen))
         }
     }
 }
