@@ -50,9 +50,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BaseApp() {
     var waterLevelState by remember {mutableStateOf(0)}
+    var collection by remember { mutableStateOf(0)}
 
     Column(Modifier.background(color = SoothingGreen)){
-        TopBar(waterLevel = waterLevelState)
+        TopBar(waterLevel = waterLevelState, collection = collection)
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
             CenterArea()
         }
@@ -61,7 +62,13 @@ fun BaseApp() {
             updateWaterLevel = {
                     newWaterLevel ->
                     waterLevelState = newWaterLevel
-        })
+            },
+            leaves = collection,
+            updateLeaveRecollection = {
+                    collectedLeaves ->
+                    collection = collectedLeaves
+            }
+        )
     }
 }
 
@@ -101,7 +108,7 @@ fun CenterArea() {
 
 // En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
 @Composable
-fun TopBar(waterLevel: Int) {
+fun TopBar(waterLevel: Int, collection: Int) {
         Row(
             Modifier
                 .background(color = BraveGreen)
@@ -127,14 +134,15 @@ fun TopBar(waterLevel: Int) {
                 .background(color = Color(0x0CFFFFFF))){
                 Text(modifier = Modifier
                     .align(Center),
-                    text = "leaves")
+                    text = "$collection")
             }
             Spacer(modifier = Modifier.weight(0.075f))
         }
 }
 
 @Composable
-fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit) {
+fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit,
+              leaves:Int, updateLeaveRecollection:(Int) -> Unit) {
     val heightBottomBar = 192.dp
     val heightCircle = 125.dp
     val heightTotal = heightBottomBar+heightCircle/2
@@ -168,6 +176,7 @@ fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit) {
                         painter = painterResource(id = R.drawable.icona_podar),
                         "",
                         modifier = Modifier
+                            .clickable(onClick = { updateLeaveRecollection(leaves + 1) })
                             .padding(8.dp)
                             .size(heightButton)
                             .align(CenterVertically))
@@ -176,7 +185,6 @@ fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit) {
                 Surface(
                     color = SoothingGreen,
                     modifier = Modifier
-                        .clickable(onClick = { updateWaterLevel(waterLevel + 10) })
                         .align(CenterVertically)
                         .width(widthButton)
                         .height(heightButton)
@@ -186,6 +194,7 @@ fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit) {
                         painter = painterResource(id = R.drawable.icona_regadora),
                         "",
                         modifier = Modifier
+                            .clickable(onClick = { updateWaterLevel(waterLevel + 10) })
                             .size(heightButton)
                             .align(CenterVertically))
                 }
@@ -211,5 +220,37 @@ fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit) {
         }
     }
 }
+
+
+//fun PopupDragDemo() {
+//    val offset = remember { mutableStateOf(Offset.Zero) }
+//
+//    Column {
+//        Text("That is a pop up with a dragGestureFilter on it.  You can drag it around!")
+//        BoxWithConstraints(
+//            alignment = Alignment.TopStart,
+//            offset = offset.value.round()
+//        ) {
+//            Box {
+//                Box(
+//                    Modifier
+//                        .pointerInput(Unit) {
+//                            detectDragGestures { _, dragAmount ->
+//                                offset.value = offset.value + dragAmount
+//                            }
+//                        }
+//                        .size(70.dp)
+//                        .background(Color.Green, CircleShape),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text(
+//                        text = "This is a popup!",
+//                        textAlign = TextAlign.Center
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
 
 
