@@ -5,14 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -48,12 +49,19 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun BaseApp() {
+    var waterLevelState by remember {mutableStateOf(0)}
+
     Column(Modifier.background(color = SoothingGreen)){
-        TopBar()
+        TopBar(waterLevel = waterLevelState)
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
             CenterArea()
         }
-        BottomBar()
+        BottomBar(
+            waterLevel = waterLevelState,
+            updateWaterLevel = {
+                    newWaterLevel ->
+                    waterLevelState = newWaterLevel
+        })
     }
 }
 
@@ -93,13 +101,12 @@ fun CenterArea() {
 
 // En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
 @Composable
-fun TopBar() {
+fun TopBar(waterLevel: Int) {
         Row(
             Modifier
                 .background(color = BraveGreen)
                 .fillMaxWidth()
                 .height(64.dp)) {
-            //DropdownMenu(expanded = false, onDismissRequest = { /*TODO*/ }) {}
             Spacer(modifier = Modifier.weight(1f))
             Box(modifier = Modifier
                 .align(CenterVertically)
@@ -109,7 +116,7 @@ fun TopBar() {
                 .background(color = Color(0x0CFFFFFF))){
                 Text(modifier = Modifier
                     .align(Center),
-                    text = "water")
+                    text = "$waterLevel %" )
             }
             Spacer(modifier = Modifier.weight(0.02f))
             Box(modifier = Modifier
@@ -127,7 +134,7 @@ fun TopBar() {
 }
 
 @Composable
-fun BottomBar() {
+fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit) {
     val heightBottomBar = 192.dp
     val heightCircle = 125.dp
     val heightTotal = heightBottomBar+heightCircle/2
@@ -169,6 +176,7 @@ fun BottomBar() {
                 Surface(
                     color = SoothingGreen,
                     modifier = Modifier
+                        .clickable(onClick = { updateWaterLevel(waterLevel + 10) })
                         .align(CenterVertically)
                         .width(widthButton)
                         .height(heightButton)
@@ -186,7 +194,7 @@ fun BottomBar() {
         Surface(
             color = BraveGreen,
             modifier = Modifier
-                .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle/2))
+                .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle / 2))
                 .align(TopCenter)
                 .size(heightCircle)
                 .clip(CircleShape)
@@ -203,3 +211,5 @@ fun BottomBar() {
         }
     }
 }
+
+
