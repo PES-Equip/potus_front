@@ -10,9 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -99,7 +102,6 @@ fun TopBar() {
                 .background(color = BraveGreen)
                 .fillMaxWidth()
                 .height(64.dp)) {
-            //DropdownMenu(expanded = false, onDismissRequest = { /*TODO*/ }) {}
             Spacer(modifier = Modifier.weight(1f))
             Box(modifier = Modifier
                 .align(CenterVertically)
@@ -117,7 +119,7 @@ fun TopBar() {
                 .width(64.dp)
                 .height(30.dp)
                 .clip(RoundedCornerShape(15.dp))
-                .background(color = Color(0x0CFFFFFF))){
+                .background(color = Color(0x0CFFFFFF))) {
                 Text(modifier = Modifier
                     .align(Center),
                     text = "leaves")
@@ -133,6 +135,7 @@ fun BottomBar() {
     val heightTotal = heightBottomBar+heightCircle/2
     val heightButton = 125.dp
     val widthButton = 140.dp
+    val leaves = remember { mutableStateOf(0)}
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(heightTotal)) {
@@ -161,6 +164,7 @@ fun BottomBar() {
                         painter = painterResource(id = R.drawable.icona_podar),
                         "",
                         modifier = Modifier
+                            .clickable(onClick = { leaves.value += 1 })
                             .padding(8.dp)
                             .size(heightButton)
                             .align(CenterVertically))
@@ -201,5 +205,6 @@ fun BottomBar() {
                     .clip(CircleShape)
                     .background(color = SoothingGreen))
         }
+        Text(text = "PODA: "+leaves.value.toString(),modifier = Modifier.size(100.dp))
     }
 }
