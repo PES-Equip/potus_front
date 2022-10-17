@@ -5,25 +5,35 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.round
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Potus_frontTheme
 import com.potus.potus_front.ui.theme.SoothingGreen
+import kotlin.math.roundToInt
+
 //import com.potus.potus_front.composables.[composable]
 
 class MainActivity : ComponentActivity() {
@@ -48,12 +58,18 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun BaseApp() {
+    var collection by remember { mutableStateOf(0)}
     Column(Modifier.background(color = SoothingGreen)){
-        TopBar()
+        TopBar(collection)
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
             CenterArea()
         }
-        BottomBar()
+        BottomBar(
+            leaves = collection,
+            updateLeaveRecollection = {
+                collectedLeaves -> collection = collectedLeaves
+            }
+        )
     }
 }
 
@@ -93,13 +109,12 @@ fun CenterArea() {
 
 // En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
 @Composable
-fun TopBar() {
+fun TopBar(collection:Int) {
         Row(
             Modifier
                 .background(color = BraveGreen)
                 .fillMaxWidth()
                 .height(64.dp)) {
-            //DropdownMenu(expanded = false, onDismissRequest = { /*TODO*/ }) {}
             Spacer(modifier = Modifier.weight(1f))
             Box(modifier = Modifier
                 .align(CenterVertically)
@@ -117,17 +132,17 @@ fun TopBar() {
                 .width(64.dp)
                 .height(30.dp)
                 .clip(RoundedCornerShape(15.dp))
-                .background(color = Color(0x0CFFFFFF))){
+                .background(color = Color(0x0CFFFFFF))) {
                 Text(modifier = Modifier
                     .align(Center),
-                    text = "leaves")
+                    text = "$collection")
             }
             Spacer(modifier = Modifier.weight(0.075f))
         }
 }
 
 @Composable
-fun BottomBar() {
+fun BottomBar(leaves:Int, updateLeaveRecollection:(Int) -> Unit) {
     val heightBottomBar = 192.dp
     val heightCircle = 125.dp
     val heightTotal = heightBottomBar+heightCircle/2
@@ -161,6 +176,7 @@ fun BottomBar() {
                         painter = painterResource(id = R.drawable.icona_podar),
                         "",
                         modifier = Modifier
+                            .clickable(onClick = { updateLeaveRecollection(leaves + 1) })
                             .padding(8.dp)
                             .size(heightButton)
                             .align(CenterVertically))
@@ -203,3 +219,35 @@ fun BottomBar() {
         }
     }
 }
+
+//@Composable
+//fun PopupDragDemo() {
+//    val offset = remember { mutableStateOf(Offset.Zero) }
+//
+//    Column {
+//        Text("That is a pop up with a dragGestureFilter on it.  You can drag it around!")
+//        BoxWithConstraints(
+//            alignment = Alignment.TopStart,
+//            offset = offset.value.round()
+//        ) {
+//            Box {
+//                Box(
+//                    Modifier
+//                        .pointerInput(Unit) {
+//                            detectDragGestures { _, dragAmount ->
+//                                offset.value = offset.value + dragAmount
+//                            }
+//                        }
+//                        .size(70.dp)
+//                        .background(Color.Green, CircleShape),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text(
+//                        text = "This is a popup!",
+//                        textAlign = TextAlign.Center
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
