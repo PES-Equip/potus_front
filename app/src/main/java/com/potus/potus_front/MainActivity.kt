@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Potus_frontTheme
 import com.potus.potus_front.ui.theme.SoothingGreen
+import com.potus.potus_front.controllers.PotusController
 //import com.potus.potus_front.composables.[composable]
 
 class MainActivity : ComponentActivity() {
@@ -49,8 +50,8 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun BaseApp() {
-    var waterLevelState by remember {mutableStateOf(0)}
-    var collection by remember { mutableStateOf(0)}
+    var waterLevelState by remember {mutableStateOf(PotusController.getWater())}
+    var collection by remember { mutableStateOf(PotusController.getLeaves())}
 
     Column(Modifier.background(color = SoothingGreen)){
         TopBar(waterLevel = waterLevelState, collection = collection)
@@ -176,7 +177,10 @@ fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit,
                         painter = painterResource(id = R.drawable.icona_podar),
                         "",
                         modifier = Modifier
-                            .clickable(onClick = { updateLeaveRecollection(leaves + 1) })
+                            .clickable(onClick = {
+                                updateLeaveRecollection(leaves + 1)
+                                PotusController.updateLeaves(leaves + 1)
+                            })
                             .padding(8.dp)
                             .size(heightButton)
                             .align(CenterVertically))
@@ -194,7 +198,10 @@ fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit,
                         painter = painterResource(id = R.drawable.icona_regadora),
                         "",
                         modifier = Modifier
-                            .clickable(onClick = { updateWaterLevel(waterLevel + 10) })
+                            .clickable(onClick = {
+                                updateWaterLevel(waterLevel + 10)
+                                PotusController.updateWater(waterLevel + 10)
+                            })
                             .size(heightButton)
                             .align(CenterVertically))
                 }
