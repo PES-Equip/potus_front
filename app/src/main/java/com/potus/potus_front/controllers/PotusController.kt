@@ -15,7 +15,7 @@ interface PotusController {
 
         fun updateWater(updatedWater: Int): Boolean {
             // Here a call to the backend service will be performed to set the water level.
-            if(updatedWater in 1..100) return true
+            if(updatedWater in 0..100) return true
             return false
         }
 
