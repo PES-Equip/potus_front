@@ -22,12 +22,22 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 
 // En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
 @Composable
-fun TopBar(waterLevel: Int, collection: Int) {
+fun TopBar(waterLevel: Int, collection: Int, username: String) {
     Row(
         Modifier
             .background(color = BraveGreen)
             .fillMaxWidth()
             .height(64.dp)) {
+        Box(modifier = Modifier
+            .align(Alignment.CenterVertically)
+            .width(64.dp)
+            .height(30.dp)
+            .clip(RoundedCornerShape(15.dp))
+            .background(color = Color(0x0CFFFFFF))){
+            Text(modifier = Modifier
+                .align(Alignment.Center),
+                text = username )
+        }
         Spacer(modifier = Modifier.weight(1f))
         Box(modifier = Modifier
             .align(Alignment.CenterVertically)

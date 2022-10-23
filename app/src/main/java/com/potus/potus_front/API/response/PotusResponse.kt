@@ -1,4 +1,4 @@
-package com.potus.potus_front.API
+package com.potus.potus_front.API.response
 
 import java.util.*
 
@@ -10,5 +10,5 @@ data class PotusResponse(
     var lastModified: Date,
     var alive: Boolean,
     var infested: Boolean,
-    var actions: Map<String,ActionResponse>,
+    var actions: Map<String, ActionResponse>,
 )

@@ -1,4 +1,4 @@
-package com.potus.potus_front.API
+package com.potus.potus_front.API.response
 
 import java.util.*
 

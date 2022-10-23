@@ -1,10 +1,11 @@
-package com.potus.potus_front.screens
+package com.potus.potus_front.ui.screens
 
 import android.content.IntentSender.SendIntentException
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -20,8 +21,8 @@ import com.google.android.gms.common.api.ApiException
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.R
-import com.potus.potus_front.google.AuthResultContract
-import com.potus.potus_front.google.AuthViewModel
+import com.potus.potus_front.google.*
+import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.component.SignInButtons
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,11 +37,10 @@ import timber.log.Timber
 @ExperimentalCoroutinesApi
 @ExperimentalMaterialApi
 @Composable
-fun AuthScreen(
-) {
+fun AuthScreen() {
     val coroutineScope = rememberCoroutineScope()
     var text by remember { mutableStateOf<String?>(null) }
-    var token by remember { mutableStateOf<String?>(null) }
+    val tokenState = TokenState.current
     val signInRequestCode = 1
 
     val authResultLauncher =
@@ -50,22 +50,26 @@ fun AuthScreen(
                 if (account == null) {
                     text = "Google sign in failed"
                 } else {
-                    token = account.idToken
+                    if(account.idToken != null) {
+                        tokenState.signToken(account.idToken!!)
+                    }
+                    else{
+                        text = "Google sign in failed"
+                    }
                 }
             } catch (e: ApiException) {
-                Timber.d("EXCEPTION %s",e.toString())
                 text = "Google sign in failed"
             }
         }
 
-    AuthView(
-        errorText = text,
-        onClick = {
-            text = null
-            authResultLauncher.launch(signInRequestCode)
-        }
-    )
-
+        AuthView(
+            errorText = text,
+            onClick = {
+                text = null
+                authResultLauncher.launch(signInRequestCode)
+            }
+        )
+    /*
     token?.let {
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit().create(APIService::class.java).getUser("Bearer $token","user/profile")
@@ -78,10 +82,10 @@ fun AuthScreen(
                 Timber.d("BAD")
             }
         }
-        Timber.d("TTTTTTTTTTTTTTTTTTTTTTTT")
-        Timber.d(token)
-        Timber.d("TTTTTTTTTTTTTTTTTTTTTTTT")
+
     }
+
+     */
 }
 
 @ExperimentalMaterialApi
