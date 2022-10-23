@@ -2,7 +2,6 @@ package com.potus.potus_front.controllers
 
 interface PotusController {
     companion object {
-        @JvmStatic
         fun getWater(): Int {
             // Here a call to the backend service will be performed to get the actual water level.
             return 0
