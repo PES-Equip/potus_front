@@ -7,28 +7,56 @@ import androidx.compose.foundation.background
 import androidx.compose.material.*
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.potus.potus_front.composables.BottomBar
 import com.potus.potus_front.composables.CenterArea
 import com.potus.potus_front.composables.TopBar
 import com.potus.potus_front.ui.theme.Potus_frontTheme
 import com.potus.potus_front.ui.theme.SoothingGreen
 import com.potus.potus_front.controllers.PotusController
+import com.potus.potus_front.data.remote.PostsService
+import com.potus.potus_front.data.remote.dto.PostResponse
 
 class MainActivity : ComponentActivity() {
+    //HTTP client creation
+    private val service = PostsService.create()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val posts = produceState<List<PostResponse>>(
+                initialValue = emptyList(),
+                producer = {
+                    value = service.getPosts()
+                }
+            )
+
             Potus_frontTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    // color = MaterialTheme.colors.background
                     color = MaterialTheme.colors.background
-
                 ) {
                     BaseApp()
+
+                    LazyColumn {
+                        items(posts.value) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+                                Text(text = it.title, fontSize = 20.sp)
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(text = it.body, fontSize = 14.sp)
+                            }
+                        }
+                    }
                 }
             }
         }
