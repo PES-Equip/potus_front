@@ -64,7 +64,6 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
     }
 }
 
-
 @Composable
 fun CenterArea() {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -96,7 +95,6 @@ fun CenterArea() {
         }
     }
 }
-
 
 @Composable
 fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit,
