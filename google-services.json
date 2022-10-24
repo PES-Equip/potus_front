@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "865634932444",
+    "project_id": "potus-364311",
+    "storage_bucket": "potus-364311.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865634932444:android:f563986f57677cc1a78619",
+        "android_client_info": {
+          "package_name": "com.potus.potus_front"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865634932444-dgnu2ufad71q1vdb7312gnrir2f1db05.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.potus.potus_front",
+            "certificate_hash": "0434b19294f9d47b31d2ae2167e8aaa8519216fd"
+          }
+        },
+        {
+          "client_id": "865634932444-0phtc6m22u0j4jua0drpms11tj3puvah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFLn_FQC9HXOiglmg6Ipk2qDZ1g7vW0-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865634932444-0phtc6m22u0j4jua0drpms11tj3puvah.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

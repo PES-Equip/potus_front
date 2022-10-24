@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -32,9 +33,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        //freeCompilerArgs +=  "-Xjvm-default=all"
     }
     buildFeatures {
         compose true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.1.1'
@@ -56,11 +59,24 @@ dependencies {
     implementation 'androidx.compose.material:material:1.1.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
 
-    def ktor_version = "1.6.3"
-    implementation "io.ktor:ktor-client-core:$ktor_version"
-    implementation "io.ktor:ktor-client-android:$ktor_version"
-    implementation "io.ktor:ktor-client-serialization:$ktor_version"
-    implementation "io.ktor:ktor-client-logging:$ktor_version"
+    implementation "androidx.compose.runtime:runtime-livedata:1.2.1"
+
+    //navigation
+    implementation "androidx.navigation:navigation-compose:2.5.2"
+
+    //google oauth
+    implementation "com.google.android.gms:play-services-auth:20.3.0"
+
+
+    //HTTP REQUESTS
+    implementation "com.squareup.picasso:picasso:2.71828"
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+    // FOR LOGGING
+    implementation "com.jakewharton.timber:timber:5.0.1"
+    implementation 'com.google.android.material:material:1.7.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
