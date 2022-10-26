@@ -1,7 +1,11 @@
 <resources>
-    <string name="app_name">potus_front</string>
+    <string name="app_name">Potus Game</string>
     <string name="title_activity_test_navigation">TestNavigationActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="google_cloud_server_client_id" translatable="false">865634932444-46ru8lin4fib3uh3ffr6botc6j1gcj20.apps.googleusercontent.com</string>
+    <string name="app_login_bottom">Made with ❤️ - Potus the Game</string>
+    <string name="app_logo_desc">App Logo</string>
+    <string name="auth_error_msg">Something went wrong...</string>
 </resources>
