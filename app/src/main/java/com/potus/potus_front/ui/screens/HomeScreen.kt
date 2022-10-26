@@ -9,7 +9,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.potus.potus_front.composables.BottomBar
 import com.potus.potus_front.composables.CenterArea
 import com.potus.potus_front.composables.TopBar
-import com.potus.potus_front.controllers.PotusController
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
 
@@ -17,22 +16,20 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 @Preview(showBackground = true)
 @Composable
 fun HomeScreen() {
-    var waterLevelState by remember { mutableStateOf(PotusController.getWater()) }
-    var collection by remember { mutableStateOf(PotusController.getLeaves()) }
     val user = TokenState.current.user!!
+    var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
+    var collection by remember { mutableStateOf(user.currency) }
 
     Column(Modifier.background(color = SoothingGreen)){
-        TopBar(waterLevel = user.potus.waterLevel, collection = user.currency, username = user.username)
+        TopBar(waterLevel = waterLevelState, collection = collection, username = user.username)
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
             CenterArea()
         }
         BottomBar(
-            waterLevel = waterLevelState,
             updateWaterLevel = {
                     newWaterLevel ->
                 waterLevelState = newWaterLevel
             },
-            leaves = collection,
             updateLeaveRecollection = {
                     collectedLeaves ->
                 collection = collectedLeaves
