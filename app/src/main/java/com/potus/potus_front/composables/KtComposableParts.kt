@@ -9,16 +9,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.potus.potus_front.API.APIService
+import com.potus.potus_front.API.getRetrofit
+import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.R
-import com.potus.potus_front.controllers.PotusController
+import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.SoothingGreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 // En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
 @Composable
@@ -97,8 +105,8 @@ fun CenterArea() {
 }
 
 @Composable
-fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit,
-              leaves:Int, updateLeaveRecollection:(Int) -> Unit) {
+fun BottomBar(updateWaterLevel: (Int) -> Unit,
+              updateLeaveRecollection:(Int) -> Unit) {
     val heightBottomBar = 192.dp
     val heightCircle = 125.dp
     val heightTotal = heightBottomBar+heightCircle/2
@@ -128,13 +136,20 @@ fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit,
                         .height(heightButton)
                         .clip(RoundedCornerShape(10.dp))
                 ) {
+                    val tokenState = TokenState.current
+                    val coroutineScope = rememberCoroutineScope()
                     Image(
                         painter = painterResource(id = R.drawable.icona_podar),
                         "",
                         modifier = Modifier
                             .clickable(onClick = {
-                                updateLeaveRecollection(leaves + 1)
-                                PotusController.updateLeaves(leaves + 1)
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    val newUpdateActionRequest = ActionRequest("prune")
+                                    getRetrofit().create(APIService::class.java)
+                                        .actions("Bearer " + tokenState.token, "potus/actions", newUpdateActionRequest)
+                                }
+
+                                tokenState.user?.currency?.let { updateLeaveRecollection(it) }
                             })
                             .padding(8.dp)
                             .size(heightButton)
@@ -149,13 +164,21 @@ fun BottomBar(waterLevel: Int, updateWaterLevel: (Int) -> Unit,
                         .height(heightButton)
                         .clip(RoundedCornerShape(10.dp))
                 ) {
+                    val tokenState = TokenState.current
+                    val coroutineScope = rememberCoroutineScope()
                     Image(
                         painter = painterResource(id = R.drawable.icona_regadora),
                         "",
                         modifier = Modifier
                             .clickable(onClick = {
-                                updateWaterLevel(waterLevel + 10)
-                                PotusController.updateWater(waterLevel + 10)
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    val newUpdateActionRequest = ActionRequest("watering")
+                                    val call = getRetrofit().create(APIService::class.java)
+                                        .actions("Bearer " + tokenState.token, "potus/actions", newUpdateActionRequest)
+
+                                }
+
+                                tokenState.user?.potus?.let { updateWaterLevel(it.waterLevel) }
                             })
                             .size(heightButton)
                             .align(Alignment.CenterVertically))
