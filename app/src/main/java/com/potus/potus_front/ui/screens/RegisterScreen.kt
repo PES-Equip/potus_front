@@ -1,57 +1,33 @@
 package com.potus.potus_front.ui.screens
 
+//import timber.log.Timber
+
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.TextField
-import androidx.compose.runtime.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.RegisterUserRequest
+import com.potus.potus_front.R
 import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-//import timber.log.Timber
-
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-
-import androidx.compose.ui.unit.dp
-import com.potus.potus_front.R
-import com.potus.potus_front.controllers.PotusController
-import com.potus.potus_front.ui.theme.BraveGreen
-import com.potus.potus_front.ui.theme.Potus_frontTheme
-import com.potus.potus_front.ui.theme.Shapes
-import com.potus.potus_front.ui.theme.SoothingGreen
 
 
 @ExperimentalAnimationApi
@@ -118,14 +94,10 @@ fun RegisterScreen() {
                         val call = getRetrofit().create(APIService::class.java)
                             .registerUser("Bearer " + tokenState.token, "user", registerUserRequest)
 
-                        if(textState.value.text == "maxvives"){
-                            openDialog.value =true
-                            //call.isSuccessful = false
-                        }
-
                         if (call.isSuccessful) {
                             tokenState.signUser(call.body())
                         } else {
+                            openDialog.value =true
                             //Timber.d("BAD")
                         }
                     }
@@ -151,27 +123,18 @@ fun RegisterScreen() {
                         openDialog.value = false
                     },
                     title = {
-                        Text(text = "Dialog Title")
+                        Text(text = "ERROR")
                     },
                     text = {
-                        Text("Here is a text ")
+                        Text(
+                            text = "Username already taken ")
                     },
                     confirmButton = {
                         Button(
-
                             onClick = {
                                 openDialog.value = false
                             }) {
-                            Text("This is the Confirm Button")
-                        }
-                    },
-                    dismissButton = {
-                        Button(
-
-                            onClick = {
-                                openDialog.value = false
-                            }) {
-                            Text("This is the dismiss Button")
+                            Text("Ok")
                         }
                     }
                 )

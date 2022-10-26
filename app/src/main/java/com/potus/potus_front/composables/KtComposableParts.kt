@@ -9,10 +9,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -123,6 +123,10 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
     val heightTotal = heightBottomBar+heightCircle/2
     val heightButton = 125.dp
     val widthButton = 140.dp
+
+    val openDialog = remember { mutableStateOf(false)  }
+    var actionString = ""
+
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(heightTotal)) {
@@ -169,13 +173,37 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                         tokenState.signUser(call.body())
                                         tokenState.user?.currency?.let { updateLeaveRecollection(it) }
                                     } else {
-                                        //Toast.makeText(MainActivity, "", Toast.LENGTH_SHORT)
+                                        openDialog.value = true
+                                        actionString = "prune"
                                     }
                                 }
                             })
                             .padding(8.dp)
                             .size(heightButton)
                             .align(Alignment.CenterVertically))
+                }
+                if (openDialog.value) {
+
+                    AlertDialog(
+                        onDismissRequest = {
+                            // Dismiss the dialog when the user clicks outside the dialog or on the back
+                            // button. If you want to disable that functionality, simply use an empty
+                            // onCloseRequest.
+                            openDialog.value = false
+                        },
+                        text = {
+                            Text(
+                                text = "You can't " + actionString + " your Potus! It doesn't need it yet!")
+                        },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    openDialog.value = false
+                                }) {
+                                Text("Ok")
+                            }
+                        }
+                    )
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Surface(
@@ -208,7 +236,8 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                         tokenState.signUser(call.body())
                                         tokenState.user?.potus?.let { updateWaterLevel(it.waterLevel) }
                                     } else {
-                                        //Toast.makeText(MainActivity, "", Toast.LENGTH_SHORT)
+                                        openDialog.value = true
+                                        actionString = "water"
                                     }
                                 }
                             })
