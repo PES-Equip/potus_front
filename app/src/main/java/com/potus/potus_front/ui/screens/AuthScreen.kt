@@ -5,14 +5,20 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.Image
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.startIntentSenderForResult
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest
@@ -24,6 +30,7 @@ import com.potus.potus_front.R
 import com.potus.potus_front.google.*
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.component.SignInButtons
+import com.potus.potus_front.ui.theme.BraveGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,6 +44,7 @@ import timber.log.Timber
 @ExperimentalCoroutinesApi
 @ExperimentalMaterialApi
 @Composable
+
 fun AuthScreen() {
     val coroutineScope = rememberCoroutineScope()
     var text by remember { mutableStateOf<String?>(null) }
@@ -88,22 +96,39 @@ fun AuthScreen() {
      */
 }
 
+
 @ExperimentalMaterialApi
 @Composable
 fun AuthView(
     errorText: String?,
     onClick: () -> Unit
 ) {
+
+
+
     var isLoading by remember { mutableStateOf(false) }
 
     Scaffold {
+
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        )
+
+        {
+            Image(painter = painterResource(id = R.drawable.titol), "",
+                modifier = Modifier.height(150.dp)
+                    .size(360.dp)
+                    .align(Alignment.CenterHorizontally))
+            Image(painter = painterResource(id = R.drawable.basic), "",
+                modifier = Modifier
+                    .size(240.dp)
+                    .align(Alignment.CenterHorizontally))
+
             SignInButtons(
                 text = "Sign in with Google",
+                backgroundColor = BraveGreen,
                 loadingText = "Signing in...",
                 isLoading = isLoading,
                 icon = painterResource(id = R.drawable.ic_google_logo),
@@ -111,6 +136,9 @@ fun AuthView(
                     isLoading = true
                     onClick()
                 }
+
+
+
             )
 
             errorText?.let {
