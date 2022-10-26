@@ -144,6 +144,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                         modifier = Modifier
                             .clickable(onClick = {
                                 CoroutineScope(Dispatchers.IO).launch {
+
                                     val newUpdateActionRequest = ActionRequest("prune")
                                     getRetrofit().create(APIService::class.java)
                                         .actions("Bearer " + tokenState.token, "potus/actions", newUpdateActionRequest)
@@ -172,13 +173,21 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                         modifier = Modifier
                             .clickable(onClick = {
                                 CoroutineScope(Dispatchers.IO).launch {
+
                                     val newUpdateActionRequest = ActionRequest("watering")
                                     val call = getRetrofit().create(APIService::class.java)
                                         .actions("Bearer " + tokenState.token, "potus/actions", newUpdateActionRequest)
 
+                                    if (call.isSuccessful) {
+                                        val update = getRetrofit().create(APIService::class.java)
+                                            .getUser("Bearer " + tokenState.token, "/user/profile")
+
+                                        update.body()?.potus?.let { updateWaterLevel(it.waterLevel) }
+                                    }
+
                                 }
 
-                                tokenState.user?.potus?.let { updateWaterLevel(it.waterLevel) }
+                                tokenState.user?.potus?.let {  }
                             })
                             .size(heightButton)
                             .align(Alignment.CenterVertically))
