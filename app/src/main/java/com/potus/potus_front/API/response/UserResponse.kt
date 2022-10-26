@@ -6,4 +6,5 @@ data class UserResponse(
     var currency: Int,
     var potus: PotusResponse,
     var status: String,
+    var message: String
 )

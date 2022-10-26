@@ -1,11 +1,15 @@
 package com.potus.potus_front.composables
 
+import android.widget.Toast
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,11 +20,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
+import com.potus.potus_front.MainActivity
 import com.potus.potus_front.R
 import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.ui.screens.HomeScreen
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
@@ -104,6 +112,9 @@ fun CenterArea() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class,
+    ExperimentalAnimationApi::class
+)
 @Composable
 fun BottomBar(updateWaterLevel: (Int) -> Unit,
               updateLeaveRecollection:(Int) -> Unit) {
@@ -146,11 +157,21 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                 CoroutineScope(Dispatchers.IO).launch {
 
                                     val newUpdateActionRequest = ActionRequest("prune")
-                                    getRetrofit().create(APIService::class.java)
-                                        .actions("Bearer " + tokenState.token, "potus/actions", newUpdateActionRequest)
-                                }
+                                    val call = getRetrofit()
+                                        .create(APIService::class.java)
+                                        .actions(
+                                            "Bearer " + tokenState.token,
+                                            "potus/action",
+                                            newUpdateActionRequest
+                                        )
 
-                                tokenState.user?.currency?.let { updateLeaveRecollection(it) }
+                                    if (call.isSuccessful) {
+                                        tokenState.signUser(call.body())
+                                        tokenState.user?.currency?.let { updateLeaveRecollection(it) }
+                                    } else {
+                                        //Toast.makeText(MainActivity, "", Toast.LENGTH_SHORT)
+                                    }
+                                }
                             })
                             .padding(8.dp)
                             .size(heightButton)
@@ -175,19 +196,21 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                 CoroutineScope(Dispatchers.IO).launch {
 
                                     val newUpdateActionRequest = ActionRequest("watering")
-                                    val call = getRetrofit().create(APIService::class.java)
-                                        .actions("Bearer " + tokenState.token, "potus/actions", newUpdateActionRequest)
+                                    val call = getRetrofit()
+                                        .create(APIService::class.java)
+                                        .actions(
+                                            "Bearer " + tokenState.token,
+                                            "potus/action",
+                                            newUpdateActionRequest
+                                        )
 
                                     if (call.isSuccessful) {
-                                        val update = getRetrofit().create(APIService::class.java)
-                                            .getUser("Bearer " + tokenState.token, "/user/profile")
-
-                                        update.body()?.potus?.let { updateWaterLevel(it.waterLevel) }
+                                        tokenState.signUser(call.body())
+                                        tokenState.user?.potus?.let { updateWaterLevel(it.waterLevel) }
+                                    } else {
+                                        //Toast.makeText(MainActivity, "", Toast.LENGTH_SHORT)
                                     }
-
                                 }
-
-                                tokenState.user?.potus?.let {  }
                             })
                             .size(heightButton)
                             .align(Alignment.CenterVertically))
