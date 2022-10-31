@@ -266,3 +266,9 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
         }
     }
 }
+
+fun PlantEvents() {
+    //Fer que retorni un string amb el path fins la imatge a mostrar
+    //Fer que rebi quin estat ha de mostrar des del Back
+    //Potser un mapa o un diccionari?
+}
