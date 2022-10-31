@@ -7,10 +7,16 @@ Frontend developing repository by:
 - Marc Heras
 - Max Vives
 
-Underway Sprint 1 tasks:
+Completed Sprint 1 tasks:
 
-- Inici de sessió [#56, MV]
-- Rega de la planta [#101, MH]
-- Poda de la planta [#103, BF]
+- Sign in and Login [#56, MV]
+- Watering the plant [#101, MH]
+- Pruning the plant [#103, BF]
+
+Underway Sprint 2 tasks:
+
+- Show profile information [#63, MV]
+- ... [#?, MH]
+- Plant events [#186, BF]
 
 [This is the develop branch]
