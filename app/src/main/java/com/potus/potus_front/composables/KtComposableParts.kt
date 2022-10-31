@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -35,6 +36,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.Collections.list
 
 // En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
 @Composable
@@ -82,6 +84,9 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
 
 @Composable
 fun CenterArea() {
+    val plant = PlantEvents("basic")
+    val tiges = plant[0]
+    val fulles = plant[1]
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(128.dp))
         Box(modifier = Modifier
@@ -95,14 +100,14 @@ fun CenterArea() {
                     .align(Alignment.Center)
             )
             Image(
-                painter = painterResource(id = R.drawable.planta_basic_tiges),
+                painter = tiges,
                 "",
                 modifier = Modifier
                     .size(360.dp)
                     .align(Alignment.Center)
             )
             Image(
-                painter = painterResource(id = R.drawable.planta_basic_fulles),
+                painter = fulles,
                 "",
                 modifier = Modifier
                     .size(360.dp)
@@ -267,8 +272,29 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
     }
 }
 
-fun PlantEvents() {
-    //Fer que retorni un string amb el path fins la imatge a mostrar
-    //Fer que rebi quin estat ha de mostrar des del Back
-    //Potser un mapa o un diccionari?
+@Composable
+fun PlantEvents(state:String): List<Painter> {
+    //FER QUE REBI ELS ESTATS DEL BACK !!!
+    when (state) {
+        "C6H6" -> { return listOf(painterResource(id = R.drawable.planta_c6h6_tiges), painterResource(id = R.drawable.planta_c6h6_fulles)) }
+        "Cl2" -> { return listOf(painterResource(id = R.drawable.planta_cl2_tiges), painterResource(id = R.drawable.planta_cl2_fulles)) }
+        "CO" -> { return listOf(painterResource(id = R.drawable.planta_co_tiges), painterResource(id = R.drawable.planta_co_fulles)) }
+        //IMPORTANT: assegurar-se que si no té fulles no peta
+        "H2S" -> { return listOf(painterResource(id = R.drawable.planta_h2s_tiges)) }
+        "HCl" -> { return listOf(painterResource(id = R.drawable.planta_hcl_tiges), painterResource(id = R.drawable.planta_hcl_fulles)) }
+        "HCNM" -> { return listOf(painterResource(id = R.drawable.planta_hcnm_tiges), painterResource(id = R.drawable.planta_hcnm_fulles)) }
+        "HCT" -> { return listOf(painterResource(id = R.drawable.planta_hct_tiges), painterResource(id = R.drawable.planta_hct_fulles)) }
+        "Hg" -> { return listOf(painterResource(id = R.drawable.planta_hg_tiges), painterResource(id = R.drawable.planta_hg_fulles)) }
+        //IMPORTANT: assegurar-se que si no té fulles no peta
+        "NO2" -> { return listOf(painterResource(id = R.drawable.planta_no2_tiges)) }
+        "NO" -> { return listOf(painterResource(id = R.drawable.planta_no_tiges), painterResource(id = R.drawable.planta_no_fulles)) }
+        "NOx" -> { return listOf(painterResource(id = R.drawable.planta_nox_tiges), painterResource(id = R.drawable.planta_nox_fulles)) }
+        "O3" -> { return listOf(painterResource(id = R.drawable.planta_o3_tiges), painterResource(id = R.drawable.planta_o3_fulles)) }
+        "PM1" -> { return listOf(painterResource(id = R.drawable.planta_pm1_tiges), painterResource(id = R.drawable.planta_pm1_fulles)) }
+        "PM10" -> { return listOf(painterResource(id = R.drawable.planta_pm10_tiges), painterResource(id = R.drawable.planta_pm10_fulles)) }
+        "PM2.5" -> { return listOf(painterResource(id = R.drawable.planta_pm25_tiges), painterResource(id = R.drawable.planta_pm25_fulles)) }
+        "PS" -> { return listOf(painterResource(id = R.drawable.planta_ps_tiges), painterResource(id = R.drawable.planta_ps_fulles)) }
+        "SO2" -> { return listOf(painterResource(id = R.drawable.planta_so2_tiges), painterResource(id = R.drawable.planta_so2_fulles)) }
+        else -> { return listOf(painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+    }
 }
