@@ -48,7 +48,7 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
             .height(64.dp)) {
         Box(modifier = Modifier
             .align(Alignment.CenterVertically)
-            .width(64.dp)
+            .width((username.length * 10).dp)
             .height(30.dp)
             .clip(RoundedCornerShape(15.dp))
             .background(color = Color(0x0CFFFFFF))){
@@ -83,8 +83,8 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
 }
 
 @Composable
-fun CenterArea() {
-    val plant = PlantEvents("basic")
+fun CenterArea(plantState:String) {
+    val plant = PlantEvents(plantState)
     val tiges = plant[0]
     val fulles = plant[1]
     Column(modifier = Modifier.fillMaxWidth()) {
