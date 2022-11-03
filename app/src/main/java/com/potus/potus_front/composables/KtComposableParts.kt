@@ -1,6 +1,5 @@
 package com.potus.potus_front.composables
 
-import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -20,21 +19,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupPositionProvider
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
-import com.potus.potus_front.MainActivity
 import com.potus.potus_front.R
 import com.potus.potus_front.models.TokenState
-import com.potus.potus_front.ui.screens.HomeScreen
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 // En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
 @Composable
@@ -45,8 +39,9 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
             .fillMaxWidth()
             .height(64.dp)) {
         Box(modifier = Modifier
+            .padding(start = 16.dp)
             .align(Alignment.CenterVertically)
-            .width(64.dp)
+            .width((username.length * 10).dp)
             .height(30.dp)
             .clip(RoundedCornerShape(15.dp))
             .background(color = Color(0x0CFFFFFF))){
@@ -57,26 +52,42 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
         Spacer(modifier = Modifier.weight(1f))
         Box(modifier = Modifier
             .align(Alignment.CenterVertically)
-            .width(64.dp)
+            .width(80.dp)
             .height(30.dp)
             .clip(RoundedCornerShape(15.dp))
             .background(color = Color(0x0CFFFFFF))){
+            Image(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 4.dp)
+                    .size(32.dp),
+                painter = painterResource(id = R.drawable.droplet),
+                contentDescription = "")
             Text(modifier = Modifier
-                .align(Alignment.Center),
+                .align(Alignment.CenterEnd)
+                .padding(end = 8.dp),
                 text = "$waterLevel %" )
         }
         Spacer(modifier = Modifier.weight(0.02f))
         Box(modifier = Modifier
+            .padding(end = 16.dp)
             .align(Alignment.CenterVertically)
-            .width(64.dp)
+            .width(80.dp)
             .height(30.dp)
             .clip(RoundedCornerShape(15.dp))
             .background(color = Color(0x0CFFFFFF))){
+            Image(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 4.dp)
+                    .size(24.dp),
+                painter = painterResource(id = R.drawable.currency),
+                contentDescription = "")
             Text(modifier = Modifier
-                .align(Alignment.Center),
+                .align(Alignment.CenterEnd)
+                .padding(end = 8.dp),
                 text = "$collection")
         }
-        Spacer(modifier = Modifier.weight(0.075f))
     }
 }
 
