@@ -1,6 +1,7 @@
 package com.potus.potus_front.API
 
 import com.potus.potus_front.API.requests.ActionRequest
+import com.potus.potus_front.API.requests.ChangeUsernameRequest
 import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.API.response.UserResponse
 import retrofit2.Response
@@ -22,6 +23,9 @@ interface APIService {
 
     @POST
     suspend fun actions(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ActionRequest): Response<UserResponse>
+
+    @POST
+    suspend fun changeUsername(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ChangeUsernameRequest): Response<UserResponse>
 }
 
 fun getRetrofit(): Retrofit {

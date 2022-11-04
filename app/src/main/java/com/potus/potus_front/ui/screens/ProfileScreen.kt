@@ -20,10 +20,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import com.potus.potus_front.API.APIService
+import com.potus.potus_front.API.getRetrofit
+import com.potus.potus_front.API.requests.ChangeUsernameRequest
+import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.MainActivity
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
@@ -36,7 +43,7 @@ fun ProfileScreen() {
 
     val tokenState = TokenState.current
     val user = TokenState.current.user!!
-    var defaultUsername by remember { mutableStateOf(user.username) }
+    var username by remember { mutableStateOf(user.username) }
 
 
     //poner el email del usuario pero no que no se pueda modificar mirar UserResponse
@@ -51,11 +58,9 @@ fun ProfileScreen() {
     }
 
     var name by rememberSaveable { mutableStateOf("default name") }
-    var username by rememberSaveable { mutableStateOf("default username") }
     var bio by rememberSaveable { mutableStateOf("default bio") }
     var ola = false
 
-    name = defaultUsername
 
 
 
@@ -85,8 +90,21 @@ fun ProfileScreen() {
             }
             Button(
                 onClick = {
-                    notification.value = "Profile updated"
-                    ola=true
+                    CoroutineScope(Dispatchers.IO).launch {
+
+                        val changeUsernameRequest = ChangeUsernameRequest(username)
+                        val call = getRetrofit().create(APIService::class.java)
+                            .changeUsername("Bearer " + tokenState.token, "user/profile", changeUsernameRequest)
+
+                        if (call.isSuccessful) {
+                            notification.value = "Profile updated"
+                            tokenState.signUser(call.body())
+                        }
+                        else{
+                            notification.value = "ERROR"
+                        }
+                    }
+
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
 
