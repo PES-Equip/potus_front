@@ -58,7 +58,7 @@ fun RegisterScreen() {
         Column {
             Spacer(modifier = Modifier.size(32.dp))
 
-
+            //canviar imatge a register
             Image(painter = painterResource(id = R.drawable.logintext), "",
                 modifier = Modifier
                     .size(200.dp)
@@ -111,7 +111,7 @@ fun RegisterScreen() {
                     .padding(16.dp),
                 shape = MaterialTheme.shapes.medium
             ) {
-                Text(text = "Log In")
+                Text(text = "Register")
             }
             if (openDialog.value) {
 
