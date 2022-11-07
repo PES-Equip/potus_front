@@ -1,5 +1,6 @@
 package com.potus.potus_front.composables
 
+import android.icu.number.Precision.currency
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -30,7 +31,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-// En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
 @Composable
 fun TopBar(waterLevel: Int, collection: Int, username: String) {
     Row(
@@ -61,7 +61,7 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
                     .align(Alignment.CenterStart)
                     .padding(start = 4.dp)
                     .size(32.dp),
-                painter = painterResource(id = R.drawable.droplet),
+                painter = painterResource(id = R.drawable.icona_droplet),
                 contentDescription = "")
             Text(modifier = Modifier
                 .align(Alignment.CenterEnd)
@@ -81,7 +81,7 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
                     .align(Alignment.CenterStart)
                     .padding(start = 4.dp)
                     .size(24.dp),
-                painter = painterResource(id = R.drawable.currency),
+                painter = painterResource(id = R.drawable.icona_currency),
                 contentDescription = "")
             Text(modifier = Modifier
                 .align(Alignment.CenterEnd)
