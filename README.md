@@ -13,10 +13,16 @@ Completed Sprint 1 tasks:
 - Watering the plant [#101, MH]
 - Pruning the plant [#103, BF]
 
+Completed Sprint 2 tasks:
+
+- ...
+
 Underway Sprint 2 tasks:
 
 - Show profile information [#63, MV]
-- ... [#?, MH]
-- Plant events [#186, BF]
+- Improve Potus basics [#181, MH]
+- Plant events [#86, BF]
+- Thematic events [#92, BF]
+- Popup to show yesterday's gases [#180, BF]
 
 [This is the develop branch]
