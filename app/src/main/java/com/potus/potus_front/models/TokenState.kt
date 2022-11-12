@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
 
 class TokenStateViewModel: ViewModel(){
@@ -21,7 +22,6 @@ class TokenStateViewModel: ViewModel(){
 
         return user!!.status
     }
-
 
     fun signUser(user: UserResponse?){
         this.user = user
@@ -41,6 +41,12 @@ class TokenStateViewModel: ViewModel(){
         isBusy = false
         token = null
         user = null
+    }
+
+    fun myPotus(potus: PotusResponse?){
+        if (potus != null) {
+            this.user?.potus = potus
+        }
     }
 }
 

@@ -45,7 +45,7 @@ fun HomeScreen() {
             )
 
         if (call.isSuccessful) {
-            tokenState.signUser(call.body())
+            tokenState.myPotus(call.body())
             tokenState.user?.potus?.let { plantState = it.state }
         } else {
             //ERROR MESSAGES, IF ANY
@@ -81,7 +81,7 @@ fun HomeScreen() {
             },
             text = {
                 Text(
-                    text = "ERROR!")
+                    text = "ERROR! No s'ha trobat un estat.")
             },
             confirmButton = {
                 Button(
