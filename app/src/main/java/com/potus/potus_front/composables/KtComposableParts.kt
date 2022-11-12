@@ -83,6 +83,17 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
 @Composable
 fun CenterArea() {
     Column(modifier = Modifier.fillMaxWidth()) {
+        Box(modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .width(360.dp)
+            .height(180.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = Color(0x0CFFFFFF))){ //#FFF2CC <- color que hauria de tenir el pop-up
+            Text(modifier = Modifier
+                .align(Alignment.Center),
+                text = "Yesterday's air quality data")
+        }
+        //MISSING EXPANDABLE PROPERTY; COULD NOT TRY ANYTHING OUT :(
         Spacer(modifier = Modifier.height(128.dp))
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally))
