@@ -9,3 +9,4 @@ val Teal200 = Color(0xFF03DAC5)
 
 val SoothingGreen = Color(0xFFB0DD7F)
 val BraveGreen = Color(0xFF82AF5A)
+val Daffodil = Color(0xFFFFF2CC)

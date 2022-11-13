@@ -31,6 +31,7 @@ import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.screens.HomeScreen
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.SoothingGreen
+import com.potus.potus_front.ui.theme.Daffodil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,17 +84,18 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
 @Composable
 fun CenterArea() {
     Column(modifier = Modifier.fillMaxWidth()) {
+        //MAYBE: BUTTON (TOGGLEABLE) + SCALE (BUTTON ATTACHED TO BOOLEAN + TWO BOOL-DEPENDANT MODIFIERS?)
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally)
             .width(360.dp)
             .height(180.dp)
             .clip(RoundedCornerShape(10.dp))
-            .background(color = Color(0x0CFFFFFF))){ //#FFF2CC <- color que hauria de tenir el pop-up
-            Text(modifier = Modifier
-                .align(Alignment.Center),
-                text = "Yesterday's air quality data")
-        }
-        //MISSING EXPANDABLE PROPERTY; COULD NOT TRY ANYTHING OUT :(
+            .background(color = Daffodil)){
+                Text(modifier = Modifier
+                    .align(Alignment.Center),
+                    text = "Yesterday's air quality data")
+            }
+        //MISSING EXPANDABLE PROPERTY
         Spacer(modifier = Modifier.height(128.dp))
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally))
