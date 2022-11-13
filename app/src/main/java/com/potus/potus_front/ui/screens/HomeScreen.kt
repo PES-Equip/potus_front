@@ -82,7 +82,7 @@ fun HomeScreen() {
             },
             text = {
                 Text(
-                    text = "ERROR! No s'ha trobat un estat.")
+                    text = "ERROR! Could not establish a working connection")
             },
             confirmButton = {
                 Button(
