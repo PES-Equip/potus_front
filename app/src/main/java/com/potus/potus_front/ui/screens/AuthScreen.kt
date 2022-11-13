@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.startIntentSenderForResult
+import androidx.navigation.NavController
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.ApiException
@@ -45,7 +46,7 @@ import timber.log.Timber
 @ExperimentalMaterialApi
 @Composable
 
-fun AuthScreen() {
+fun AuthScreen(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
     var text by remember { mutableStateOf<String?>(null) }
     val tokenState = TokenState.current
@@ -60,6 +61,16 @@ fun AuthScreen() {
                 } else {
                     if(account.idToken != null) {
                         tokenState.signToken(account.idToken!!)
+                        navController.navigate("register_screen")
+
+                        /*
+                        when(tokenState.getState()) {
+                            "NEW" -> navController.navigate("register_screen")
+                            "CONFIRMED" -> navController.navigate("profile_screen")
+                        }
+
+                         */
+
                     }
                     else{
                         text = "Google sign in failed"

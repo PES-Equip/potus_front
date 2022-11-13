@@ -33,7 +33,7 @@ fun ApplicationSwitcher() {
             }
         }
     } else {
-        AuthScreen()
+        //AuthScreen()
     }
 
     when(tokenState.getState()) {
