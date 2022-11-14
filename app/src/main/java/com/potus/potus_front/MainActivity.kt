@@ -49,9 +49,6 @@ class MainActivity : ComponentActivity() {
             Timber.plant(Timber.DebugTree())
         }
 
-        //CAL PASSAR-HO AL NOU SWITCHER !!!
-        getLastLocation()
-
         setContent {
             Potus_frontTheme {
                 // A surface container using the 'background' color from the theme
@@ -62,7 +59,7 @@ class MainActivity : ComponentActivity() {
 
                 ) {
                     CompositionLocalProvider(TokenState provides tokenStateViewModel) {
-                        ApplicationSwitcher()
+                        ApplicationSwitcher(getLastLocation())
                         //AuthScreen()
                     }
                     //Navigation(tokenViewModel)

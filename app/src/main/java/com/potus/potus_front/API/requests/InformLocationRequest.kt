@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull
 
 data class InformLocationRequest(
     @NotNull()
-    var latitude: Int,
+    var latitude: Double,
     @NotNull()
-    var length: Int
+    var length: Double
 )
