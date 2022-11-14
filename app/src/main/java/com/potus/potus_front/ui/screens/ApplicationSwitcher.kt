@@ -19,7 +19,7 @@ import timber.log.Timber
 @ExperimentalCoroutinesApi
 @ExperimentalMaterialApi
 @Composable
-fun ApplicationSwitcher() {
+fun ApplicationSwitcher(location : Pair<Double,Double>) {
     val tokenState = TokenState.current
 
     if(tokenState.isLoggedIn){
@@ -38,7 +38,7 @@ fun ApplicationSwitcher() {
 
     when(tokenState.getState()) {
         "NEW" -> RegisterScreen()
-        "CONFIRMED" -> HomeScreen()
+        "CONFIRMED" -> HomeScreen(location)
     }
 
 }
