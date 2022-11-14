@@ -1,6 +1,8 @@
 package com.potus.potus_front.composables
 
-import android.icu.number.Precision.currency
+import android.app.Application
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -18,18 +20,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
+import com.potus.potus_front.MainActivity
 import com.potus.potus_front.R
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import retrofit2.http.Body
+import java.security.AccessController.getContext
 
 @Composable
 fun TopBar(waterLevel: Int, collection: Int, username: String) {
@@ -123,9 +131,6 @@ fun CenterArea() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class,
-    ExperimentalAnimationApi::class
-)
 @Composable
 fun BottomBar(updateWaterLevel: (Int) -> Unit,
               updateLeaveRecollection:(Int) -> Unit) {
@@ -169,7 +174,8 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                         "",
                         modifier = Modifier
                             .clickable(onClick = {
-                                CoroutineScope(Dispatchers.IO).launch {
+                                GlobalScope.launch(Dispatchers.IO) {
+                                //CoroutineScope(Dispatchers.IO).launch {
 
                                     val newUpdateActionRequest = ActionRequest("prune")
                                     val call = getRetrofit()
@@ -179,13 +185,17 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                             "potus/action",
                                             newUpdateActionRequest
                                         )
-
+                                    val body = call.body()
+                                    val Ebody = call.errorBody()
                                     if (call.isSuccessful) {
-                                        tokenState.signUser(call.body())
+                                        tokenState.signUser(body)
                                         tokenState.user?.currency?.let { updateLeaveRecollection(it) }
                                     } else {
                                         openDialog.value = true
-                                        actionString = "prune"
+                                        if (Ebody != null) {
+                                            var jObjErr = JSONObject(Ebody.string())
+                                            actionString = jObjErr.getString("message")
+                                        }
                                     }
                                 }
                             })
@@ -194,7 +204,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                             .align(Alignment.CenterVertically))
                 }
                 if (openDialog.value) {
-
+                    //Toast.makeText(, actionString, Toast.LENGTH_LONG).show()
                     AlertDialog(
                         onDismissRequest = {
                             // Dismiss the dialog when the user clicks outside the dialog or on the back
@@ -204,7 +214,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                         },
                         text = {
                             Text(
-                                text = "You can't " + actionString + " your Potus! It doesn't need it yet!")
+                                text = actionString)
                         },
                         confirmButton = {
                             Button(
@@ -243,12 +253,17 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                             newUpdateActionRequest
                                         )
 
+                                    val body = call.body()
+                                    val Ebody = call.errorBody()
                                     if (call.isSuccessful) {
                                         tokenState.signUser(call.body())
                                         tokenState.user?.potus?.let { updateWaterLevel(it.waterLevel) }
                                     } else {
                                         openDialog.value = true
-                                        actionString = "water"
+                                        if (Ebody != null) {
+                                            var jObjErr = JSONObject(Ebody.string())
+                                            actionString = jObjErr.getString("message")
+                                        }
                                     }
                                 }
                             })
