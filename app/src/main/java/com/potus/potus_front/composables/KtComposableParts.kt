@@ -7,13 +7,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -83,6 +81,8 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
 
 @Composable
 fun CenterArea() {
+    var toggled by remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxWidth()) {
         //MAYBE: BUTTON (TOGGLEABLE) + SCALE (BUTTON ATTACHED TO BOOLEAN + TWO BOOL-DEPENDANT MODIFIERS?)
         Box(modifier = Modifier
@@ -90,11 +90,12 @@ fun CenterArea() {
             .width(360.dp)
             .height(180.dp)
             .clip(RoundedCornerShape(10.dp))
+            .toggleable(value = toggled, onValueChange = { toggled = it })
             .background(color = Daffodil)){
-                Text(modifier = Modifier
-                    .align(Alignment.Center),
-                    text = "Yesterday's air quality data")
-            }
+            Text(modifier = Modifier
+                .align(Alignment.Center),
+                text = toggled.toString())
+        }
         //MISSING EXPANDABLE PROPERTY
         Spacer(modifier = Modifier.height(128.dp))
         Box(modifier = Modifier
