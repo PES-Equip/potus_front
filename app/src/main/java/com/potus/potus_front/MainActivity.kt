@@ -90,12 +90,12 @@ class MainActivity : ComponentActivity() {
                 if(it != null) {
                     lat = it.latitude
                     lon = it.longitude
-                    Timber.tag(tag).d("getLastLocation: latitude is %s", lat)
-                    Timber.tag(tag).d("getLastLocation: longitude is %s", lon)
                 }
+                Timber.tag(tag).d("getLastLocation: latitude is %s", lat)
+                Timber.tag(tag).d("getLastLocation: longitude is %s", lon)
             }
             //Failed attempt to get user's last location
-            userLocation.addOnSuccessListener {
+            userLocation.addOnFailureListener {
                 Timber.tag(tag).d("getLastLocation: Location cannot be traced")
             }
         }

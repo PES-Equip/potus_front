@@ -27,12 +27,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen() {
     val openDialog = remember { mutableStateOf(false)  }
+    val error = remember { mutableStateOf(200)  }
 
     val user = TokenState.current.user!!
     var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
     var collection by remember { mutableStateOf(user.currency) }
     var plantState by remember { mutableStateOf("DEFAULT") }
-    var thematicEvent by remember { mutableStateOf("Aniversari") }
+    var thematicEvent by remember { mutableStateOf("DEFAULT") }
 
     val tokenState = TokenState.current
     LaunchedEffect(Dispatchers.IO) {
@@ -50,6 +51,7 @@ fun HomeScreen() {
             tokenState.user?.potus?.let { plantState = it.state }
         } else {
             //ERROR MESSAGES, IF ANY
+            error.value = call.code()
             openDialog.value = true
         }
     }
@@ -82,7 +84,7 @@ fun HomeScreen() {
             },
             text = {
                 Text(
-                    text = "ERROR! Could not establish a working connection")
+                    text = "ERROR " + error.value + "! Could not establish a working connection")
             },
             confirmButton = {
                 Button(

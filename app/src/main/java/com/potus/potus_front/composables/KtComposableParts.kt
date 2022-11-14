@@ -86,7 +86,8 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
 fun CenterArea(thematicEvent:String, plantState:String) {
     val plant = PlantEvents(plantState)
     val tiges = plant[0]
-    val fulles = plant[1]
+    var fulles = painterResource(id = R.drawable.planta_basic_fulles)
+    if (plant.size == 2) fulles = plant[1]
     val test = ThematicEvents(thematicEvent)
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(128.dp))
@@ -107,13 +108,15 @@ fun CenterArea(thematicEvent:String, plantState:String) {
                     .size(360.dp)
                     .align(Alignment.Center)
             )
-            Image(
-                painter = fulles,
-                "",
-                modifier = Modifier
-                    .size(360.dp)
-                    .align(Alignment.Center)
-            )
+            if (plant.size == 2) {
+                Image(
+                    painter = fulles,
+                    "",
+                    modifier = Modifier
+                        .size(360.dp)
+                        .align(Alignment.Center)
+                )
+            }
         }
     }
 }
@@ -279,13 +282,11 @@ fun PlantEvents(state:String): List<Painter> {
         "C6H6" -> { return listOf(painterResource(id = R.drawable.planta_c6h6_tiges), painterResource(id = R.drawable.planta_c6h6_fulles)) }
         "Cl2" -> { return listOf(painterResource(id = R.drawable.planta_cl2_tiges), painterResource(id = R.drawable.planta_cl2_fulles)) }
         "CO" -> { return listOf(painterResource(id = R.drawable.planta_co_tiges), painterResource(id = R.drawable.planta_co_fulles)) }
-        //IMPORTANT: assegurar-se que si no té fulles no peta
         "H2S" -> { return listOf(painterResource(id = R.drawable.planta_h2s_tiges)) }
         "HCl" -> { return listOf(painterResource(id = R.drawable.planta_hcl_tiges), painterResource(id = R.drawable.planta_hcl_fulles)) }
         "HCNM" -> { return listOf(painterResource(id = R.drawable.planta_hcnm_tiges), painterResource(id = R.drawable.planta_hcnm_fulles)) }
         "HCT" -> { return listOf(painterResource(id = R.drawable.planta_hct_tiges), painterResource(id = R.drawable.planta_hct_fulles)) }
         "Hg" -> { return listOf(painterResource(id = R.drawable.planta_hg_tiges), painterResource(id = R.drawable.planta_hg_fulles)) }
-        //IMPORTANT: assegurar-se que si no té fulles no peta
         "NO2" -> { return listOf(painterResource(id = R.drawable.planta_no2_tiges)) }
         "NO" -> { return listOf(painterResource(id = R.drawable.planta_no_tiges), painterResource(id = R.drawable.planta_no_fulles)) }
         "NOX" -> { return listOf(painterResource(id = R.drawable.planta_nox_tiges), painterResource(id = R.drawable.planta_nox_fulles)) }
