@@ -7,13 +7,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +29,7 @@ import com.potus.potus_front.R
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.screens.HomeScreen
 import com.potus.potus_front.ui.theme.BraveGreen
+import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -84,12 +83,29 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
 
 @Composable
 fun CenterArea(thematicEvent:String, plantState:String) {
+    var toggled by remember { mutableStateOf(false) }
+
     val plant = PlantEvents(plantState)
     val tiges = plant[0]
     var fulles = painterResource(id = R.drawable.planta_basic_fulles)
     if (plant.size == 2) fulles = plant[1]
     val test = ThematicEvents(thematicEvent)
+
     Column(modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.height(32.dp))
+        Box(modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .width(360.dp)
+            .height(128.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = Daffodil)
+            .toggleable(value = toggled, onValueChange = { toggled = it })) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                text = toggled.toString()
+            )
+        }
         Spacer(modifier = Modifier.height(128.dp))
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally))
