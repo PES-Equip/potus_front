@@ -204,27 +204,8 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                             .align(Alignment.CenterVertically))
                 }
                 if (openDialog.value) {
-                    //Toast.makeText(, actionString, Toast.LENGTH_LONG).show()
-                    AlertDialog(
-                        onDismissRequest = {
-                            // Dismiss the dialog when the user clicks outside the dialog or on the back
-                            // button. If you want to disable that functionality, simply use an empty
-                            // onCloseRequest.
-                            openDialog.value = false
-                        },
-                        text = {
-                            Text(
-                                text = actionString)
-                        },
-                        confirmButton = {
-                            Button(
-                                onClick = {
-                                    openDialog.value = false
-                                }) {
-                                Text("Ok")
-                            }
-                        }
-                    )
+                    Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_SHORT).show()
+                    openDialog.value = false
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Surface(
