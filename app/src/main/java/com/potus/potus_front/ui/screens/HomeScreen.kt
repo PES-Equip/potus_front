@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun HomeScreen(location : Pair<Double,Double>) {
+fun HomeScreen() {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -36,7 +36,7 @@ fun HomeScreen(location : Pair<Double,Double>) {
 
     val tokenState = TokenState.current
     LaunchedEffect(Dispatchers.IO) {
-        val newUpdateStateRequest = InformLocationRequest(latitude = location.first, length = location.second)
+        val newUpdateStateRequest = InformLocationRequest(latitude = tokenState.location.first, length = tokenState.location.second)
         val call = getRetrofit()
             .create(APIService::class.java)
             .informLocation(

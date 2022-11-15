@@ -49,6 +49,8 @@ class MainActivity : ComponentActivity() {
             Timber.plant(Timber.DebugTree())
         }
 
+        tokenStateViewModel.myLocation(getLastLocation())
+
         setContent {
             Potus_frontTheme {
                 // A surface container using the 'background' color from the theme
@@ -59,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
                 ) {
                     CompositionLocalProvider(TokenState provides tokenStateViewModel) {
-                        ApplicationSwitcher(getLastLocation())
+                        ApplicationSwitcher()
                         //AuthScreen()
                     }
                     //Navigation(tokenViewModel)
