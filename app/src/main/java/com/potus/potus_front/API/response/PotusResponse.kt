@@ -11,4 +11,5 @@ data class PotusResponse(
     var alive: Boolean,
     var infested: Boolean,
     var actions: Map<String, ActionResponse>,
+    var state: String
 )
