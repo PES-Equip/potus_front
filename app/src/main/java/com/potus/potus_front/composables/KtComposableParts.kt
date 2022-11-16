@@ -302,34 +302,33 @@ fun PlantEvents(state:String): List<Painter> {
 
 @Composable
 fun ThematicEvents(event:String): Painter {
-    //MILLOR AMB DATES?
     when (event) {
         //31.12 & 01.01
-        "CapAny" -> { return painterResource(id = R.drawable.test_cap_any) }
+        "NEW_YEAR" -> { return painterResource(id = R.drawable.test_cap_any) }
         //Dia canviant !!! (22.01 - 01.02)
-        "CapAnyXines" -> { return painterResource(id = R.drawable.test_cap_any_xines) }
+        "CHINESE_NEW_YEAR" -> { return painterResource(id = R.drawable.test_cap_any_xines) }
         //Dia canviant !!! (01.02 - 10.03)
-        "MardiGras" -> { return painterResource(id = R.drawable.test_mardi_gras) }
+        "MARDI_GRAS" -> { return painterResource(id = R.drawable.test_mardi_gras) }
         //17.03
-        "SantPatrici" -> { return painterResource(id = R.drawable.test_sant_patrici) }
+        "SAINT_PATRICK" -> { return painterResource(id = R.drawable.test_sant_patrici) }
         //Dia canviant !!! (19.03 - 21.03)
-        "EquinocciPrimavera" -> { return painterResource(id = R.drawable.test_equinocci_primavera) }
+        "SPRING_EQUINOX" -> { return painterResource(id = R.drawable.test_equinocci_primavera) }
         //Dia canviant !!! (22.03 - 25.04)
-        "Pasqua" -> { return painterResource(id = R.drawable.test_pasqua) }
+        "EASTER" -> { return painterResource(id = R.drawable.test_pasqua) }
         //Dia canviant !!! (20.06 - 22.06)
-        "SolsticiEstiu" -> { return painterResource(id = R.drawable.test_solstici_estiu) }
+        "SUMMER_SOLSTICE" -> { return painterResource(id = R.drawable.test_solstici_estiu) }
         //24.06
-        "SantJoan" -> { return painterResource(id = R.drawable.test_sant_joan) }
+        "SANT_JOAN" -> { return painterResource(id = R.drawable.test_sant_joan) }
         //Dia canviant !!! (21.09 - 24.09)
-        "EquinocciTardor" -> { return painterResource(id = R.drawable.test_equinocci_tardor) }
+        "AUTUMN_EQUINOX" -> { return painterResource(id = R.drawable.test_equinocci_tardor) }
         //31.10
-        "Halloween" -> { return painterResource(id = R.drawable.test_halloween) }
+        "HALLOWEEN" -> { return painterResource(id = R.drawable.test_halloween) }
         //Dia canviant !!! (20.12 - 23.12)
-        "SolsticiHivern" -> { return painterResource(id = R.drawable.test_solstici_hivern) }
+        "WINTER_SOLSTICE" -> { return painterResource(id = R.drawable.test_solstici_hivern) }
         //25.12
-        "Nadal" -> { return painterResource(id = R.drawable.test_nadal) }
+        "CHRISTMAS" -> { return painterResource(id = R.drawable.test_nadal) }
         //Aniversari de l'usuari
-        "Aniversari" -> { return painterResource(id = R.drawable.test_aniversari) }
+        "BIRTHDAY" -> { return painterResource(id = R.drawable.test_aniversari) }
         else -> { return painterResource(id = R.drawable.test_basic) }
     }
 }
