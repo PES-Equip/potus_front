@@ -1,17 +1,15 @@
 package com.potus.potus_front.composables
 
-import android.app.Application
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
-import com.potus.potus_front.MainActivity
 import com.potus.potus_front.R
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
@@ -36,11 +33,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import retrofit2.http.Body
-import java.security.AccessController.getContext
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun TopBar(waterLevel: Int, collection: Int, username: String) {
+fun TopBar(waterLevel: Int, collection: Int, username: String, addedWater: Int, addedLeaves: Int) {
     Row(
         Modifier
             .background(color = BraveGreen)
@@ -58,12 +54,14 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
                 text = username )
         }
         Spacer(modifier = Modifier.weight(1f))
+
         Box(modifier = Modifier
             .align(Alignment.CenterVertically)
             .width(80.dp)
             .height(30.dp)
             .clip(RoundedCornerShape(15.dp))
             .background(color = Color(0x0CFFFFFF))){
+
             Image(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
@@ -71,10 +69,12 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
                     .size(32.dp),
                 painter = painterResource(id = R.drawable.icona_droplet),
                 contentDescription = "")
+
             Text(modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 8.dp),
-                text = "$waterLevel %" )
+                text = "$waterLevel %")
+
         }
         Spacer(modifier = Modifier.weight(0.02f))
         Box(modifier = Modifier
@@ -101,6 +101,7 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
 
 @Composable
 fun CenterArea() {
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(128.dp))
         Box(modifier = Modifier
@@ -133,7 +134,8 @@ fun CenterArea() {
 
 @Composable
 fun BottomBar(updateWaterLevel: (Int) -> Unit,
-              updateLeaveRecollection:(Int) -> Unit) {
+              updateLeaveRecollection:(Int) -> Unit
+) {
     val heightBottomBar = 192.dp
     val heightCircle = 125.dp
     val heightTotal = heightBottomBar+heightCircle/2
@@ -162,6 +164,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                 Surface(
                     color = SoothingGreen,
                     modifier = Modifier
+                        .padding(start = 8.dp)
                         .align(Alignment.CenterVertically)
                         .width(widthButton)
                         .height(heightButton)
@@ -175,7 +178,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                         modifier = Modifier
                             .clickable(onClick = {
                                 GlobalScope.launch(Dispatchers.IO) {
-                                //CoroutineScope(Dispatchers.IO).launch {
+                                    //CoroutineScope(Dispatchers.IO).launch {
 
                                     val newUpdateActionRequest = ActionRequest("prune")
                                     val call = getRetrofit()
@@ -211,6 +214,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                 Surface(
                     color = SoothingGreen,
                     modifier = Modifier
+                        .padding(end = 8.dp)
                         .align(Alignment.CenterVertically)
                         .width(widthButton)
                         .height(heightButton)
@@ -234,7 +238,6 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                             newUpdateActionRequest
                                         )
 
-                                    val body = call.body()
                                     val Ebody = call.errorBody()
                                     if (call.isSuccessful) {
                                         tokenState.signUser(call.body())
@@ -273,3 +276,4 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
         }
     }
 }
+
