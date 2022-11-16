@@ -1,12 +1,10 @@
 package com.potus.potus_front.composables
 
-import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,23 +17,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupPositionProvider
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
-import com.potus.potus_front.MainActivity
 import com.potus.potus_front.R
 import com.potus.potus_front.models.TokenState
-import com.potus.potus_front.ui.screens.HomeScreen
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.util.Collections.list
+
 
 // En el composable Top Bar caldria descobrir com separar els composables de water i leaves.
 @Composable
@@ -81,17 +74,12 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CenterArea(thematicEvent:String, plantState:String) {
-    var toggled by remember { mutableStateOf(false) }
-
-    val plant = PlantEvents(plantState)
-    val tiges = plant[0]
-    var fulles = painterResource(id = R.drawable.planta_basic_fulles)
-    if (plant.size == 2) fulles = plant[1]
-    val test = ThematicEvents(thematicEvent)
-
+fun GasesWindow() {
     Column(modifier = Modifier.fillMaxWidth()) {
+        var toggled by remember { mutableStateOf(false) }
+
         Spacer(modifier = Modifier.height(32.dp))
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally)
@@ -99,14 +87,43 @@ fun CenterArea(thematicEvent:String, plantState:String) {
             .height(128.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(color = Daffodil)
-            .toggleable(value = toggled, onValueChange = { toggled = it })) {
+            .toggleable(value = toggled, onValueChange = { toggled = it })
+        ) {
             Text(
                 modifier = Modifier
                     .align(Alignment.Center),
                 text = toggled.toString()
             )
+            LazyVerticalGrid(
+                modifier = Modifier.align(Alignment.Center),
+                cells = GridCells.Fixed(4)) {
+                items(8) {
+                    Row(
+                        modifier = Modifier
+                            .width(16.dp)
+                            .height(64.dp)
+                            .border(1.dp, BraveGreen),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "GAS", color = BraveGreen)
+                    }
+                }
+            }
         }
-        Spacer(modifier = Modifier.height(128.dp))
+    }
+}
+
+@Composable
+fun CenterArea(thematicEvent:String, plantState:String) {
+    val plant = PlantEvents(plantState)
+    val tiges = plant[0]
+    var fulles = painterResource(id = R.drawable.planta_basic_fulles)
+    if (plant.size > 1) fulles = plant[1]
+    val test = ThematicEvents(thematicEvent)
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        //Spacer(modifier = Modifier.height(16.dp))
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally))
         {
