@@ -34,7 +34,7 @@ fun HomeScreen() {
     var addedWater by remember { mutableStateOf(0) }
     var addedLeaves by remember { mutableStateOf(0) }
     var plantState by remember { mutableStateOf("DEFAULT") }
-    var thematicEvent by remember { mutableStateOf("DEFAULT") }
+    //var thematicEvent by remember { mutableStateOf("DEFAULT") }
 
     val tokenState = TokenState.current
     LaunchedEffect(Dispatchers.IO) {
@@ -66,7 +66,8 @@ fun HomeScreen() {
             addedLeaves = addedLeaves
         )
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
-            CenterArea(thematicEvent, plantState)
+            //CenterArea(thematicEvent, plantState)
+            CenterArea(plantState)
         }
         BottomBar(
             updateWaterLevel = { newWaterLevel ->

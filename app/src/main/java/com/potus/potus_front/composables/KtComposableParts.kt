@@ -103,12 +103,15 @@ fun TopBar(waterLevel: Int, collection: Int, username: String, addedWater: Int, 
 }
 
 @Composable
-fun CenterArea(thematicEvent:String, plantState:String) {
-    val plant = PlantEvents(plantState)
-    val tiges = plant[0]
+//fun CenterArea(thematicEvent:String, plantState:String) {
+fun CenterArea(plantState:String) {
+    //val plant = PlantEvents(plantState)
+    //val test = ThematicEvents(thematicEvent)
+    val overallState = JoinedEvents(plantState)
+    val test = overallState[0]
+    val tiges = overallState[1]
     var fulles = painterResource(id = R.drawable.planta_basic_fulles)
-    if (plant.size == 2) fulles = plant[1]
-    val test = ThematicEvents(thematicEvent)
+    if (overallState.size == 3) fulles = overallState[2]
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(128.dp))
         Box(modifier = Modifier
@@ -128,7 +131,7 @@ fun CenterArea(thematicEvent:String, plantState:String) {
                     .size(360.dp)
                     .align(Alignment.Center)
             )
-            if (plant.size == 2) {
+            if (overallState.size == 3) {
                 Image(
                     painter = fulles,
                     "",
@@ -287,6 +290,44 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
 }
 
 @Composable
+fun JoinedEvents(state:String): List<Painter> {
+    // AS IMPLEMENTED IN THE BACKEND, PLANT EVENTS AND THEMATIC EVENTS ARE EXCLUSIVE OF EACH OTHER
+    when (state) {
+        "C6H6" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_c6h6_tiges), painterResource(id = R.drawable.planta_c6h6_fulles)) }
+        "Cl2" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_cl2_tiges), painterResource(id = R.drawable.planta_cl2_fulles)) }
+        "CO" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_co_tiges), painterResource(id = R.drawable.planta_co_fulles)) }
+        "H2S" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_h2s_tiges)) }
+        "HCl" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_hcl_tiges), painterResource(id = R.drawable.planta_hcl_fulles)) }
+        "HCNM" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_hcnm_tiges), painterResource(id = R.drawable.planta_hcnm_fulles)) }
+        "HCT" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_hct_tiges), painterResource(id = R.drawable.planta_hct_fulles)) }
+        "Hg" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_hg_tiges), painterResource(id = R.drawable.planta_hg_fulles)) }
+        "NO2" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_no2_tiges)) }
+        "NO" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_no_tiges), painterResource(id = R.drawable.planta_no_fulles)) }
+        "NOX" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_nox_tiges), painterResource(id = R.drawable.planta_nox_fulles)) }
+        "O3" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_o3_tiges), painterResource(id = R.drawable.planta_o3_fulles)) }
+        "PM1" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_pm1_tiges), painterResource(id = R.drawable.planta_pm1_fulles)) }
+        "PM10" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_pm10_tiges), painterResource(id = R.drawable.planta_pm10_fulles)) }
+        "PM2_5" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_pm25_tiges), painterResource(id = R.drawable.planta_pm25_fulles)) }
+        "PS" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_ps_tiges), painterResource(id = R.drawable.planta_ps_fulles)) }
+        "SO2" -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_so2_tiges), painterResource(id = R.drawable.planta_so2_fulles)) }
+        "NEW_YEAR" -> { return listOf(painterResource(id = R.drawable.test_cap_any), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "CHINESE_NEW_YEAR" -> { return listOf(painterResource(id = R.drawable.test_cap_any_xines), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "MARDI_GRAS" -> { return listOf(painterResource(id = R.drawable.test_mardi_gras), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "SAINT_PATRICK" -> { return listOf(painterResource(id = R.drawable.test_sant_patrici), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "SPRING_EQUINOX" -> { return listOf(painterResource(id = R.drawable.test_equinocci_primavera), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "EASTER" -> { return listOf(painterResource(id = R.drawable.test_pasqua), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "SUMMER_SOLSTICE" -> { return listOf(painterResource(id = R.drawable.test_solstici_estiu), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "SANT_JOAN" -> { return listOf(painterResource(id = R.drawable.test_sant_joan), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "AUTUMN_EQUINOX" -> { return listOf(painterResource(id = R.drawable.test_equinocci_tardor), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "HALLOWEEN" -> { return listOf(painterResource(id = R.drawable.test_halloween), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "WINTER_SOLSTICE" -> { return listOf(painterResource(id = R.drawable.test_solstici_hivern), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "CHRISTMAS" -> { return listOf(painterResource(id = R.drawable.test_nadal), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        "BIRTHDAY" -> { return listOf(painterResource(id = R.drawable.test_aniversari), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+        else -> { return listOf(painterResource(id = R.drawable.test_basic), painterResource(id = R.drawable.planta_basic_tiges), painterResource(id = R.drawable.planta_basic_fulles)) }
+    }
+}
+
+@Composable
 fun PlantEvents(state:String): List<Painter> {
     when (state) {
         "C6H6" -> { return listOf(painterResource(id = R.drawable.planta_c6h6_tiges), painterResource(id = R.drawable.planta_c6h6_fulles)) }
@@ -314,31 +355,31 @@ fun PlantEvents(state:String): List<Painter> {
 fun ThematicEvents(event:String): Painter {
     when (event) {
         //31.12 & 01.01
-        "CapAny" -> { return painterResource(id = R.drawable.test_cap_any) }
+        "NEW_YEAR" -> { return painterResource(id = R.drawable.test_cap_any) }
         //Dia canviant !!! (22.01 - 01.02)
-        "CapAnyXines" -> { return painterResource(id = R.drawable.test_cap_any_xines) }
+        "CHINESE_NEW_YEAR" -> { return painterResource(id = R.drawable.test_cap_any_xines) }
         //Dia canviant !!! (01.02 - 10.03)
-        "MardiGras" -> { return painterResource(id = R.drawable.test_mardi_gras) }
+        "MARDI_GRAS" -> { return painterResource(id = R.drawable.test_mardi_gras) }
         //17.03
-        "SantPatrici" -> { return painterResource(id = R.drawable.test_sant_patrici) }
+        "SAINT_PATRICK" -> { return painterResource(id = R.drawable.test_sant_patrici) }
         //Dia canviant !!! (19.03 - 21.03)
-        "EquinocciPrimavera" -> { return painterResource(id = R.drawable.test_equinocci_primavera) }
+        "SPRING_EQUINOX" -> { return painterResource(id = R.drawable.test_equinocci_primavera) }
         //Dia canviant !!! (22.03 - 25.04)
-        "Pasqua" -> { return painterResource(id = R.drawable.test_pasqua) }
+        "EASTER" -> { return painterResource(id = R.drawable.test_pasqua) }
         //Dia canviant !!! (20.06 - 22.06)
-        "SolsticiEstiu" -> { return painterResource(id = R.drawable.test_solstici_estiu) }
+        "SUMMER_SOLSTICE" -> { return painterResource(id = R.drawable.test_solstici_estiu) }
         //24.06
-        "SantJoan" -> { return painterResource(id = R.drawable.test_sant_joan) }
+        "SANT_JOAN" -> { return painterResource(id = R.drawable.test_sant_joan) }
         //Dia canviant !!! (21.09 - 24.09)
-        "EquinocciTardor" -> { return painterResource(id = R.drawable.test_equinocci_tardor) }
+        "AUTUMN_EQUINOX" -> { return painterResource(id = R.drawable.test_equinocci_tardor) }
         //31.10
-        "Halloween" -> { return painterResource(id = R.drawable.test_halloween) }
+        "HALLOWEEN" -> { return painterResource(id = R.drawable.test_halloween) }
         //Dia canviant !!! (20.12 - 23.12)
-        "SolsticiHivern" -> { return painterResource(id = R.drawable.test_solstici_hivern) }
+        "WINTER_SOLSTICE" -> { return painterResource(id = R.drawable.test_solstici_hivern) }
         //25.12
-        "Nadal" -> { return painterResource(id = R.drawable.test_nadal) }
+        "CHRISTMAS" -> { return painterResource(id = R.drawable.test_nadal) }
         //Aniversari de l'usuari
-        "Aniversari" -> { return painterResource(id = R.drawable.test_aniversari) }
+        "BIRTHDAY" -> { return painterResource(id = R.drawable.test_aniversari) }
         else -> { return painterResource(id = R.drawable.test_basic) }
     }
 }
