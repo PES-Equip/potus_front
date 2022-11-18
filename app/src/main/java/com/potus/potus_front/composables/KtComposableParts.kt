@@ -1,13 +1,21 @@
 package com.potus.potus_front.composables
 
-import android.widget.Toast
+import android.graphics.Typeface.BOLD
+import android.graphics.fonts.FontStyle
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,13 +29,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.R
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
+import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -102,6 +114,40 @@ fun TopBar(waterLevel: Int, collection: Int, username: String, addedWater: Int, 
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun GasesWindow() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2.5", "PM10", "PS", "SO2")
+        var toggled by remember { mutableStateOf(false) }
+
+        Spacer(modifier = Modifier.height(32.dp))
+        LazyVerticalGrid(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .width(360.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(color = Daffodil)
+                .toggleable(value = toggled, onValueChange = { toggled = it })
+                .animateContentSize(),
+            cells = GridCells.Fixed(4)) {
+                var numberOfCells = 4
+                if (toggled) numberOfCells = gases.size
+                items(count = numberOfCells) {
+                Row(
+                    modifier = Modifier
+                        .width(16.dp)
+                        .height(64.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(text = gases[it], fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
+                }
+            }
+        }
+    }
+}
+
 @Composable
 //fun CenterArea(thematicEvent:String, plantState:String) {
 fun CenterArea(plantState:String) {
@@ -113,7 +159,7 @@ fun CenterArea(plantState:String) {
     var fulles = painterResource(id = R.drawable.planta_basic_fulles)
     if (overallState.size == 3) fulles = overallState[2]
     Column(modifier = Modifier.fillMaxWidth()) {
-        Spacer(modifier = Modifier.height(128.dp))
+        //Spacer(modifier = Modifier.height(16.dp))
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally))
         {

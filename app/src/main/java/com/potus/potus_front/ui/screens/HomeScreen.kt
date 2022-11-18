@@ -15,6 +15,7 @@ import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.API.requests.InformLocationRequest
 import com.potus.potus_front.composables.BottomBar
 import com.potus.potus_front.composables.CenterArea
+import com.potus.potus_front.composables.GasesWindow
 import com.potus.potus_front.composables.TopBar
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
@@ -65,6 +66,7 @@ fun HomeScreen() {
             addedWater = addedWater,
             addedLeaves = addedLeaves
         )
+        GasesWindow()
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
             //CenterArea(thematicEvent, plantState)
             CenterArea(plantState)
