@@ -98,7 +98,7 @@ fun GasesWindow() {
                 .animateContentSize(),
             cells = GridCells.Fixed(4)) {
                 var numberOfCells = 4
-                if (toggled) numberOfCells = 17
+                if (toggled) numberOfCells = gases.size
                 items(count = numberOfCells) {
                 Row(
                     modifier = Modifier
