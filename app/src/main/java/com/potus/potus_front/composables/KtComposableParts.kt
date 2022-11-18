@@ -338,10 +338,11 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
 
 @Composable
 fun GardenBottomBar() {
-    val heightBottomBar = 192.dp
-    val heightCircle = 125.dp
+    val heightBottomBar = 96.dp
+    val heightCircle = 250.dp
     val heightTotal = heightBottomBar+heightCircle/2
 
+    Spacer(modifier = Modifier.height(612.dp))
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(heightTotal)) {
@@ -351,13 +352,7 @@ fun GardenBottomBar() {
                 .fillMaxWidth()
                 .height(heightBottomBar)
                 .background(BraveGreen)
-        ) {
-            Surface (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(heightTotal)
-            ) {}
-        }
+        ) { }
         Surface(
             color = BraveGreen,
             modifier = Modifier
@@ -367,7 +362,7 @@ fun GardenBottomBar() {
                 .clip(CircleShape)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.icona_jardi),
+                painter = painterResource(id = R.drawable.basic),
                 "",
                 modifier = Modifier
                     .padding(8.dp)
