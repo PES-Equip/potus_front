@@ -1,5 +1,7 @@
 package com.potus.potus_front.composables
 
+import android.graphics.Typeface.BOLD
+import android.graphics.fonts.FontStyle
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
@@ -17,7 +19,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
@@ -102,7 +107,7 @@ fun GasesWindow() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = gases[it], color = BraveGreen)
+                    Text(text = gases[it], fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
                 }
             }
         }
