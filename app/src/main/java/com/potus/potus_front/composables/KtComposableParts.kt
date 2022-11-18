@@ -1,6 +1,7 @@
 package com.potus.potus_front.composables
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -78,36 +79,30 @@ fun TopBar(waterLevel: Int, collection: Int, username: String) {
 @Composable
 fun GasesWindow() {
     Column(modifier = Modifier.fillMaxWidth()) {
+        var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2.5", "PM10", "PS", "SO2")
         var toggled by remember { mutableStateOf(false) }
 
         Spacer(modifier = Modifier.height(32.dp))
-        Box(modifier = Modifier
-            .align(Alignment.CenterHorizontally)
-            .width(360.dp)
-            .height(128.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(color = Daffodil)
-            .toggleable(value = toggled, onValueChange = { toggled = it })
-        ) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                text = toggled.toString()
-            )
-            LazyVerticalGrid(
-                modifier = Modifier.align(Alignment.Center),
-                cells = GridCells.Fixed(4)) {
-                items(8) {
-                    Row(
-                        modifier = Modifier
-                            .width(16.dp)
-                            .height(64.dp)
-                            .border(1.dp, BraveGreen),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(text = "GAS", color = BraveGreen)
-                    }
+        LazyVerticalGrid(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .width(360.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(color = Daffodil)
+                .toggleable(value = toggled, onValueChange = { toggled = it })
+                .animateContentSize(),
+            cells = GridCells.Fixed(4)) {
+                var numberOfCells = 4
+                if (toggled) numberOfCells = 17
+                items(count = numberOfCells) {
+                Row(
+                    modifier = Modifier
+                        .width(16.dp)
+                        .height(64.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(text = gases[it], color = BraveGreen)
                 }
             }
         }
