@@ -34,7 +34,7 @@ fun ApplicationSwitcher() {
 
     when(tokenState.getState()) {
         "NEW" -> RegisterScreen()
-        "CONFIRMED" -> HomeScreen()
+        "CONFIRMED" -> SelectGardenScreen() //HomeScreen()
     }
 
 }

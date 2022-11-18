@@ -337,6 +337,49 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
 }
 
 @Composable
+fun GardenBottomBar() {
+    val heightBottomBar = 192.dp
+    val heightCircle = 125.dp
+    val heightTotal = heightBottomBar+heightCircle/2
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(heightTotal)) {
+        BoxWithConstraints(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(heightBottomBar)
+                .background(BraveGreen)
+        ) {
+            Surface (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(heightTotal)
+            ) {}
+        }
+        Surface(
+            color = BraveGreen,
+            modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle / 2))
+                .align(Alignment.TopCenter)
+                .size(heightCircle)
+                .clip(CircleShape)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.icona_jardi),
+                "",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .size(heightCircle)
+                    .align(Alignment.Center)
+                    .clip(CircleShape)
+                    .background(color = SoothingGreen))
+        }
+    }
+}
+
+@Composable
 fun JoinedEvents(state:String): List<Painter> {
     // AS IMPLEMENTED IN THE BACKEND, PLANT EVENTS AND THEMATIC EVENTS ARE EXCLUSIVE OF EACH OTHER
     when (state) {
