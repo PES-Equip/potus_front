@@ -32,8 +32,10 @@ fun HomeScreen() {
     val user = TokenState.current.user!!
     var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
     var collection by remember { mutableStateOf(user.currency) }
+    var addedWater by remember { mutableStateOf(0) }
+    var addedLeaves by remember { mutableStateOf(0) }
     var plantState by remember { mutableStateOf("DEFAULT") }
-    var thematicEvent by remember { mutableStateOf("DEFAULT") }
+    //var thematicEvent by remember { mutableStateOf("DEFAULT") }
 
     val tokenState = TokenState.current
     LaunchedEffect(Dispatchers.IO) {
@@ -56,22 +58,28 @@ fun HomeScreen() {
         }
     }
 
-    Column(Modifier.background(color = SoothingGreen)){
-        TopBar(waterLevel = waterLevelState, collection = collection, username = user.username)
+    Column(Modifier.background(color = SoothingGreen)) {
+        TopBar(
+            waterLevel = waterLevelState,
+            collection = collection,
+            username = user.username,
+            addedWater = addedWater,
+            addedLeaves = addedLeaves
+        )
         GasesWindow()
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
-            CenterArea(thematicEvent, plantState)
+            //CenterArea(thematicEvent, plantState)
+            CenterArea(plantState)
         }
         BottomBar(
-            updateWaterLevel = {
-                    newWaterLevel ->
+            updateWaterLevel = { newWaterLevel ->
+                addedWater = newWaterLevel - waterLevelState
                 waterLevelState = newWaterLevel
             },
-            updateLeaveRecollection = {
-                    collectedLeaves ->
+            updateLeaveRecollection = { collectedLeaves ->
+                addedLeaves = collectedLeaves - collection
                 collection = collectedLeaves
-            }
-        )
+            })
     }
 
     if (openDialog.value) {

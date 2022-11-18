@@ -3,6 +3,7 @@ package com.potus.potus_front.API
 import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.API.requests.InformLocationRequest
 import com.potus.potus_front.API.requests.RegisterUserRequest
+import com.potus.potus_front.API.response.ActionResponse
 import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
 import retrofit2.Response
