@@ -2,6 +2,7 @@ package com.potus.potus_front.composables
 
 import android.graphics.Typeface.BOLD
 import android.graphics.fonts.FontStyle
+import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
