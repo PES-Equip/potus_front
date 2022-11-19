@@ -21,7 +21,9 @@ Completed Sprint 2 tasks:
 Underway Sprint 2 tasks:
 
 - Show profile information [#63, MV]
+- Frontend - Show garden information [#116, BF]
 - Frontend - Garden interface [#117, BF]
+- Frontend - Show create garden interface [#122, BF]
 - Popup to show yesterday's gases [#180, BF]
 - Improve Potus basics [#181, MH]
 - Revive Potus [#184, MH]
