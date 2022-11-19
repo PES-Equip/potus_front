@@ -41,26 +41,7 @@ fun CreateGardenScreen() {
 /*
     val tokenState = TokenState.current
     val user = tokenState.user!!
-    var newGarden = remember { mutableStateOf(Triple("NEW GARDEN", 0, "")) }
-
-    LaunchedEffect(Dispatchers.IO) {
-    val newGardenRequest = CreateGardenRequest(name = "NEW GARDEN")
-        val call = getRetrofit()
-            .create(APIService::class.java)
-            .createGarden(
-                "Bearer " + tokenState.token,
-                "gardens",
-                newGardenRequest
-            )
-
-        if (call.isSuccessful) {
-            //call.body()?.let { tokenState.allGardens(it.garden) }
-        } else {
-            //ERROR MESSAGES, IF ANY
-            error.value = call.code()
-            openDialog.value = true
-        }
-    }*/
+    var newGarden = remember { mutableStateOf(Triple("NEW GARDEN", 0, "")) } */
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
@@ -71,8 +52,29 @@ fun CreateGardenScreen() {
             addedLeaves = 0
         )
         Surface(color = Daffodil, modifier = Modifier.weight(1f)) {
-            //
+            var newGardenName = remember { mutableStateOf("") }
+
+            //INPUT
+
+            /* LaunchedEffect(Dispatchers.IO) {
+                val newGardenRequest = CreateGardenRequest(name = "NEW GARDEN")
+                    val call = getRetrofit()
+                        .create(APIService::class.java)
+                        .createGarden(
+                            "Bearer " + tokenState.token,
+                            "gardens",
+                            newGardenRequest
+                        )
+
+                    if (call.isSuccessful) {
+                        //call.body()?.let { tokenState.allGardens(it.garden) }
+                    } else {
+                        //ERROR MESSAGES, IF ANY
+                        error.value = call.code()
+                        openDialog.value = true
+                    }
+                }*/
         }
-        GardenBottomBar(painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_nou_jardi))
+        GardenBottomBar(painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_seleccio_jardi))
     }
 }
