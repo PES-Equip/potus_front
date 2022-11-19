@@ -1,9 +1,11 @@
 package com.potus.potus_front.API
 
 import com.potus.potus_front.API.requests.ActionRequest
+import com.potus.potus_front.API.requests.CreateGardenRequest
 import com.potus.potus_front.API.requests.InformLocationRequest
 import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.API.response.GardenListResponse
+import com.potus.potus_front.API.response.NewGardenResponse
 import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
 import retrofit2.Response
@@ -31,6 +33,9 @@ interface APIService {
 
     @POST
     suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>
+
+    @POST
+    suspend fun createGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: CreateGardenRequest): Response<NewGardenResponse>
 }
 
 fun getRetrofit(): Retrofit {
