@@ -8,10 +8,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
-import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.API.requests.InformLocationRequest
 import com.potus.potus_front.composables.BottomBar
 import com.potus.potus_front.composables.CenterArea
@@ -19,9 +17,7 @@ import com.potus.potus_front.composables.GasesWindow
 import com.potus.potus_front.composables.TopBar
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 @Composable

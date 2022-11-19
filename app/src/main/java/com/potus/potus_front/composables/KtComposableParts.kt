@@ -327,6 +327,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                 painter = painterResource(id = R.drawable.icona_jardi),
                 "",
                 modifier = Modifier
+                    .clickable(onClick = { /* SWITCHER */ })
                     .padding(8.dp)
                     .size(heightCircle)
                     .align(Alignment.Center)
@@ -338,40 +339,65 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
 
 @Composable
 fun GardenBottomBar() {
-    val heightBottomBar = 96.dp
-    val heightCircle = 250.dp
+    val heightBottomBar = 192.dp
+    val heightCircle = 125.dp
     val heightTotal = heightBottomBar+heightCircle/2
+    val heightButton = 125.dp
+    val widthButton = 140.dp
 
-    Spacer(modifier = Modifier.height(612.dp))
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(heightTotal)) {
-        BoxWithConstraints(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .height(heightBottomBar)
-                .background(BraveGreen)
-        ) { }
-        Surface(
-            color = BraveGreen,
-            modifier = Modifier
-                .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle / 2))
-                .align(Alignment.TopCenter)
-                .size(heightCircle)
-                .clip(CircleShape)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.basic),
-                "",
+            BoxWithConstraints(
                 modifier = Modifier
-                    .padding(8.dp)
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(heightBottomBar)
+                    .background(BraveGreen)
+            ) {
+                Row (
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Surface(
+                        color = SoothingGreen,
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .align(Alignment.CenterVertically)
+                            .width(widthButton)
+                            .height(heightButton)
+                            .clip(RoundedCornerShape(10.dp))
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.icona_nou_jardi),
+                            "",
+                            modifier = Modifier
+                                .clickable(onClick = { /* SWITCHER */ })
+                                .padding(8.dp)
+                                .size(heightButton)
+                                .align(Alignment.CenterVertically)
+                        )
+                    }
+                }
+            }
+            Surface(
+                color = BraveGreen,
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle / 2))
+                    .align(Alignment.TopCenter)
                     .size(heightCircle)
-                    .align(Alignment.Center)
                     .clip(CircleShape)
-                    .background(color = SoothingGreen))
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.basic),
+                    "",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(heightCircle)
+                        .align(Alignment.Center)
+                        .clip(CircleShape)
+                        .background(color = SoothingGreen))
+            }
         }
-    }
 }
 
 @Composable

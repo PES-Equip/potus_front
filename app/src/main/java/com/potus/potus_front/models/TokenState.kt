@@ -1,10 +1,8 @@
 package com.potus.potus_front.models
 
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
+import com.potus.potus_front.API.response.GardenListResponse
 import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
 
@@ -14,7 +12,8 @@ class TokenStateViewModel: ViewModel(){
     var isBusy by mutableStateOf(false)
     var token: String? by mutableStateOf(null)
     var user: UserResponse? by mutableStateOf(null)
-    var location: Pair<Double,Double> by mutableStateOf(value=Pair(0.0,0.0))
+    var location: Pair<Double,Double> by mutableStateOf(value = Pair(0.0,0.0))
+    var gardens: List<Triple<String, Int, String>> by mutableStateOf(value = listOf(Triple("", 0,"")))
 
     fun getState(): String {
         if(user == null)
@@ -49,6 +48,10 @@ class TokenStateViewModel: ViewModel(){
 
     fun myLocation(location: Pair<Double,Double>){
         this.location = location
+    }
+
+    fun allGardens(gardens: List<Triple<String, Int, String>>){
+        this.gardens = gardens
     }
 }
 
