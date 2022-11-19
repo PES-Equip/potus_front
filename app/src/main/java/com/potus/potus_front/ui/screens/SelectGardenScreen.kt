@@ -92,7 +92,6 @@ fun GardenItem(number: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
             .padding(8.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(SoothingGreen)

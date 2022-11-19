@@ -93,7 +93,6 @@ fun ColumnItem(number: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
             .padding(8.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(SoothingGreen)
@@ -102,9 +101,9 @@ fun ColumnItem(number: Int) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (toggled) Text(text = "NO GARDENS", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
+        if (!toggled) Text(text = "NO GARDENS", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
         else {
-            Text(text = "NO GARDENS\n\n Members: 0 \n\n About: You dumb fuck.", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
+            Text(text = "NO GARDENS\n\n Members: 0\n\nAbout: You dumb fuck.", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
             Surface(
                 color = BraveGreen,
                 modifier = Modifier
