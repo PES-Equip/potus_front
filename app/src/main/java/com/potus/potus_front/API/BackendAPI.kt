@@ -2,6 +2,7 @@ package com.potus.potus_front.API
 
 import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.API.requests.InformLocationRequest
+import com.potus.potus_front.API.requests.PotusReviveRequest
 import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.API.response.ActionResponse
 import com.potus.potus_front.API.response.PotusResponse
@@ -28,6 +29,9 @@ interface APIService {
 
     @POST
     suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>
+
+    @POST
+    suspend fun revivePotus(@Header("Authorization") token:String, @Url url:String, @Body requestModel: PotusReviveRequest): Response<PotusResponse>
 }
 
 fun getRetrofit(): Retrofit {

@@ -34,8 +34,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import timber.log.Timber
-import java.util.Collections.list
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

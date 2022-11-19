@@ -1,23 +1,34 @@
 package com.potus.potus_front.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.potus.potus_front.API.APIService
+import com.potus.potus_front.API.getRetrofit
+import com.potus.potus_front.API.requests.PotusReviveRequest
+import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.SoothingGreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 @Preview
 @Composable
@@ -26,8 +37,13 @@ fun RevivePopup() {
         .fillMaxSize(),
         color = BraveGreen
     ) {
+        val tokenState = TokenState.current
         val sidePadding = 60.dp
         val verticalPadding = 200.dp
+        val textState = remember { mutableStateOf(TextFieldValue()) }
+        var displayErrorText = false
+        var errorText = ""
+
         Surface(modifier = Modifier
             .padding(
                 start = sidePadding,
@@ -40,7 +56,9 @@ fun RevivePopup() {
         )
         {
             Column(modifier = Modifier.fillMaxWidth()) {
+
                 Spacer(modifier = Modifier.weight(0.2f))
+
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = "Your Potus\nDied",
@@ -50,7 +68,9 @@ fun RevivePopup() {
                     color = Color.DarkGray,
                     textAlign = TextAlign.Center
                     )
+
                 Spacer(modifier = Modifier.weight(0.15f))
+
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                         .padding(all = 16.dp),
@@ -60,15 +80,61 @@ fun RevivePopup() {
                     fontSize = 16.sp,
                     color = Color.DarkGray,
                     textAlign = TextAlign.Center)
-                Spacer(modifier = Modifier.weight(0.4f))
+
+                Spacer(modifier = Modifier.weight(0.1f))
+
+                OutlinedTextField(
+                    value = textState.value,
+                    onValueChange = { textState.value = it },
+                    label = { Text(text = "New name") },
+                    maxLines = 1,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    shape = MaterialTheme.shapes.medium
+                )
+
+                Spacer(modifier = Modifier.weight(0.1f))
+
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        CoroutineScope(Dispatchers.IO).launch {
+
+                            val newRevivePotusRequest = PotusReviveRequest(textState.value.toString())
+                            val call = getRetrofit()
+                                .create(APIService::class.java)
+                                .revivePotus(
+                                    "Bearer " + tokenState.token,
+                                    "user/profile/potus",
+                                    newRevivePotusRequest
+                                )
+                            val body = call.body()
+                            val Ebody = call.errorBody()
+
+                            if (call.isSuccessful && body != null) {
+                                tokenState.user?.let { tokenState.user!!.potus = body }
+                            } else {
+                                if (Ebody != null) {
+                                    var jObjErr = JSONObject(Ebody.string())
+                                    errorText = jObjErr.getString("message")
+                                    displayErrorText = true
+                                }
+                            }
+                        }
+                        // navigate
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
                 ) {
                     Text(text = "Revive your Son")
                 }
+
                 Spacer(modifier = Modifier.weight(0.1f))
             }
+        }
+        if(displayErrorText) {
+            Toast.makeText(LocalContext.current, errorText, Toast.LENGTH_SHORT).show()
+            displayErrorText = false
         }
     }
 }
