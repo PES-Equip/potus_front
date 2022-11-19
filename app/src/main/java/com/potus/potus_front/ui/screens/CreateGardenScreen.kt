@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -33,19 +32,21 @@ import kotlinx.coroutines.Dispatchers
 
 @Preview
 @Composable
-fun SelectGardenScreen() {
+fun CreateGardenScreen() {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
-    val tokenState = TokenState.current
-    val user = tokenState.user!!
+    //val tokenState = TokenState.current
+    //val user = tokenState.user!!
 
-    LaunchedEffect(Dispatchers.IO) {
+    /*LaunchedEffect(Dispatchers.IO) {
+    val newUpdateStateRequest = InformLocationRequest(latitude = tokenState.location.first, length = tokenState.location.second)
         val call = getRetrofit()
             .create(APIService::class.java)
             .getGardenList(
                 "Bearer " + tokenState.token,
                 "gardens"
+             newUpdateStateRequest
             )
 
         if (call.isSuccessful) {
@@ -55,38 +56,38 @@ fun SelectGardenScreen() {
             error.value = call.code()
             openDialog.value = true
         }
-    }
+    }*/
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
-            waterLevel = user.potus.waterLevel,
-            collection = user.currency,
-            username = user.username,
+            waterLevel = 100, //user.potus.waterLevel,
+            collection = 100, //user.currency,
+            username = "JoeBiden", //user.username,
             addedWater = 0,
             addedLeaves = 0
         )
         Surface(color = Daffodil, modifier = Modifier.weight(1f)) {
-            GardenList(tokenState.gardens)
+            List(listOf(Triple("NO GARDENS", 0, "You dumb fuck.")))
         }
         GardenBottomBar(painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_nou_jardi))
     }
 }
 
 @Composable
-fun GardenList (gardens: List<Triple<String, Int, String>>) {
+fun List (gardens: List<Triple<String, Int, String>>) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(gardens.size) {
-            arrayItem -> GardenItem(number = arrayItem)
+                arrayItem -> ColumnItem(number = arrayItem)
         }
     }
 }
 
 @Composable
-fun GardenItem(number: Int) {
+fun ColumnItem(number: Int) {
     var toggled by remember { mutableStateOf(false) }
 
     Column(
@@ -101,9 +102,9 @@ fun GardenItem(number: Int) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (!toggled) Text(text = TokenState.current.gardens[number].first, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
+        if (toggled) Text(text = "NO GARDENS", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
         else {
-            Text(text = TokenState.current.gardens[number].first + "\n\n Members: " + TokenState.current.gardens[number].second.toString() + "\n\n About: " + TokenState.current.gardens[number].third, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
+            Text(text = "NO GARDENS\n\n Members: 0 \n\n About: You dumb fuck.", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
             Surface(
                 color = BraveGreen,
                 modifier = Modifier
@@ -112,7 +113,7 @@ fun GardenItem(number: Int) {
                     .width(64.dp)
                     .height(32.dp)
                     .clip(RoundedCornerShape(10.dp))
-            ) {Text(text = "Join!", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Daffodil)}
+            ) { Text(text = "Join!", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Daffodil) }
         }
     }
 }

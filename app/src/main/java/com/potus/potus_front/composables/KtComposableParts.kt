@@ -338,12 +338,12 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
 }
 
 @Composable
-fun GardenBottomBar() {
-    val heightBottomBar = 192.dp
-    val heightCircle = 125.dp
+fun GardenBottomBar(centerImage: Painter, rightImage: Painter) {
+    val heightBottomBar = 96.dp
+    val heightCircle = 160.dp
     val heightTotal = heightBottomBar+heightCircle/2
-    val heightButton = 125.dp
-    val widthButton = 140.dp
+    val heightButton = 80.dp
+    val widthButton = 96.dp
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -356,6 +356,9 @@ fun GardenBottomBar() {
                     .background(BraveGreen)
             ) {
                 Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(heightTotal)
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     Surface(
@@ -368,7 +371,7 @@ fun GardenBottomBar() {
                             .clip(RoundedCornerShape(10.dp))
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.icona_nou_jardi),
+                            painter = rightImage,
                             "",
                             modifier = Modifier
                                 .clickable(onClick = { /* SWITCHER */ })
@@ -388,11 +391,11 @@ fun GardenBottomBar() {
                     .clip(CircleShape)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.basic),
+                    painter = centerImage,
                     "",
                     modifier = Modifier
                         .padding(8.dp)
-                        .size(heightCircle)
+                        .size(heightCircle - 32.dp)
                         .align(Alignment.Center)
                         .clip(CircleShape)
                         .background(color = SoothingGreen))

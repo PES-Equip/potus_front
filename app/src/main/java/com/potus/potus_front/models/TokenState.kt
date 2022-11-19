@@ -13,7 +13,7 @@ class TokenStateViewModel: ViewModel(){
     var token: String? by mutableStateOf(null)
     var user: UserResponse? by mutableStateOf(null)
     var location: Pair<Double,Double> by mutableStateOf(value = Pair(0.0,0.0))
-    var gardens: List<Triple<String, Int, String>> by mutableStateOf(value = listOf(Triple("", 0,"")))
+    var gardens: List<Triple<String, Int, String>> by mutableStateOf(value = listOf(Triple("No Gardens available", 0, "There are no Gardens available.")))
 
     fun getState(): String {
         if(user == null)
