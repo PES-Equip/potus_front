@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.RegisterUserRequest
@@ -36,7 +37,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Preview
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
     val tokenState = TokenState.current
     val openDialog = remember { mutableStateOf(false)  }
@@ -96,6 +97,7 @@ fun RegisterScreen() {
 
                         if (call.isSuccessful) {
                             tokenState.signUser(call.body())
+                            navController.navigate("home_screen")
                         } else {
                             openDialog.value =true
                             //Timber.d("BAD")

@@ -61,16 +61,7 @@ fun AuthScreen(navController: NavController) {
                 } else {
                     if(account.idToken != null) {
                         tokenState.signToken(account.idToken!!)
-                        navController.navigate("register_screen")
-
-                        /*
-                        when(tokenState.getState()) {
-                            "NEW" -> navController.navigate("register_screen")
-                            "CONFIRMED" -> navController.navigate("profile_screen")
-                        }
-
-                         */
-
+                        navController.navigate("switcher_screen")
                     }
                     else{
                         text = "Google sign in failed"

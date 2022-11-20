@@ -32,6 +32,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 fun Navigation(){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = AuthScreen.route){
+        composable(SwitcherScreen.route){
+            ApplicationSwitcher(navController)
+        }
         composable(Pantalla1.route){
             Pantalla1()
         }
@@ -39,7 +42,7 @@ fun Navigation(){
             HomeScreen()
         }
         composable(RegisterScreen.route){
-            RegisterScreen()
+            RegisterScreen(navController)
         }
         composable(AuthScreen.route){
             AuthScreen(navController)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.NavController
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.models.TokenState
@@ -19,7 +20,7 @@ import timber.log.Timber
 @ExperimentalCoroutinesApi
 @ExperimentalMaterialApi
 @Composable
-fun ApplicationSwitcher() {
+fun ApplicationSwitcher(navController: NavController) {
     val tokenState = TokenState.current
 
     if(tokenState.isLoggedIn){
@@ -33,12 +34,12 @@ fun ApplicationSwitcher() {
             }
         }
     } else {
-        //AuthScreen()
+        navController.navigate("auth_screen")
     }
 
     when(tokenState.getState()) {
-        "NEW" -> RegisterScreen()
-        "CONFIRMED" -> ProfileScreen()
+        "NEW" -> navController.navigate("register_screen")
+        "CONFIRMED" -> navController.navigate("home_screen")
     }
 
 }
