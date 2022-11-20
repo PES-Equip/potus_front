@@ -64,9 +64,9 @@ fun GardenScreen() {
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
-            waterLevel = 100, //user.potus.waterLevel,
-            collection = 100, //user.currency,
-            username = "JoeBiden", //user.username,
+            waterLevel = user.potus.waterLevel,
+            collection = user.currency,
+            username = user.username,
             addedWater = 0,
             addedLeaves = 0
         )
