@@ -48,7 +48,7 @@ fun Navigation(){
             AuthScreen(navController)
         }
         composable(route= ProfileScreen.route){
-            ProfileScreen()
+            ProfileScreen(navController)
         }
         composable(route = MainScreen.route){
             MainScreen(navController = navController)
