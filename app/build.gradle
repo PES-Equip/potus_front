@@ -67,6 +67,8 @@ dependencies {
     //google oauth
     implementation "com.google.android.gms:play-services-auth:20.3.0"
 
+    //android localization
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     //HTTP REQUESTS
     implementation "com.squareup.picasso:picasso:2.71828"

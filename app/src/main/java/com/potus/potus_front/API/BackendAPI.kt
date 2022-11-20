@@ -2,7 +2,10 @@ package com.potus.potus_front.API
 
 import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.API.requests.ChangeUsernameRequest
+import com.potus.potus_front.API.requests.InformLocationRequest
 import com.potus.potus_front.API.requests.RegisterUserRequest
+import com.potus.potus_front.API.response.ActionResponse
+import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -26,10 +29,14 @@ interface APIService {
 
     @POST
     suspend fun changeUsername(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ChangeUsernameRequest): Response<UserResponse>
+
+    @POST
+    suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>
 }
 
 fun getRetrofit(): Retrofit {
     return Retrofit.Builder()
+        //.baseUrl("https://potusback-production.up.railway.app/api/")
         .baseUrl("http://10.0.2.2:8080/api/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
