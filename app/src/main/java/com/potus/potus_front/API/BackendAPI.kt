@@ -4,6 +4,7 @@ import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.API.requests.InformLocationRequest
 import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.API.response.ActionResponse
+import com.potus.potus_front.API.response.HistoryResponse
 import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
 import retrofit2.Response
@@ -19,6 +20,9 @@ interface APIService {
 
     @GET
     suspend fun getUser(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
+
+    @GET
+    suspend fun getHistory(@Header("Authorization") token:String, @Url url:String): Response<HistoryResponse>
 
     @POST
     suspend fun registerUser(@Header("Authorization") token:String, @Url url:String, @Body requestModel: RegisterUserRequest): Response<UserResponse>

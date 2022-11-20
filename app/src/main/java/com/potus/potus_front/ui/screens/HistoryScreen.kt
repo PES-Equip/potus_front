@@ -12,7 +12,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalOf
@@ -39,8 +38,8 @@ import kotlinx.coroutines.launch
 @Preview
 @Composable
 fun HistoryScreen() {
-    /*val openDialog = remember { mutableStateOf(false)  }
-    val error = remember { mutableStateOf(200)  }
+    /*val openDialog = remember { mutableStateOf(false) }
+    val error = remember { mutableStateOf("") }
 
     val user = TokenState.current.user!!
     var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
@@ -52,21 +51,19 @@ fun HistoryScreen() {
 
     val tokenState = TokenState.current
     LaunchedEffect(Dispatchers.IO) {
-        val newUpdateStateRequest = InformLocationRequest(latitude = tokenState.location.first, length = tokenState.location.second)
         val call = getRetrofit()
             .create(APIService::class.java)
-            .informLocation(
+            .getHistory(
                 "Bearer " + tokenState.token,
-                "potus/events",
-                newUpdateStateRequest
+                "user/profile/history"
             )
 
         if (call.isSuccessful) {
-            tokenState.myPotus(call.body())
-            tokenState.user?.potus?.let { plantState = it.state }
+            entries = call.body()
         } else {
             //ERROR MESSAGES, IF ANY
-            error.value = call.code()
+            var jObjErr = JSONObject(call.errorBody().string())
+            error.value = jObjErr.getString("message")
             openDialog.value = true
         }
     }
@@ -87,27 +84,8 @@ fun HistoryScreen() {
 
 
     /*if (openDialog.value) {
-
-        AlertDialog(
-            onDismissRequest = {
-                // Dismiss the dialog when the user clicks outside the dialog or on the back
-                // button. If you want to disable that functionality, simply use an empty
-                // onCloseRequest.
-                openDialog.value = false
-            },
-            text = {
-                Text(
-                    text = "ERROR " + error.value + "! Could not establish a working connection")
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        openDialog.value = false
-                    }) {
-                    Text("Ok")
-                }
-            }
-        )
+        Toast.makeText(LocalContext.current, error.value, Toast.LENGTH_SHORT).show()
+        openDialog. value = false
     }*/
 }
 
