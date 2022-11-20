@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -22,15 +22,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
-import com.potus.potus_front.API.requests.InformLocationRequest
-import com.potus.potus_front.API.requests.RegisterUserRequest
+import com.potus.potus_front.API.requests.GardenRequest
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Preview
@@ -82,13 +83,14 @@ fun GardenList (gardens: List<Triple<String, Int, String>>) {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(gardens.size) {
-            arrayItem -> GardenItem(number = arrayItem)
+            arrayItem -> GardenItem(garden = gardens[arrayItem])
         }
     }
 }
 
 @Composable
-fun GardenItem(number: Int) {
+fun GardenItem(garden: Triple<String, Int, String>) {
+    val tokenState = TokenState.current
     var toggled by remember { mutableStateOf(false) }
 
     Column(
@@ -103,19 +105,50 @@ fun GardenItem(number: Int) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (!toggled) Text(text = TokenState.current.gardens[number].first, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
+        if (!toggled) Text(text = garden.first, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
         else {
-            Text(text = "\n" + TokenState.current.gardens[number].first + "\n\nMembers: " + TokenState.current.gardens[number].second + "\nAbout:" + TokenState.current.gardens[number].third + "\n", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
-            Surface(
-                color = BraveGreen,
-                modifier = Modifier
-                    .clickable(onClick = { /* SWITCHER */ })
-                    .padding(8.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .width(64.dp)
-                    .height(32.dp)
-                    .clip(RoundedCornerShape(10.dp))
-            ) { Text(text = "Join!", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Daffodil, textAlign = TextAlign.Center) }
+            Column() {
+                Row(modifier = Modifier.align(Alignment.Start)) {
+                    Text(
+                        text = "\n" + garden.first + "\n\nMembers: " + garden.second.toString() + "\nAbout: " + garden.third + "\n",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 8.dp).align(CenterVertically)
+                    )
+                }
+                Surface(
+                    color = BraveGreen,
+                    modifier = Modifier
+                        .clickable(onClick = {
+                                val askedGardenName = garden.first
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    val gardenRequest = GardenRequest(name = askedGardenName)
+                                    val call = getRetrofit()
+                                        .create(APIService::class.java)
+                                        .askToJoinGarden(
+                                            "Bearer " + tokenState.token,
+                                            "gardens/profile/requests/$askedGardenName",
+                                            gardenRequest
+                                        )
+                                }
+
+                                /* POP-UP? */
+                            })
+                        .padding(8.dp)
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth()
+                        .height(32.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                ) {
+                    Text(
+                        text = "Send Join Request!",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Daffodil,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
     }
 }

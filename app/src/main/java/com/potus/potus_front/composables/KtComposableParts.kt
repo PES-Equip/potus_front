@@ -237,8 +237,6 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                         modifier = Modifier
                             .clickable(onClick = {
                                 GlobalScope.launch(Dispatchers.IO) {
-                                    //CoroutineScope(Dispatchers.IO).launch {
-
                                     val newUpdateActionRequest = ActionRequest("prune")
                                     val call = getRetrofit()
                                         .create(APIService::class.java)
@@ -327,7 +325,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                 painter = painterResource(id = R.drawable.icona_jardi),
                 "",
                 modifier = Modifier
-                    .clickable(onClick = { /* SWITCHER */ })
+                    .clickable(onClick = { /* SWITCHER: if user does not have a Garden: to SelectGardenScreen; if user has Garden: to GardenScreen */ })
                     .padding(8.dp)
                     .size(heightCircle)
                     .align(Alignment.Center)
@@ -363,7 +361,7 @@ fun GardenBottomBar(leftImage: Painter, centerImage: Painter, rightImage: Painte
                     Surface(
                         color = SoothingGreen,
                         modifier = Modifier
-                            .padding(end = 8.dp)
+                            .padding(start = 8.dp)
                             .align(Alignment.CenterVertically)
                             .width(widthButton)
                             .height(heightButton)
@@ -373,7 +371,7 @@ fun GardenBottomBar(leftImage: Painter, centerImage: Painter, rightImage: Painte
                             painter = leftImage,
                             "",
                             modifier = Modifier
-                                .clickable(onClick = { /* SWITCHER */ })
+                                .clickable(onClick = { /* SWITCHER: s'haurà de fer en funció de la imatge que li arribi! */ })
                                 .padding(8.dp)
                                 .size(heightButton)
                                 .align(Alignment.CenterVertically)
@@ -383,7 +381,7 @@ fun GardenBottomBar(leftImage: Painter, centerImage: Painter, rightImage: Painte
                     Surface(
                         color = SoothingGreen,
                         modifier = Modifier
-                            .padding(start = 8.dp)
+                            .padding(end = 8.dp)
                             .align(Alignment.CenterVertically)
                             .width(widthButton)
                             .height(heightButton)
@@ -393,7 +391,7 @@ fun GardenBottomBar(leftImage: Painter, centerImage: Painter, rightImage: Painte
                             painter = rightImage,
                             "",
                             modifier = Modifier
-                                .clickable(onClick = { /* SWITCHER */ })
+                                .clickable(onClick = { /* SWITCHER: s'haurà de fer en funció de la imatge que li arribi! */ })
                                 .padding(8.dp)
                                 .size(heightButton)
                                 .align(Alignment.CenterVertically)
@@ -413,6 +411,7 @@ fun GardenBottomBar(leftImage: Painter, centerImage: Painter, rightImage: Painte
                     painter = centerImage,
                     "",
                     modifier = Modifier
+                        .clickable(onClick = { /* SWITCHER: s'haurà de fer en funció de la imatge que li arribi! */ })
                         .padding(8.dp)
                         .size(heightCircle - 32.dp)
                         .align(Alignment.Center)
