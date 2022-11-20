@@ -49,9 +49,9 @@ fun CreateGardenScreen() {
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
-            waterLevel = 100, //user.potus.waterLevel,
-            collection = 100, //user.currency,
-            username = "JoeBiden", //user.username,
+            waterLevel = user.potus.waterLevel,
+            collection = user.currency,
+            username = user.username,
             addedWater = 0,
             addedLeaves = 0
         )
@@ -116,6 +116,6 @@ fun CreateGardenScreen() {
                 Text(text = "Create and Join!", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = SoothingGreen)
             }
         }
-        GardenBottomBar(painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_seleccio_jardi))
+        GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_seleccio_jardi))
     }
 }

@@ -338,7 +338,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
 }
 
 @Composable
-fun GardenBottomBar(centerImage: Painter, rightImage: Painter) {
+fun GardenBottomBar(leftImage: Painter, centerImage: Painter, rightImage: Painter) {
     val heightBottomBar = 96.dp
     val heightCircle = 160.dp
     val heightTotal = heightBottomBar+heightCircle/2
@@ -360,11 +360,30 @@ fun GardenBottomBar(centerImage: Painter, rightImage: Painter) {
                         .fillMaxWidth()
                         .height(heightTotal)
                 ) {
-                    Spacer(modifier = Modifier.weight(1f))
                     Surface(
                         color = SoothingGreen,
                         modifier = Modifier
                             .padding(end = 8.dp)
+                            .align(Alignment.CenterVertically)
+                            .width(widthButton)
+                            .height(heightButton)
+                            .clip(RoundedCornerShape(10.dp))
+                    ) {
+                        Image(
+                            painter = leftImage,
+                            "",
+                            modifier = Modifier
+                                .clickable(onClick = { /* SWITCHER */ })
+                                .padding(8.dp)
+                                .size(heightButton)
+                                .align(Alignment.CenterVertically)
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Surface(
+                        color = SoothingGreen,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
                             .align(Alignment.CenterVertically)
                             .width(widthButton)
                             .height(heightButton)

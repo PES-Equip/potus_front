@@ -70,7 +70,7 @@ fun SelectGardenScreen() {
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             GardenList(tokenState.gardens)
         }
-        GardenBottomBar(painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_nou_jardi))
+        GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_nou_jardi))
     }
 }
 
