@@ -113,7 +113,7 @@ fun GardenItem(garden: Triple<String, Int, String>) {
                         text = "\n" + garden.first + "\n\nMembers: " + garden.second.toString() + "\nAbout: " + garden.third + "\n",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(start = 8.dp).align(CenterVertically)
+                        modifier = Modifier.padding(start = 16.dp).align(CenterVertically)
                     )
                 }
                 Surface(

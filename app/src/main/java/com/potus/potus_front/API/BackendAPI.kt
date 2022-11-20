@@ -22,6 +22,9 @@ interface APIService {
     suspend fun getGardenList(@Header("Authorization") token:String, @Url url:String): Response<GardenListResponse>
 
     @GET
+    suspend fun getGardenMembers(@Header("Authorization") token:String, @Url url:String): Response<GardenMembersResponse>
+
+    @GET
     suspend fun getInvitationList(@Header("Authorization") token:String, @Url url:String): Response<GardenListResponse>
 
     @POST
