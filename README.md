@@ -26,6 +26,7 @@ Underway Sprint 2 tasks:
 - Show profile information [#63, MV]
 - Frontend - Show garden information [#116, BF]
 - Frontend - Garden interface [#117, BF]
+- Fronend - Invite user interface [#130, BF]
 - Frontend - Show the invitation to the invited user [#131, BF]
 - Popup to show yesterday's gases [#180, BF]
 - Improve Potus basics [#181, MH]
