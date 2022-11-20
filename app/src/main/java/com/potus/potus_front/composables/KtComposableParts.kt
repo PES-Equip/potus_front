@@ -160,7 +160,10 @@ fun CenterArea(plantState:String) {
     val tiges = overallState[1]
     var fulles = painterResource(id = R.drawable.planta_basic_fulles)
     if (overallState.size == 3) fulles = overallState[2]
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         //Spacer(modifier = Modifier.height(16.dp))
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally))
@@ -188,8 +191,8 @@ fun CenterArea(plantState:String) {
                         .align(Alignment.Center)
                 )
             }
-            Text(text = TokenState.current.user?.potus?.name.toString(), fontWeight = BOLD, fontSize = 30.sp, textAlign = TextAlign.Center)
         }
+        Text(text = TokenState.current.user?.potus?.name.toString(), fontWeight = FontWeight.Bold, fontSize = 30.sp, color = BraveGreen, textAlign = TextAlign.Center)
     }
 }
 
