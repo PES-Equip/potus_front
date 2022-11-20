@@ -1,9 +1,6 @@
 package com.potus.potus_front.API
 
-import com.potus.potus_front.API.requests.ActionRequest
-import com.potus.potus_front.API.requests.GardenRequest
-import com.potus.potus_front.API.requests.InformLocationRequest
-import com.potus.potus_front.API.requests.RegisterUserRequest
+import com.potus.potus_front.API.requests.*
 import com.potus.potus_front.API.response.*
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -41,6 +38,9 @@ interface APIService {
 
     @POST
     suspend fun askToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest)
+
+    @POST
+    suspend fun sendGardenInvitation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest)
 
     @PUT
     suspend fun joinGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest): Response<GardenResponse>
