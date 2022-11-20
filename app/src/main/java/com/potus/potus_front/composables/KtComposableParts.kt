@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
@@ -187,6 +188,7 @@ fun CenterArea(plantState:String) {
                         .align(Alignment.Center)
                 )
             }
+            Text(text = TokenState.current.user?.potus?.name.toString(), fontWeight = BOLD, fontSize = 30.sp, textAlign = TextAlign.Center)
         }
     }
 }
