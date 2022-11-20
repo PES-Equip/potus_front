@@ -26,6 +26,7 @@ import com.google.android.gms.location.Priority
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.models.TokenStateViewModel
 import com.potus.potus_front.ui.screens.ApplicationSwitcher
+import com.potus.potus_front.ui.screens.Navigation
 import com.potus.potus_front.ui.theme.Potus_frontTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
@@ -52,6 +53,7 @@ class MainActivity : ComponentActivity() {
         tokenStateViewModel.myLocation(getLastLocation())
 
         setContent {
+
             Potus_frontTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -60,8 +62,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
 
                 ) {
+
                     CompositionLocalProvider(TokenState provides tokenStateViewModel) {
-                        ApplicationSwitcher()
+                        Navigation()
+                        //ApplicationSwitcher()
                         //AuthScreen()
                     }
                     //Navigation(tokenViewModel)
