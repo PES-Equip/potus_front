@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 @Preview
 @Composable
 fun GardenScreen() {
-    /*val openDialog = remember { mutableStateOf(false)  }
+    val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
@@ -48,19 +48,19 @@ fun GardenScreen() {
     LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()
             .create(APIService::class.java)
-            .getInvitationList(
+            .getGarden(
                 "Bearer " + tokenState.token,
                 "gardens/profile"
             )
 
         if (call.isSuccessful) {
-            call.body()?.let { tokenState.myInvitations(it.gardens) }
+            //call.body()?.let { tokenState.myGarden(it.garden) }
         } else {
             //ERROR MESSAGES, IF ANY
             error.value = call.code()
             openDialog.value = true
         }
-    }*/
+    }
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
