@@ -34,7 +34,6 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @ExperimentalCoroutinesApi
 @ExperimentalMaterialApi
-@Preview
 @Composable
 fun RegisterScreen(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
