@@ -1,11 +1,8 @@
 package com.potus.potus_front.ui.screens
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -26,17 +23,17 @@ import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.GardenDescriptionRequest
 import com.potus.potus_front.API.requests.GardenInvitationRequest
+import com.potus.potus_front.API.requests.GardenRequest
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
+import com.potus.potus_front.ui.theme.RoseRed
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.random.Random
 
 
 @Preview
@@ -45,28 +42,11 @@ fun GardenManagementScreen() {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
-    //val tokenState = TokenState.current
-    //val user = tokenState.user!!
+    val tokenState = TokenState.current
+    val user = tokenState.user!!
     val members = remember { mutableStateOf(listOf(Pair("THERE ARE NO USERS IN THIS GARDEN", "OWNER"))) }
     val description = remember { mutableStateOf(TextFieldValue()) }
     val invitedUser = remember { mutableStateOf(TextFieldValue()) }
-
-    /*LaunchedEffect(Dispatchers.IO) {
-        val call = getRetrofit()
-            .create(APIService::class.java)
-            .getGardenMembers(
-                "Bearer " + tokenState.token,
-                "garden/profile/members"
-            )
-
-        if (call.isSuccessful) {
-            call.body()?.let { members.value = it.members }
-        } else {
-            //ERROR MESSAGES, IF ANY
-            error.value = call.code()
-            openDialog.value = true
-        }
-    }*/
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
@@ -80,8 +60,8 @@ fun GardenManagementScreen() {
             Spacer(modifier = Modifier.size(8.dp))
             Column(modifier = Modifier.align(Alignment.Start).padding(8.dp).clip(RoundedCornerShape(10.dp)).background(SoothingGreen).fillMaxWidth()) {
                 Text(
-                    text = "MY GARDEN",
-                    //text = tokenState.user?.garden_info?.garden?.third.toString(),
+                    //text = "MY GARDEN",
+                    text = tokenState.user?.garden_info?.garden?.third.toString(),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -95,8 +75,8 @@ fun GardenManagementScreen() {
                         textAlign = TextAlign.Center
                     )
                     Text(
-                        text = "0",
-                        //text = "Members: " + tokenState.user?.garden_info?.garden?.second.toString(),
+                        //text = "0",
+                        text = tokenState.user?.garden_info?.garden?.second.toString(),
                         fontSize = 20.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(start = 8.dp)
@@ -113,8 +93,8 @@ fun GardenManagementScreen() {
                         value = description.value,
                         onValueChange = { description.value = it },
                         label = { Text(
-                            text = "Test description."
-                            //text = "Members: " + tokenState.user?.garden_info?.garden?.second.toString(),
+                            //text = "Test description."
+                            text = tokenState.user?.garden_info?.garden?.first.toString(),
                         ) },
                         modifier = Modifier
                             .width(296.dp)
@@ -125,7 +105,7 @@ fun GardenManagementScreen() {
                 }
                 Button(
                     onClick = {
-                        /*CoroutineScope(Dispatchers.IO).launch {
+                        CoroutineScope(Dispatchers.IO).launch {
                             val newGardenDescriptionRequest = GardenDescriptionRequest(description = description.value.text)
                             val call = getRetrofit()
                                 .create(APIService::class.java)
@@ -142,7 +122,7 @@ fun GardenManagementScreen() {
                                 error.value = call.code()
                                 openDialog.value = true
                             }
-                        }*/
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                     modifier = Modifier
@@ -174,17 +154,17 @@ fun GardenManagementScreen() {
                 )
                 Button(
                     onClick = {
-                        /*CoroutineScope(Dispatchers.IO).launch {
+                        CoroutineScope(Dispatchers.IO).launch {
                             val garden = tokenState.user?.garden_info?.garden?.third.toString()
                             val receiver = invitedUser.value.toString()
                             val sendGardenInvitation = GardenInvitationRequest(garden = garden, user = receiver)
-                            val call = getRetrofit().create(APIService::class.java)
+                            getRetrofit().create(APIService::class.java)
                                 .sendGardenInvitation(
                                 "Bearer " + tokenState.token,
                                 "gardens/$garden/requests/$receiver",
                                 sendGardenInvitation
                             )
-                        }*/
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen),
                     modifier = Modifier
@@ -195,6 +175,58 @@ fun GardenManagementScreen() {
                 ) {
                     Text(text = "Send!", color = Daffodil)
                 }
+            }
+            Spacer(modifier = Modifier.size(64.dp))
+            Button(
+                onClick = {
+                    /* SHOULD ASK FOR CONFIRMATION THROUGH A POP-UP */
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        getRetrofit()
+                            .create(APIService::class.java)
+                            .exitGarden(
+                                "Bearer " + tokenState.token,
+                                "gardens/profile"
+                            )
+                    }
+
+                    /* SWITCHER: redirect to HomeScreen */
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = RoseRed),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .align(CenterHorizontally),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text(text = "Leave Garden", color = Daffodil)
+            }
+            Button(
+                onClick = {
+                    /* SHOULD ASK FOR CONFIRMATION THROUGH A POP-UP */
+
+                    val askedGardenName = tokenState.user?.garden_info?.garden?.third.toString()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val deleteGardenRequest = GardenRequest(name = askedGardenName)
+                        getRetrofit()
+                            .create(APIService::class.java)
+                            .removeGarden(
+                                "Bearer " + tokenState.token,
+                                "gardens/$askedGardenName",
+                                deleteGardenRequest
+                            )
+                    }
+
+                    /* SWITCHER: redirect to HomeScreen */
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .align(CenterHorizontally),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text(text = "DELETE GARDEN", color = Daffodil)
             }
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_jardi))
