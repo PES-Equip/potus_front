@@ -51,8 +51,14 @@ interface APIService {
     @PUT
     suspend fun changeGardenDescription(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenDescriptionRequest): Response<NewGardenResponse>
 
+    @POST
+    suspend fun acceptGardenPetition(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest): Response<GardenPetitionsResponse>
+
     @DELETE
     suspend fun refuseToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest)
+
+    @DELETE
+    suspend fun refuseGardenPetition(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest)
 
     @DELETE
     suspend fun exitGarden(@Header("Authorization") token:String, @Url url:String)

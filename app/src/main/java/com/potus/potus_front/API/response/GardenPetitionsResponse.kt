@@ -1,5 +1,5 @@
 package com.potus.potus_front.API.response
 
 data class GardenPetitionsResponse(
-    var petitions: List<UserResponse>
+    var petitions: List<GardenMemberResponse>
 )

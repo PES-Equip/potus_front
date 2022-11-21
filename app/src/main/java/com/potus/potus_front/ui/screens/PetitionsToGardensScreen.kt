@@ -18,15 +18,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.data.EmptyGroup.name
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
+import com.potus.potus_front.API.requests.GardenInvitationRequest
 import com.potus.potus_front.API.requests.GardenRequest
-import com.potus.potus_front.API.response.NewGardenResponse
-import com.potus.potus_front.API.response.UserResponse
+import com.potus.potus_front.API.response.*
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
 import com.potus.potus_front.models.TokenState
@@ -37,6 +36,7 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 @Preview
@@ -47,10 +47,9 @@ fun PetitionsToGardensScreen() {
 
     val tokenState = TokenState.current
     val user = tokenState.user!!
-    var invitations: List<UserResponse> = remember { mutableStateOf(listOf(UserResponse)).value }
 
     LaunchedEffect(Dispatchers.IO) {
-        val garden = user.garden_info.name
+        val garden = user.garden_info.garden.name
         val allGardenPetitionsRequest = GardenRequest(name = garden)
         val call = getRetrofit()
             .create(APIService::class.java)
@@ -61,7 +60,7 @@ fun PetitionsToGardensScreen() {
             )
 
         if (call.isSuccessful) {
-            call.body()?.let { petitions.value = it.petitions }
+            call.body()?.let { tokenState.myPetitions(it) }
         } else {
             //ERROR MESSAGES, IF ANY
             error.value = call.code()
@@ -71,22 +70,21 @@ fun PetitionsToGardensScreen() {
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
-            waterLevel = 100, //user.potus.waterLevel,
-            collection = 100, //user.currency,
-            username = "JoeBiden", //user.username,
+            waterLevel = user.potus.waterLevel,
+            collection = user.currency,
+            username = user.username,
             addedWater = 0,
             addedLeaves = 0
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
-            //PetitionsList(tokenState.invitations)
-            PetitionsList(petitions.value)
+            PetitionsList(tokenState.petitions)
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_gestio_jardi), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_jardi))
     }
 }
 
 @Composable
-fun PetitionsList (petitions: List<String>) {
+fun PetitionsList (petitions: List<GardenMemberResponse>) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(8.dp),
@@ -99,11 +97,12 @@ fun PetitionsList (petitions: List<String>) {
 }
 
 @Composable
-fun PetitionItem(petition: String) {
+fun PetitionItem(petition: GardenMemberResponse) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
-    //val tokenState = TokenState.current
+    val tokenState = TokenState.current
+    val user = tokenState.user!!
     var joinedGarden = remember { mutableStateOf(Triple("You do not have any pending invitations.", 0, "NO INVITATIONS")) }
     var toggled by remember { mutableStateOf(false) }
 
@@ -129,7 +128,7 @@ fun PetitionItem(petition: String) {
                         .padding(start = 8.dp)
                 )
                 Text(
-                    text = petition,
+                    text = petition.user.username,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = BraveGreen,
@@ -148,7 +147,7 @@ fun PetitionItem(petition: String) {
                             .padding(start = 8.dp)
                     )
                     Text(
-                        text = petition,
+                        text = petition.user.username,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 16.dp).align(CenterVertically)
@@ -159,25 +158,26 @@ fun PetitionItem(petition: String) {
                         color = BraveGreen,
                         modifier = Modifier
                             .clickable(onClick = {
-                                /*val askedGardenName = garden.third
+                                val garden = user.garden_info.garden.name
+                                val petitioner = petition.user.username
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val gardenRequest = GardenRequest(name = askedGardenName)
+                                    val petitionRequest = GardenInvitationRequest(garden = garden, user = petitioner)
                                     val call = getRetrofit()
                                         .create(APIService::class.java)
-                                        .joinGarden(
+                                        .acceptGardenPetition(
                                             "Bearer " + tokenState.token,
-                                            "gardens/profile/requests/$askedGardenName",
-                                            gardenRequest
+                                            "gardens/$garden/requests/$petitioner",
+                                            petitionRequest
                                         )
 
-                                        if (call.isSuccessful) {
-                                            call.body()?.let { joinedGarden.value = it.garden.garden }
-                                        } else {
-                                            //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
-                                            error.value = call.code()
-                                            openDialog.value = true
-                                        }
-                                }*/
+                                    if (call.isSuccessful) {
+                                        call.body()?.let { tokenState.myPetitions(it) }
+                                    } else {
+                                        //ERROR MESSAGES, IF ANY
+                                        error.value = call.code()
+                                        openDialog.value = true
+                                    }
+                                }
 
                                 /* SWITCHER: to the Garden */
                             })
@@ -200,17 +200,18 @@ fun PetitionItem(petition: String) {
                             .clickable(onClick = {
                                 /* ACTION CONFIRMATION POP-UP? */
 
-                                /*val askedGardenName = garden.third
+                                val garden = user.garden_info.garden.name
+                                val petitioner = petition.user.username
                                 CoroutineScope(Dispatchers.IO).launch {
-                                val gardenRequest = GardenRequest(name = askedGardenName)
-                                val call = getRetrofit()
-                                    .create(APIService::class.java)
-                                    .refuseToJoinGarden(
-                                        "Bearer " + tokenState.token,
-                                        "gardens/profile/requests/$askedGardenName",
-                                        gardenRequest
-                                    )
-                            }*/
+                                    val petitionRequest = GardenInvitationRequest(garden = garden, user = petitioner)
+                                    getRetrofit()
+                                        .create(APIService::class.java)
+                                        .refuseGardenPetition(
+                                            "Bearer " + tokenState.token,
+                                            "gardens/$garden/requests/$petitioner",
+                                            petitionRequest
+                                        )
+                                }
 
                                 /* SWITCHER: to itself (InvitationsToGardenScreen) */
                             })
