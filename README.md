@@ -19,7 +19,9 @@ Completed Sprint 2 tasks:
 - Thematic events [#92, BF]
 - Frontend - Show garden information [#116, BF]
 - Frontend - Garden interface [#117, BF]
+- Frontend - Leave the garden interface [#120, BF]
 - Frontend - Show create garden interface [#122, BF]
+- Frontend - Eliminate garden interface [#124, BF]
 - Frontend - Update the description interface [#127, BF]
 - Fronend - Invite user interface [#130, BF]
 - Frontend - Show the invitation to the invited user [#131, BF]
@@ -29,9 +31,8 @@ Completed Sprint 2 tasks:
 Underway Sprint 2 tasks:
 
 - Show profile information [#63, MV]
-- Frontend - Leave the garden interface [#120, BF]
-- Frontend - Eliminate garden interface [#124, BF]
 - Popup to show yesterday's gases [#180, BF]
 - Improve Potus basics [#181, MH]
+- Frontend - Show Garden Join Petitions [#232, BF]
 
 [This is the develop branch]
