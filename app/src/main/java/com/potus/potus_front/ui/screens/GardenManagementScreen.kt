@@ -61,7 +61,7 @@ fun GardenManagementScreen() {
             Column(modifier = Modifier.align(Alignment.Start).padding(8.dp).clip(RoundedCornerShape(10.dp)).background(SoothingGreen).fillMaxWidth()) {
                 Text(
                     //text = "MY GARDEN",
-                    text = tokenState.user?.garden_info?.garden?.third.toString(),
+                    text = tokenState.user?.garden_info?.name.toString(),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -76,7 +76,7 @@ fun GardenManagementScreen() {
                     )
                     Text(
                         //text = "0",
-                        text = tokenState.user?.garden_info?.garden?.second.toString(),
+                        text = tokenState.user?.garden_info?.members_num.toString(),
                         fontSize = 20.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(start = 8.dp)
@@ -94,7 +94,7 @@ fun GardenManagementScreen() {
                         onValueChange = { description.value = it },
                         label = { Text(
                             //text = "Test description."
-                            text = tokenState.user?.garden_info?.garden?.first.toString(),
+                            text = tokenState.user?.garden_info?.description.toString(),
                         ) },
                         modifier = Modifier
                             .width(296.dp)
@@ -116,7 +116,7 @@ fun GardenManagementScreen() {
                                 )
 
                             if (call.isSuccessful) {
-                                call.body()?.let { tokenState.user?.garden_info?.garden = it.garden }
+                                call.body()?.let { tokenState.user?.garden_info?.description = it.description }
                             } else {
                                 //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
                                 error.value = call.code()
@@ -155,7 +155,7 @@ fun GardenManagementScreen() {
                 Button(
                     onClick = {
                         CoroutineScope(Dispatchers.IO).launch {
-                            val garden = tokenState.user?.garden_info?.garden?.third.toString()
+                            val garden = tokenState.user?.garden_info?.name.toString()
                             val receiver = invitedUser.value.toString()
                             val sendGardenInvitation = GardenInvitationRequest(garden = garden, user = receiver)
                             getRetrofit().create(APIService::class.java)
@@ -205,7 +205,7 @@ fun GardenManagementScreen() {
                 onClick = {
                     /* SHOULD ASK FOR CONFIRMATION THROUGH A POP-UP */
 
-                    val askedGardenName = tokenState.user?.garden_info?.garden?.third.toString()
+                    val askedGardenName = tokenState.user?.garden_info?.name.toString()
                     CoroutineScope(Dispatchers.IO).launch {
                         val deleteGardenRequest = GardenRequest(name = askedGardenName)
                         getRetrofit()
