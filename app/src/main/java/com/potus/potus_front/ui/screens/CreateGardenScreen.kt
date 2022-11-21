@@ -100,6 +100,8 @@ fun CreateGardenScreen() {
                             }
                     }
 
+                    /* ÉS MOLT PROBABLE QUE CALGUI FER UNA JOIN REQUEST I UNA ACCEPTACIÓ DIRECTA PER PART DEL JARDÍ */
+
                     /* SWITCHER: a la vista del nou Jardi */
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
