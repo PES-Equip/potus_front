@@ -35,7 +35,9 @@ fun CreateGardenScreen() {
 
     val tokenState = TokenState.current
     val user = tokenState.user!!
-    var newGarden = remember { mutableStateOf(Triple("NEW GARDEN", 0, "")) }
+    var newGardensName = remember { mutableStateOf("NEW GARDEN") }
+    var newGardensMembers = remember { mutableStateOf(0) }
+    var newGardensDescription = remember { mutableStateOf("") }
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
@@ -86,13 +88,18 @@ fun CreateGardenScreen() {
                                 )
 
                             if (call.isSuccessful) {
-                                call.body()?.let { newGarden.value = it.garden }
+                                call.body()?.let {
+                                    newGardensName.value = it.name
+                                    newGardensMembers.value = it.members_num
+                                    newGardensDescription.value = it.description
+                                }
                             } else {
                                 //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
                                 error.value = call.code()
                                 openDialog.value = true
                             }
                     }
+
                     /* SWITCHER: a la vista del nou Jardi */
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
