@@ -34,12 +34,12 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @ExperimentalCoroutinesApi
 @ExperimentalMaterialApi
-@Preview
 @Composable
 fun RegisterScreen(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
     val tokenState = TokenState.current
     val openDialog = remember { mutableStateOf(false)  }
+    var navigation_bool = false
 
     Surface(
         color = MaterialTheme.colors.primaryVariant,
@@ -55,7 +55,7 @@ fun RegisterScreen(navController: NavController) {
             mutableStateOf(false)
         }
         val textState = remember { mutableStateOf(TextFieldValue()) }
-        Column {
+        Column (modifier = Modifier.fillMaxHeight()) {
             Spacer(modifier = Modifier.size(32.dp))
 
             //canviar imatge a register
@@ -96,15 +96,12 @@ fun RegisterScreen(navController: NavController) {
 
                         if (call.isSuccessful) {
                             tokenState.signUser(call.body())
-                            navController.navigate("home_screen")
+                            navigation_bool = true
                         } else {
                             openDialog.value =true
                             //Timber.d("BAD")
                         }
                     }
-
-
-
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen),
                 modifier = Modifier
@@ -141,8 +138,10 @@ fun RegisterScreen(navController: NavController) {
                 )
             }
         }
-
-
+    }
+    if (navigation_bool) {
+        navController.navigate("home_screen")
+        navigation_bool = false
     }
 }
 /*

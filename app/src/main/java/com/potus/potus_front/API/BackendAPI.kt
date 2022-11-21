@@ -24,7 +24,7 @@ interface APIService {
     suspend fun changeUsername(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ChangeUsernameRequest): Response<UserResponse>
 
     @DELETE
-    suspend fun deleteAccount(@Header("Authorization") token:String, @Url url:String, @Body requestModel: DeleteAccountRequest): Response<UserResponse>
+    suspend fun deleteAccount(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
 
     @POST
     suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>

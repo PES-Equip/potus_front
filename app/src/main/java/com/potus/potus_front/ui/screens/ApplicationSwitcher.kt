@@ -46,7 +46,7 @@ fun ApplicationSwitcher(navController: NavController) {
         }
         else if(tokenState.getState()== "CONFIRMED"){
             TokenFet=false;
-            navController.navigate("home_screen")
+            navController.navigate("profile_screen")
         }
     }
 
