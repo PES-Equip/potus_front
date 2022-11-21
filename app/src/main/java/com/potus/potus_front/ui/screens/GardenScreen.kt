@@ -3,6 +3,7 @@ package com.potus.potus_front.ui.screens
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.toggleable
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,46 +77,15 @@ fun GardenScreen() {
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             Spacer(modifier = Modifier.size(8.dp))
-            Row(modifier = Modifier.align(Alignment.Start).padding(8.dp).clip(RoundedCornerShape(10.dp)).background(BraveGreen).fillMaxWidth()) {
-                Image(
-                    painter = painterResource(id = R.drawable.icona_convidar_jardi), "",
-                    modifier = Modifier
-                        .size(64.dp)
-                        .align(CenterVertically)
-                        .padding(start = 8.dp)
+            Surface(modifier = Modifier.fillMaxWidth().clickable(onClick = { /* SWITCHER: a GardenManagementScreen */ }), color = Color.Transparent) {
+                Text(
+                    //text = "MY GARDEN",
+                    text = tokenState.user?.garden_info?.garden?.third.toString(),
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = BraveGreen,
+                    textAlign = TextAlign.Center
                 )
-                OutlinedTextField(
-                    value = invitedUser.value,
-                    onValueChange = { invitedUser.value = it },
-                    label = { Text(text = "Invite User") },
-                    modifier = Modifier
-                        .width(200.dp)
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                        .align(CenterVertically)
-                )
-                Button(
-                    onClick = {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val garden = tokenState.user?.garden_info?.garden?.third.toString()
-                            val receiver = invitedUser.value.toString()
-                            val sendGardenInvitation = GardenInvitationRequest(garden = garden, user = receiver)
-                            val call = getRetrofit().create(APIService::class.java)
-                                .sendGardenInvitation(
-                                "Bearer " + tokenState.token,
-                                "gardens/$garden/requests/$receiver",
-                                sendGardenInvitation
-                            )
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .align(CenterVertically),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Text(text = "Send!", color = Daffodil)
-                }
             }
             //MembersList(listOf(Pair("Me", "OWNER"), Pair("You", "ADMIN"), Pair("He", "ADMIN"), Pair("She", "ADMIN"), Pair("They", "ADMIN")))
             MembersList(members.value)
