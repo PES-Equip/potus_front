@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
@@ -159,7 +160,10 @@ fun CenterArea(plantState:String) {
     val tiges = overallState[1]
     var fulles = painterResource(id = R.drawable.planta_basic_fulles)
     if (overallState.size == 3) fulles = overallState[2]
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         //Spacer(modifier = Modifier.height(16.dp))
         Box(modifier = Modifier
             .align(Alignment.CenterHorizontally))
@@ -188,6 +192,7 @@ fun CenterArea(plantState:String) {
                 )
             }
         }
+        Text(text = TokenState.current.user?.potus?.name.toString(), fontWeight = FontWeight.Bold, fontSize = 30.sp, color = BraveGreen, textAlign = TextAlign.Center)
     }
 }
 
