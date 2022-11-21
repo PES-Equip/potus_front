@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.GardenRequest
+import com.potus.potus_front.API.response.NewGardenResponse
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
 import com.potus.potus_front.models.TokenState
@@ -54,7 +55,7 @@ fun InvitationsToGardensScreen() {
             )
 
         if (call.isSuccessful) {
-            call.body()?.let { tokenState.myInvitations(it.gardens) }
+            call.body()?.let { tokenState.myInvitations(it) }
         } else {
             //ERROR MESSAGES, IF ANY
             error.value = call.code()
@@ -79,20 +80,20 @@ fun InvitationsToGardensScreen() {
 }
 
 @Composable
-fun InvitationsList (gardens: List<Triple<String, Int, String>>) {
+fun InvitationsList (invitations: List<NewGardenResponse>) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(gardens.size) {
-                arrayItem -> InvitationItem(garden = gardens[arrayItem])
+        items(invitations.size) {
+                arrayItem -> InvitationItem(invitation = invitations[arrayItem])
         }
     }
 }
 
 @Composable
-fun InvitationItem(garden: Triple<String, Int, String>) {
+fun InvitationItem(invitation: NewGardenResponse) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -122,7 +123,7 @@ fun InvitationItem(garden: Triple<String, Int, String>) {
                         .padding(start = 8.dp)
                 )
                 Text(
-                    text = garden.third,
+                    text = invitation.name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = BraveGreen,
@@ -141,7 +142,7 @@ fun InvitationItem(garden: Triple<String, Int, String>) {
                             .padding(start = 8.dp)
                     )
                     Text(
-                        text = "\n" + garden.third + "\n\nMembers: " + garden.second.toString() + "\nAbout: " + garden.first + "\n",
+                        text = "\n" + invitation.name + "\n\nMembers: " + invitation.members_num.toString() + "\nAbout: " + invitation.description + "\n",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 16.dp).align(CenterVertically)
@@ -152,7 +153,7 @@ fun InvitationItem(garden: Triple<String, Int, String>) {
                         color = BraveGreen,
                         modifier = Modifier
                             .clickable(onClick = {
-                                val askedGardenName = garden.third
+                                val askedGardenName = invitation.name
                                 CoroutineScope(Dispatchers.IO).launch {
                                     val gardenRequest = GardenRequest(name = askedGardenName)
                                     val call = getRetrofit()
@@ -164,7 +165,7 @@ fun InvitationItem(garden: Triple<String, Int, String>) {
                                         )
 
                                         if (call.isSuccessful) {
-                                            call.body()?.let { joinedGarden.value = it.garden.garden }
+                                            call.body()?.let { joinedGarden.value = Triple(it.garden.name, it.garden.members_num, it.garden.description) }
                                         } else {
                                             //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
                                             error.value = call.code()
@@ -193,7 +194,7 @@ fun InvitationItem(garden: Triple<String, Int, String>) {
                             .clickable(onClick = {
                                 /* ACTION CONFIRMATION POP-UP? */
 
-                                val askedGardenName = garden.third
+                                val askedGardenName = invitation.name
                                 CoroutineScope(Dispatchers.IO).launch {
                                 val gardenRequest = GardenRequest(name = askedGardenName)
                                 val call = getRetrofit()
