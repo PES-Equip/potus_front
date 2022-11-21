@@ -27,12 +27,12 @@ Completed Sprint 2 tasks:
 - Frontend - Show the invitation to the invited user [#131, BF]
 - Revive Potus [#184, MH]
 - Frontend - Show Garden Selection screen [#230, BF]
+- Frontend - Show Garden Join Petitions [#232, BF]
 
 Underway Sprint 2 tasks:
 
 - Show profile information [#63, MV]
 - Popup to show yesterday's gases [#180, BF]
 - Improve Potus basics [#181, MH]
-- Frontend - Show Garden Join Petitions [#232, BF]
 
 [This is the develop branch]
