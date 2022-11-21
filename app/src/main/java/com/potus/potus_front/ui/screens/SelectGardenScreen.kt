@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.GardenRequest
+import com.potus.potus_front.API.response.GardenListResponse
+import com.potus.potus_front.API.response.NewGardenResponse
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
 import com.potus.potus_front.models.TokenState
@@ -52,7 +54,7 @@ fun SelectGardenScreen() {
             )
 
         if (call.isSuccessful) {
-            call.body()?.let { tokenState.allGardens(it.gardens) }
+            call.body()?.let { tokenState.allGardens(it) }
         } else {
             //ERROR MESSAGES, IF ANY
             error.value = call.code()
@@ -76,7 +78,7 @@ fun SelectGardenScreen() {
 }
 
 @Composable
-fun GardenList (gardens: List<Triple<String, Int, String>>) {
+fun GardenList (gardens: List<NewGardenResponse>) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(8.dp),
@@ -89,7 +91,7 @@ fun GardenList (gardens: List<Triple<String, Int, String>>) {
 }
 
 @Composable
-fun GardenItem(garden: Triple<String, Int, String>) {
+fun GardenItem(garden: NewGardenResponse) {
     val tokenState = TokenState.current
     var toggled by remember { mutableStateOf(false) }
 
@@ -105,12 +107,12 @@ fun GardenItem(garden: Triple<String, Int, String>) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (!toggled) Text(text = garden.first, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
+        if (!toggled) Text(text = garden.name, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
         else {
             Column() {
                 Row(modifier = Modifier.align(Alignment.Start)) {
                     Text(
-                        text = "\n" + garden.first + "\n\nMembers: " + garden.second.toString() + "\nAbout: " + garden.third + "\n",
+                        text = "\n" + garden.name + "\n\nMembers: " + garden.members_num.toString() + "\nAbout: " + garden.description + "\n",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 16.dp).align(CenterVertically)
@@ -120,7 +122,7 @@ fun GardenItem(garden: Triple<String, Int, String>) {
                     color = BraveGreen,
                     modifier = Modifier
                         .clickable(onClick = {
-                                val askedGardenName = garden.first
+                                val askedGardenName = garden.name
                                 CoroutineScope(Dispatchers.IO).launch {
                                     val gardenRequest = GardenRequest(name = askedGardenName)
                                     val call = getRetrofit()

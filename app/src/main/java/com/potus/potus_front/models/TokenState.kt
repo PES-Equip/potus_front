@@ -2,9 +2,7 @@ package com.potus.potus_front.models
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
-import com.potus.potus_front.API.response.GardenListResponse
-import com.potus.potus_front.API.response.PotusResponse
-import com.potus.potus_front.API.response.UserResponse
+import com.potus.potus_front.API.response.*
 
 class TokenStateViewModel: ViewModel(){
 
@@ -13,8 +11,8 @@ class TokenStateViewModel: ViewModel(){
     var token: String? by mutableStateOf(null)
     var user: UserResponse? by mutableStateOf(null)
     var location: Pair<Double,Double> by mutableStateOf(value = Pair(0.0,0.0))
-    var gardens: List<Triple<String, Int, String>> by mutableStateOf(value = listOf(Triple("No Gardens available", 0, "There are no Gardens available.")))
-    var invitations: List<Triple<String, Int, String>> by mutableStateOf(value = listOf(Triple("No invitations available", 0, "You have not received any invitations to join a Garden.")))
+    var gardens: List<NewGardenResponse> by mutableStateOf(value = listOf(NewGardenResponse("NoGardensAvailable", 0, "There are no Gardens available.")))
+    var invitations: List<NewGardenResponse> by mutableStateOf(value = listOf(NewGardenResponse("No invitations available", 0, "You have not received any invitations to join a Garden.")))
 
     fun getState(): String {
         if(user == null)
@@ -51,12 +49,12 @@ class TokenStateViewModel: ViewModel(){
         this.location = location
     }
 
-    fun allGardens(gardens: List<Triple<String, Int, String>>){
-        this.gardens = gardens
+    fun allGardens(gardens: GardenListResponse?) {
+        this.gardens = gardens?.gardens!!
     }
 
-    fun myInvitations(invitations: List<Triple<String, Int, String>>){
-        this.invitations = invitations
+    fun myInvitations(invitations: GardenListResponse?){
+        this.invitations = invitations?.gardens!!
     }
 }
 
