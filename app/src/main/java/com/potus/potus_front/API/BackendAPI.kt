@@ -50,6 +50,12 @@ interface APIService {
 
     @DELETE
     suspend fun refuseToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest)
+
+    @DELETE
+    suspend fun exitGarden(@Header("Authorization") token:String, @Url url:String)
+
+    @DELETE
+    suspend fun removeGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest)
 }
 
 fun getRetrofit(): Retrofit {
