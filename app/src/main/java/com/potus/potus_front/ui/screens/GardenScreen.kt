@@ -80,7 +80,7 @@ fun GardenScreen() {
             Surface(modifier = Modifier.fillMaxWidth().clickable(onClick = { /* SWITCHER: a GardenManagementScreen */ }), color = Color.Transparent) {
                 Text(
                     //text = "MY GARDEN",
-                    text = tokenState.user?.garden_info?.garden?.third.toString(),
+                    text = tokenState.user?.garden_info?.name.toString(),
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = BraveGreen,
