@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
@@ -27,6 +28,7 @@ import com.potus.potus_front.API.requests.ChangeUsernameRequest
 import com.potus.potus_front.API.requests.DeleteAccountRequest
 import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.MainActivity
+import com.potus.potus_front.R
 import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
@@ -113,7 +115,10 @@ fun ProfileScreen(navController: NavController) {
                 Text(text = "Save")
             }
         }
-
+        Image(painter = painterResource(id = R.drawable.basic), "",
+            modifier = Modifier
+                .size(240.dp)
+                .align(Alignment.CenterHorizontally))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
