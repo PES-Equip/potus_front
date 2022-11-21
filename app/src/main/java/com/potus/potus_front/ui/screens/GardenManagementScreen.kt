@@ -229,6 +229,6 @@ fun GardenManagementScreen() {
                 Text(text = "DELETE GARDEN", color = Daffodil)
             }
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_jardi))
+        GardenBottomBar(painterResource(id = R.drawable.icona_peticions_jardi), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_jardi))
     }
 }
