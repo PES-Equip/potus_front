@@ -3,9 +3,9 @@ Potus Front-End
 
 Frontend developing repository by:
 
-- Berta Fitó
-- Marc Heras
-- Max Vives
+- Berta Fitó [BF]
+- Marc Heras [MH]
+- Max Vives [MV]
 
 Completed Sprint 1 tasks:
 
@@ -23,7 +23,7 @@ Completed Sprint 2 tasks:
 - Frontend - Show create garden interface [#122, BF]
 - Frontend - Eliminate garden interface [#124, BF]
 - Frontend - Update the description interface [#127, BF]
-- Fronend - Invite user interface [#130, BF]
+- Frontend - Invite user interface [#130, BF]
 - Frontend - Show the invitation to the invited user [#131, BF]
 - Revive Potus [#184, MH]
 - Frontend - Show Garden Selection screen [#230, BF]
