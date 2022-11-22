@@ -65,10 +65,7 @@ class MainActivity : ComponentActivity() {
 
                     CompositionLocalProvider(TokenState provides tokenStateViewModel) {
                         Navigation()
-                        //ApplicationSwitcher()
-                        //AuthScreen()
                     }
-                    //Navigation(tokenViewModel)
                 }
             }
         }
