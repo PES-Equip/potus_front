@@ -17,7 +17,7 @@ class TokenStateViewModel: ViewModel(){
     var isBusy by mutableStateOf(false)
     var token: String? by mutableStateOf(null)
     var user: UserResponse? by mutableStateOf(null)
-    var gases: GasesResponse by mutableStateOf(value = GasesResponse("", 0.0, 0.0, "", registry = Registry(listOf(Gas("", "", "", 0.0)))))
+    var gases: GasesResponse by mutableStateOf(value = GasesResponse("", 0.0, 0.0, "", registry = Registry(registry = listOf(Gas("", "", "mg_m3", 0.0)))))
     var location: Pair<Double,Double> by mutableStateOf(value=Pair(0.0,0.0))
 
     fun getState(): String {
@@ -52,7 +52,9 @@ class TokenStateViewModel: ViewModel(){
     }
 
     fun regionalGases(gases: GasesResponse?){
-        this.gases = gases!!
+        if (gases != null) {
+            this.gases = gases!!
+        }
     }
 
     fun myLocation(location: Pair<Double,Double>){

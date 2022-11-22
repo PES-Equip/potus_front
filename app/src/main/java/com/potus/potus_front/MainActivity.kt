@@ -76,9 +76,9 @@ class MainActivity : ComponentActivity() {
 
     private fun getLastLocation() : Pair<Double,Double> {
         //IF WE DO NOT HAVE THE USER'S PERMISSION TO ACCESS THEIR LOCATION OR THE REQUEST FAILS:
-        // THE DEFAULT RETURNED LOCATION WILL BE (0,0)
-        var lat = 0.0
-        var lon = 0.0
+        // THE DEFAULT RETURNED LOCATION WILL BE THE LONGITUDE AND LATITUDE OF BARCELONA
+        var lat = 41.39
+        var lon = 2.15
         //If we do not have permission to access the user's location, ask for it
         if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //Request the user's permission

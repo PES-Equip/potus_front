@@ -144,7 +144,7 @@ fun GasesWindow() {
 
     Column(modifier = Modifier.fillMaxWidth()) {
         //var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2.5", "PM10", "PS", "SO2")
-        var gases = tokenState.gases.registry
+        var gases = tokenState.gases.registry.registry
         var toggled by remember { mutableStateOf(false) }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -158,7 +158,7 @@ fun GasesWindow() {
                 .animateContentSize(),
             cells = GridCells.Fixed(4)) {
                 var numberOfCells = 4
-                if (toggled or (gases.registry.size < 4)) numberOfCells = gases.registry.size
+                if (toggled or (gases.size < 4)) numberOfCells = gases.size
                 items(count = numberOfCells) {
                 Row(
                     modifier = Modifier
@@ -167,7 +167,7 @@ fun GasesWindow() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    val gas = gases.registry[it]
+                    val gas = gases[it]
                     var color = noDanger
                     when (gas.dangerLevel) {
                         "Low" -> color = Low
