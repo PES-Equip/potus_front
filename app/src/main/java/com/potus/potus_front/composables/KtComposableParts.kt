@@ -38,11 +38,10 @@ import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
+import com.potus.potus_front.API.requests.InformLocationRequest
 import com.potus.potus_front.R
 import com.potus.potus_front.models.TokenState
-import com.potus.potus_front.ui.theme.BraveGreen
-import com.potus.potus_front.ui.theme.Daffodil
-import com.potus.potus_front.ui.theme.SoothingGreen
+import com.potus.potus_front.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -119,8 +118,33 @@ fun TopBar(waterLevel: Int, collection: Int, username: String, addedWater: Int, 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GasesWindow() {
+    val openDialog = remember { mutableStateOf(false)  }
+    val error = remember { mutableStateOf(200)  }
+
+    val tokenState = TokenState.current
+
+    LaunchedEffect(Dispatchers.IO) {
+        val call = getRetrofit()
+            .create(APIService::class.java)
+            .getGases(
+                "Bearer " + tokenState.token,
+                "external/airquality/region",
+                latitude = tokenState.location.first,
+                length = tokenState.location.second
+            )
+
+        if (call.isSuccessful) {
+            tokenState.regionalGases(call.body())
+        } else {
+            //ERROR MESSAGES, IF ANY
+            error.value = call.code()
+            openDialog.value = true
+        }
+    }
+
     Column(modifier = Modifier.fillMaxWidth()) {
-        var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2.5", "PM10", "PS", "SO2")
+        //var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2.5", "PM10", "PS", "SO2")
+        var gases = tokenState.gases.registry
         var toggled by remember { mutableStateOf(false) }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -134,7 +158,7 @@ fun GasesWindow() {
                 .animateContentSize(),
             cells = GridCells.Fixed(4)) {
                 var numberOfCells = 4
-                if (toggled) numberOfCells = gases.size
+                if (toggled or (gases.registry.size < 4)) numberOfCells = gases.registry.size
                 items(count = numberOfCells) {
                 Row(
                     modifier = Modifier
@@ -143,7 +167,28 @@ fun GasesWindow() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = gases[it], fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
+                    val gas = gases.registry[it]
+                    var color = noDanger
+                    when (gas.dangerLevel) {
+                        "Low" -> color = Low
+                        "Moderate" -> color = Moderate
+                        "High" -> color = High
+                        "Hazardous" -> color = Hazardous
+                    }
+                    Column() {
+                        Text(
+                            text = gas.name,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = color
+                        )
+                        Text(
+                            text = gas.value.toString() + " " + gas.unit,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = color
+                        )
+                    }
                 }
             }
         }
