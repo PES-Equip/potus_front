@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.startIntentSenderForResult
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.ApiException
@@ -46,8 +47,7 @@ import timber.log.Timber
 @ExperimentalMaterialApi
 @Composable
 
-fun AuthScreen(navController: NavController) {
-    val coroutineScope = rememberCoroutineScope()
+fun AuthScreen(navController : NavHostController) { //onNavigateToSwitcher: () -> Unit) {
     var text by remember { mutableStateOf<String?>(null) }
     val tokenState = TokenState.current
     val signInRequestCode = 1
@@ -61,9 +61,10 @@ fun AuthScreen(navController: NavController) {
                 } else {
                     if(account.idToken != null) {
                         tokenState.signToken(account.idToken!!)
-                        navController.navigate("switcher_screen")
+                        //onNavigateToSwitcher
+                        navController.navigate(Screen.SwitcherScreen.route)
                     }
-                    else{
+                    else {
                         text = "Google sign in failed"
                     }
                 }
@@ -79,23 +80,6 @@ fun AuthScreen(navController: NavController) {
                 authResultLauncher.launch(signInRequestCode)
             }
         )
-    /*
-    token?.let {
-        CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIService::class.java).getUser("Bearer $token","user/profile")
-
-            val body = call.body()
-            if(call.isSuccessful){
-                Timber.d("OK")
-            }
-            else{
-                Timber.d("BAD")
-            }
-        }
-
-    }
-
-     */
 }
 
 
@@ -105,9 +89,6 @@ fun AuthView(
     errorText: String?,
     onClick: () -> Unit
 ) {
-
-
-
     var isLoading by remember { mutableStateOf(false) }
 
     Scaffold {
@@ -116,9 +97,7 @@ fun AuthView(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-        )
-
-        {
+        ) {
             Image(painter = painterResource(id = R.drawable.titol), "",
                 modifier = Modifier.height(150.dp)
                     .size(360.dp)
@@ -138,9 +117,6 @@ fun AuthView(
                     isLoading = true
                     onClick()
                 }
-
-
-
             )
 
             errorText?.let {
