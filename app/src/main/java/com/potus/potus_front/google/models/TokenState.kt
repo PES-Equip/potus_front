@@ -8,8 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.potus.potus_front.API.response.GasesResponse
 import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
-import com.potus.potus_front.API.response.data_models.Gas
-import com.potus.potus_front.API.response.data_models.Registry
+import com.potus.potus_front.API.response.data_models.GasRegistry
 
 class TokenStateViewModel: ViewModel(){
 
@@ -17,7 +16,7 @@ class TokenStateViewModel: ViewModel(){
     var isBusy by mutableStateOf(false)
     var token: String? by mutableStateOf(null)
     var user: UserResponse? by mutableStateOf(null)
-    var gases: GasesResponse by mutableStateOf(value = GasesResponse("", 0.0, 0.0, "", registry = Registry(registry = listOf(Gas("", "", "mg_m3", 0.0)))))
+    var gases: GasesResponse by mutableStateOf(value = GasesResponse("", 0.0, 0.0, "", registry = mapOf(Pair("", GasRegistry("", "NO DATA", "mg_m3", 0.0)))))
     var location: Pair<Double,Double> by mutableStateOf(value=Pair(0.0,0.0))
 
     fun getState(): String {
@@ -53,7 +52,7 @@ class TokenStateViewModel: ViewModel(){
 
     fun regionalGases(gases: GasesResponse?){
         if (gases != null) {
-            this.gases = gases!!
+            this.gases = gases
         }
     }
 

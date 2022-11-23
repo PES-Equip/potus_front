@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -33,24 +34,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
-import com.potus.potus_front.API.requests.InformLocationRequest
 import com.potus.potus_front.R
 import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
-import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import timber.log.Timber
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -157,22 +159,25 @@ fun GasesWindow() {
     }
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        //var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2.5", "PM10", "PS", "SO2")
-        var gases = tokenState.gases.registry.registry
+        //var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2_5", "PM10", "PS", "SO2")
+        val gasesInfo = tokenState.gases.registry
+        var gases = gasesInfo.keys
         var toggled by remember { mutableStateOf(false) }
 
         Spacer(modifier = Modifier.height(32.dp))
         LazyVerticalGrid(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
+                .align(CenterHorizontally)
                 .width(360.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(color = Daffodil)
                 .toggleable(value = toggled, onValueChange = { toggled = it })
                 .animateContentSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.Center,
             cells = GridCells.Fixed(4)) {
                 var numberOfCells = 4
-                if (toggled or (gases.size < 4)) numberOfCells = gases.size
+                if (toggled or (gasesInfo.size < 4)) numberOfCells = gasesInfo.size
                 items(count = numberOfCells) {
                 Row(
                     modifier = Modifier
@@ -181,23 +186,29 @@ fun GasesWindow() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    val gas = gases[it]
-                    var color = noDanger
-                    when (gas.dangerLevel) {
+                    val gas = gasesInfo[gases.elementAt(it)]
+                    var color = Color.Gray
+                    when (gas?.dangerLevel) {
+                        "NoDanger" -> color = noDanger
                         "Low" -> color = Low
                         "Moderate" -> color = Moderate
                         "High" -> color = High
                         "Hazardous" -> color = Hazardous
                     }
-                    Column() {
+                    Column(
+                        horizontalAlignment = CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
                         Text(
-                            text = gas.name,
+                            text = gas!!.name,
+                            textAlign = Center,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = color
                         )
                         Text(
-                            text = gas.value.toString() + " " + gas.unit,
+                            text = ((gas.value * 100.0).roundToInt()/100.0).toString() + " " + gas.unit,
+                            textAlign = Center,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
                             color = color
