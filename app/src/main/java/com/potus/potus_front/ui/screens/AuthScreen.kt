@@ -30,7 +30,7 @@ import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.R
 import com.potus.potus_front.google.*
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.component.SignInButtons
 import com.potus.potus_front.ui.theme.BraveGreen
 import kotlinx.coroutines.CoroutineScope
@@ -47,7 +47,7 @@ import timber.log.Timber
 @ExperimentalMaterialApi
 @Composable
 
-fun AuthScreen(navController : NavHostController) { //onNavigateToSwitcher: () -> Unit) {
+fun AuthScreen(onNavigateToSwitcher: () -> Unit) {
     var text by remember { mutableStateOf<String?>(null) }
     val tokenState = TokenState.current
     val signInRequestCode = 1
@@ -61,8 +61,7 @@ fun AuthScreen(navController : NavHostController) { //onNavigateToSwitcher: () -
                 } else {
                     if(account.idToken != null) {
                         tokenState.signToken(account.idToken!!)
-                        //onNavigateToSwitcher
-                        navController.navigate(Screen.SwitcherScreen.route)
+                        onNavigateToSwitcher()
                     }
                     else {
                         text = "Google sign in failed"

@@ -22,7 +22,7 @@ import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.R
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 @ExperimentalMaterialApi
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(onNavigateToHome: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     val tokenState = TokenState.current
     val openDialog = remember { mutableStateOf(false)  }
@@ -55,7 +55,7 @@ fun RegisterScreen(navController: NavController) {
         }
         val textState = remember { mutableStateOf(TextFieldValue()) }
         Column {
-            Spacer(modifier = Modifier.size(32.dp))
+            Spacer(modifier = Modifier.fillMaxWidth())
 
             //canviar imatge a register
             Image(painter = painterResource(id = R.drawable.logintext), "",
@@ -95,7 +95,7 @@ fun RegisterScreen(navController: NavController) {
 
                         if (call.isSuccessful) {
                             tokenState.signUser(call.body())
-                            navController.navigate("home_screen")
+                            onNavigateToHome()
                         } else {
                             openDialog.value =true
                             //Timber.d("BAD")
