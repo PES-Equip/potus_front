@@ -1,20 +1,13 @@
 package com.potus.potus_front.API
 
-import com.potus.potus_front.API.requests.ActionRequest
-import com.potus.potus_front.API.requests.ChangeUsernameRequest
-import com.potus.potus_front.API.requests.InformLocationRequest
-import com.potus.potus_front.API.requests.RegisterUserRequest
+import com.potus.potus_front.API.requests.*
 import com.potus.potus_front.API.response.ActionResponse
 import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface APIService {
 
@@ -29,6 +22,9 @@ interface APIService {
 
     @POST
     suspend fun changeUsername(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ChangeUsernameRequest): Response<UserResponse>
+
+    @DELETE
+    suspend fun deleteAccount(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
 
     @POST
     suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>

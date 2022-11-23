@@ -19,13 +19,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.potus.potus_front.composables.TopBar
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ChangeUsernameRequest
+import com.potus.potus_front.API.requests.DeleteAccountRequest
 import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.MainActivity
-import com.potus.potus_front.google.models.TokenState
+import com.potus.potus_front.R
+import com.potus.potus_front.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,189 +41,224 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @ExperimentalCoroutinesApi
 @ExperimentalMaterialApi
-@Preview
 @Composable
-fun ProfileScreen() {
-
-
-    val tokenState = TokenState.current
-    val user = TokenState.current.user!!
-    var username by remember { mutableStateOf(user.username) }
-
-
-    //poner el email del usuario pero no que no se pueda modificar mirar UserResponse
-    //poner tambien los nombres de los potus que han muerto
+fun ProfileScreen(navController: NavController) {
 
 
 
-    val notification = rememberSaveable { mutableStateOf("") }
-    if (notification.value.isNotEmpty()) {
-        Toast.makeText(LocalContext.current, notification.value, Toast.LENGTH_LONG).show()
-        notification.value = ""
-    }
 
-    var name by rememberSaveable { mutableStateOf("default name") }
-    var bio by rememberSaveable { mutableStateOf("default bio") }
-    var ola = false
+        val tokenState = TokenState.current
+        val user = TokenState.current.user!!
+        var username by remember { mutableStateOf(user?.username) }
+        var email by remember { mutableStateOf(user?.email) }
+
+        var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
+        var collection by remember { mutableStateOf(user.currency) }
+        var addedWater by remember { mutableStateOf(0) }
+        var addedLeaves by remember { mutableStateOf(0) }
+        var plantState by remember { mutableStateOf("DEFAULT") }
 
 
 
 
 
-    Column(
-        modifier = Modifier
-            .background(color = SoothingGreen)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(8.dp)
-    ) {
-        Row(
+        //poner el email del usuario pero no que no se pueda modificar mirar UserResponse
+        //poner tambien los nombres de los potus que han muerto
+
+
+        val notification = rememberSaveable { mutableStateOf("") }
+        if (notification.value.isNotEmpty()) {
+            Toast.makeText(LocalContext.current, notification.value, Toast.LENGTH_LONG).show()
+            notification.value = ""
+        }
+
+        var name by rememberSaveable { mutableStateOf("default name") }
+        var bio by rememberSaveable { mutableStateOf("default bio") }
+
+        var navigation_bool = false
+
+
+
+
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .background(color = SoothingGreen)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(8.dp)
         ) {
-            Button(
-                onClick = {
-                    notification.value = "Cancelled"
+            TopBar(
+                waterLevel = waterLevelState,
+                collection = collection,
+                username = user.username,
+                addedWater = addedWater,
+                addedLeaves = addedLeaves
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    onClick = {
+                        notification.value = "Cancelled"
 
-                },
-                colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
 
-            ){
-                Text(text = "Cancel")
+                ) {
+                    Text(text = "Cancel")
+                }
+                Button(
+                    onClick = {
+                        CoroutineScope(Dispatchers.IO).launch {
+
+                            val changeUsernameRequest = username?.let { ChangeUsernameRequest(it) }
+                            val call = changeUsernameRequest?.let {
+                                getRetrofit().create(APIService::class.java)
+                                    .changeUsername(
+                                        "Bearer " + tokenState.token,
+                                        "user/profile",
+                                        it
+                                    )
+                            }
+
+                            if (call?.isSuccessful == true) {
+                                notification.value = "Profile updated"
+                                if (call != null) {
+                                    tokenState.signUser(call.body())
+                                }
+                            } else {
+                                notification.value = "ERROR"
+                            }
+                        }
+
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
+
+                ) {
+                    Text(text = "Save")
+                }
+            }
+            Image(
+                painter = painterResource(id = R.drawable.basic), "",
+                modifier = Modifier
+                    .size(240.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp, end = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Name", modifier = Modifier.width(100.dp))
+                TextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.Transparent,
+                        textColor = Color.Black
+                    )
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp, end = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Username", modifier = Modifier.width(100.dp))
+                username?.let {
+                    TextField(
+                        value = it,
+                        onValueChange = { username = it },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            textColor = Color.Black
+                        )
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp, end = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Email", modifier = Modifier.width(100.dp))
+                email?.let {
+                    TextField(
+                        value = it,
+                        onValueChange = { email = it },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            textColor = Color.Black
+                        )
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                Text(
+                    text = "Bio", modifier = Modifier
+                        .width(100.dp)
+                        .padding(top = 8.dp)
+                )
+                TextField(
+                    value = bio,
+                    onValueChange = { bio = it },
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.Transparent,
+                        textColor = Color.Black
+                    ),
+                    singleLine = false,
+                    modifier = Modifier.height(150.dp)
+                )
             }
             Button(
                 onClick = {
                     CoroutineScope(Dispatchers.IO).launch {
 
-                        val changeUsernameRequest = ChangeUsernameRequest(username)
+                        val deleteAccountRequest = username?.let { DeleteAccountRequest(it) }
                         val call = getRetrofit().create(APIService::class.java)
-                            .changeUsername("Bearer " + tokenState.token, "user/profile", changeUsernameRequest)
+                            .deleteAccount("Bearer " + tokenState.token, "user/profile")
 
                         if (call.isSuccessful) {
-                            notification.value = "Profile updated"
+                            notification.value = "Account deleted"
                             tokenState.signUser(call.body())
-                        }
-                        else{
+                            navigation_bool = true
+                        } else {
                             notification.value = "ERROR"
+                            navigation_bool = true
                         }
                     }
-
                 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
-
-            ){
-                Text(text = "Save")
-            }
-        }
-
-        ProfileImage()
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 4.dp, end = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Name", modifier = Modifier.width(100.dp))
-            TextField(
-                value = name,
-                onValueChange = { name = it },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                )
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 4.dp, end = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Username", modifier = Modifier.width(100.dp))
-            TextField(
-                value = username,
-                onValueChange = { username = it },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                )
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.Top
-        ) {
-            Text(
-                text = "Bio", modifier = Modifier
-                    .width(100.dp)
-                    .padding(top = 8.dp)
-            )
-            TextField(
-                value = bio,
-                onValueChange = { bio = it },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                ),
-                singleLine = false,
-                modifier = Modifier.height(150.dp)
-            )
-        }
-
-    }
-
-}
-
-@Composable
-fun ProfileImage() {
-    val imageUri = rememberSaveable { mutableStateOf("") }
-    /*val painter = rememberImagePainter(
-        if (imageUri.value.isEmpty())
-            R.drawable.ic_user
-        else
-            imageUri.value
-    )
-    */
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { imageUri.value = it.toString() }
-    }
-    Spacer(modifier = Modifier.size(80.dp))
-
-    Column(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Card(
-            shape = CircleShape,
-            modifier = Modifier
-                .padding(8.dp)
-                .size(300.dp)
-        ) {
-            /*
-            Image(
-               // painter = painter,
-                contentDescription = null,
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
                 modifier = Modifier
-                    .wrapContentSize()
-                    .clickable { launcher.launch("image/*") },
-                contentScale = ContentScale.Crop
-            )
-            */
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                shape = MaterialTheme.shapes.medium
 
+            ) {
+                Text(text = "Delete Account")
+            }
 
-             */
         }
-        Text(text = "Change profile picture")
+
+        if (navigation_bool) {
+            Tokenprofile=false;
+            navigation_bool = false
+            TokenFet=true;
+            navController.navigate("auth_screen")
+        }
     }
 }

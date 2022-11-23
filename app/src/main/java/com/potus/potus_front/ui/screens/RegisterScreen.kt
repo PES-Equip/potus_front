@@ -54,8 +54,8 @@ fun RegisterScreen(onNavigateToHome: () -> Unit) {
             mutableStateOf(false)
         }
         val textState = remember { mutableStateOf(TextFieldValue()) }
-        Column {
-            Spacer(modifier = Modifier.fillMaxWidth())
+        Column (modifier = Modifier.fillMaxHeight()) {
+            Spacer(modifier = Modifier.size(32.dp))
 
             //canviar imatge a register
             Image(painter = painterResource(id = R.drawable.logintext), "",
