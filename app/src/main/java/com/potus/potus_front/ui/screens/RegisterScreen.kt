@@ -40,6 +40,10 @@ fun RegisterScreen(navController: NavController) {
     val tokenState = TokenState.current
     val openDialog = remember { mutableStateOf(false)  }
     var navigation_bool = false
+    if (navigation_bool) {
+        navController.navigate("home_screen")
+        navigation_bool = false
+    }
 
     Surface(
         color = MaterialTheme.colors.primaryVariant,
@@ -138,10 +142,6 @@ fun RegisterScreen(navController: NavController) {
                 )
             }
         }
-    }
-    if (navigation_bool) {
-        navController.navigate("home_screen")
-        navigation_bool = false
     }
 }
 /*

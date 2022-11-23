@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.potus.potus_front.composables.TopBar
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
@@ -45,10 +46,21 @@ fun ProfileScreen(navController: NavController) {
     if(Tokenprofile) {
 
 
+
+
         val tokenState = TokenState.current
-        val user = TokenState.current.user
+        val user = TokenState.current.user!!
         var username by remember { mutableStateOf(user?.username) }
         var email by remember { mutableStateOf(user?.email) }
+
+        var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
+        var collection by remember { mutableStateOf(user.currency) }
+        var addedWater by remember { mutableStateOf(0) }
+        var addedLeaves by remember { mutableStateOf(0) }
+        var plantState by remember { mutableStateOf("DEFAULT") }
+
+
+
 
 
         //poner el email del usuario pero no que no se pueda modificar mirar UserResponse
@@ -77,6 +89,13 @@ fun ProfileScreen(navController: NavController) {
                 .verticalScroll(rememberScrollState())
                 .padding(8.dp)
         ) {
+            TopBar(
+                waterLevel = waterLevelState,
+                collection = collection,
+                username = user.username,
+                addedWater = addedWater,
+                addedLeaves = addedLeaves
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
