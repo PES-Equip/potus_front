@@ -124,13 +124,12 @@ fun GardenItem(garden: NewGardenResponse) {
                         .clickable(onClick = {
                                 val askedGardenName = garden.name
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val gardenRequest = GardenRequest(name = askedGardenName)
-                                    val call = getRetrofit()
+                                    getRetrofit()
                                         .create(APIService::class.java)
                                         .askToJoinGarden(
                                             "Bearer " + tokenState.token,
                                             "gardens/profile/requests/$askedGardenName",
-                                            gardenRequest
+                                            garden = askedGardenName
                                         )
                                 }
 

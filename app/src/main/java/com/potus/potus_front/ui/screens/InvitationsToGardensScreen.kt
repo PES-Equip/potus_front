@@ -155,13 +155,12 @@ fun InvitationItem(invitation: NewGardenResponse) {
                             .clickable(onClick = {
                                 val askedGardenName = invitation.name
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val gardenRequest = GardenRequest(name = askedGardenName)
                                     val call = getRetrofit()
                                         .create(APIService::class.java)
                                         .joinGarden(
                                             "Bearer " + tokenState.token,
                                             "gardens/profile/requests/$askedGardenName",
-                                            gardenRequest
+                                            garden = askedGardenName
                                         )
 
                                         if (call.isSuccessful) {
@@ -196,13 +195,12 @@ fun InvitationItem(invitation: NewGardenResponse) {
 
                                 val askedGardenName = invitation.name
                                 CoroutineScope(Dispatchers.IO).launch {
-                                val gardenRequest = GardenRequest(name = askedGardenName)
                                 val call = getRetrofit()
                                     .create(APIService::class.java)
                                     .refuseToJoinGarden(
                                         "Bearer " + tokenState.token,
                                         "gardens/profile/requests/$askedGardenName",
-                                        gardenRequest
+                                        garden = askedGardenName
                                     )
                             }
 

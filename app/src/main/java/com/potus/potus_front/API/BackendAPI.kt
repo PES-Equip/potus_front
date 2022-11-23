@@ -10,7 +10,7 @@ import retrofit2.http.*
 interface APIService {
 
     @GET
-    suspend fun getUser(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
+    suspend fun getUser(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<UserResponse>
 
     @GET
     suspend fun getGarden(@Header("Authorization") token:String, @Url url:String): Response<GardenResponse>
@@ -25,7 +25,7 @@ interface APIService {
     suspend fun getInvitationList(@Header("Authorization") token:String, @Url url:String): Response<GardenListResponse>
 
     @GET
-    suspend fun getGardenPetitionList(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest): Response<GardenPetitionsResponse>
+    suspend fun getGardenPetitionList(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenPetitionsResponse>
 
     @POST
     suspend fun registerUser(@Header("Authorization") token:String, @Url url:String, @Body requestModel: RegisterUserRequest): Response<UserResponse>
@@ -40,13 +40,13 @@ interface APIService {
     suspend fun createGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest): Response<NewGardenResponse>
 
     @POST
-    suspend fun askToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest)
+    suspend fun askToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String)
 
     @POST
-    suspend fun sendGardenInvitation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest)
+    suspend fun sendGardenInvitation(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String, @Query("user") user:String)
 
     @PUT
-    suspend fun joinGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest): Response<GardenResponse>
+    suspend fun joinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenResponse>
 
     @PUT
     suspend fun changeGardenDescription(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenDescriptionRequest): Response<NewGardenResponse>
@@ -55,16 +55,16 @@ interface APIService {
     suspend fun acceptGardenPetition(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest): Response<GardenPetitionsResponse>
 
     @DELETE
-    suspend fun refuseToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest)
+    suspend fun refuseToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String)
 
     @DELETE
-    suspend fun refuseGardenPetition(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest)
+    suspend fun refuseGardenPetition(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String, @Query("user") user:String)
 
     @DELETE
     suspend fun exitGarden(@Header("Authorization") token:String, @Url url:String)
 
     @DELETE
-    suspend fun removeGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest)
+    suspend fun removeGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String)
 }
 
 fun getRetrofit(): Retrofit {

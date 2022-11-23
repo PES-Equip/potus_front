@@ -50,13 +50,12 @@ fun PetitionsToGardensScreen() {
 
     LaunchedEffect(Dispatchers.IO) {
         val garden = user.garden_info.garden.name
-        val allGardenPetitionsRequest = GardenRequest(name = garden)
         val call = getRetrofit()
             .create(APIService::class.java)
             .getGardenPetitionList(
                 "Bearer " + tokenState.token,
                 "gardens/$garden/requests",
-                allGardenPetitionsRequest
+                garden = garden
             )
 
         if (call.isSuccessful) {
@@ -203,13 +202,13 @@ fun PetitionItem(petition: GardenMemberResponse) {
                                 val garden = user.garden_info.garden.name
                                 val petitioner = petition.user.username
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val petitionRequest = GardenInvitationRequest(garden = garden, user = petitioner)
                                     getRetrofit()
                                         .create(APIService::class.java)
                                         .refuseGardenPetition(
                                             "Bearer " + tokenState.token,
                                             "gardens/$garden/requests/$petitioner",
-                                            petitionRequest
+                                            garden = garden,
+                                            user = petitioner
                                         )
                                 }
 

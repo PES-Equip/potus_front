@@ -157,12 +157,12 @@ fun GardenManagementScreen() {
                         CoroutineScope(Dispatchers.IO).launch {
                             val garden = tokenState.user?.garden_info?.garden?.name.toString()
                             val receiver = invitedUser.value.toString()
-                            val sendGardenInvitation = GardenInvitationRequest(garden = garden, user = receiver)
                             getRetrofit().create(APIService::class.java)
                                 .sendGardenInvitation(
                                 "Bearer " + tokenState.token,
                                 "gardens/$garden/requests/$receiver",
-                                sendGardenInvitation
+                                garden = garden,
+                                user = receiver
                             )
                         }
                     },
@@ -207,13 +207,12 @@ fun GardenManagementScreen() {
 
                     val askedGardenName = tokenState.user?.garden_info?.garden?.name.toString()
                     CoroutineScope(Dispatchers.IO).launch {
-                        val deleteGardenRequest = GardenRequest(name = askedGardenName)
                         getRetrofit()
                             .create(APIService::class.java)
                             .removeGarden(
                                 "Bearer " + tokenState.token,
                                 "gardens/$askedGardenName",
-                                deleteGardenRequest
+                                garden = askedGardenName
                             )
                     }
 
