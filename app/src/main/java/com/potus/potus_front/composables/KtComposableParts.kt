@@ -118,9 +118,6 @@ fun TopBar(waterLevel: Int, collection: Int, username: String, addedWater: Int, 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GasesWindow() {
-    val openDialog = remember { mutableStateOf(false)  }
-    val error = remember { mutableStateOf(200)  }
-
     val tokenState = TokenState.current
 
     LaunchedEffect(Dispatchers.IO) {
@@ -137,8 +134,8 @@ fun GasesWindow() {
             tokenState.regionalGases(call.body())
         } else {
             //ERROR MESSAGES, IF ANY
-            error.value = call.code()
-            openDialog.value = true
+            //error.value = call.code()
+            //openDialog.value = true
         }
     }
 
