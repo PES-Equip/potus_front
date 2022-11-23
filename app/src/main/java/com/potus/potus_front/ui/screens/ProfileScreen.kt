@@ -25,7 +25,7 @@ import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ChangeUsernameRequest
 import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.MainActivity
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

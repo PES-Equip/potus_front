@@ -62,7 +62,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:1.2.1"
 
     //navigation
-    implementation "androidx.navigation:navigation-compose:2.5.2"
+    implementation "androidx.navigation:navigation-compose:2.5.3"
 
     //google oauth
     implementation "com.google.android.gms:play-services-auth:20.3.0"
