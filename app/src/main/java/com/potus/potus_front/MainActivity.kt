@@ -23,9 +23,8 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.potus.potus_front.models.TokenState
-import com.potus.potus_front.models.TokenStateViewModel
-import com.potus.potus_front.ui.screens.ApplicationSwitcher
+import com.potus.potus_front.google.models.TokenState
+import com.potus.potus_front.google.models.TokenStateViewModel
 import com.potus.potus_front.ui.screens.Navigation
 import com.potus.potus_front.ui.theme.Potus_frontTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,22 +52,16 @@ class MainActivity : ComponentActivity() {
         tokenStateViewModel.myLocation(getLastLocation())
 
         setContent {
-
             Potus_frontTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    // color = MaterialTheme.colors.background
                     color = MaterialTheme.colors.background
 
                 ) {
-
                     CompositionLocalProvider(TokenState provides tokenStateViewModel) {
                         Navigation()
-                        //ApplicationSwitcher()
-                        //AuthScreen()
                     }
-                    //Navigation(tokenViewModel)
                 }
             }
         }

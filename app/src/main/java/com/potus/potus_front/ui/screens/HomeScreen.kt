@@ -15,13 +15,13 @@ import com.potus.potus_front.composables.BottomBar
 import com.potus.potus_front.composables.CenterArea
 import com.potus.potus_front.composables.GasesWindow
 import com.potus.potus_front.composables.TopBar
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.Dispatchers
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onNavigateToProfile: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -60,7 +60,8 @@ fun HomeScreen() {
             collection = collection,
             username = user.username,
             addedWater = addedWater,
-            addedLeaves = addedLeaves
+            addedLeaves = addedLeaves,
+            onNavigateToProfile = { onNavigateToProfile() }
         )
         GasesWindow()
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
