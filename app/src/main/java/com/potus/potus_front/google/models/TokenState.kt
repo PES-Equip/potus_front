@@ -15,7 +15,7 @@ class TokenStateViewModel: ViewModel(){
     var location: Pair<Double,Double> by mutableStateOf(value = Pair(0.0,0.0))
     var gardens: List<NewGardenResponse> by mutableStateOf(value = listOf(NewGardenResponse("No Gardens available", 0, "There are no Gardens available.")))
     var invitations: List<NewGardenResponse> by mutableStateOf(value = listOf(NewGardenResponse("No invitations available", 0, "You have not received any invitations to join a Garden.")))
-    var petitions: List<GardenMemberResponse> by mutableStateOf(value = listOf(GardenMemberResponse(garden = NewGardenResponse("GARDEN", 0, ""), "OWNER", GardenUser(0, "", 0, PotusResponse(actions = mapOf(Pair("watering", ActionResponse(lastTime = Date(21/11/2022)))), alive = true, createdDate = Date(21/11/2022), currencyGenerators = listOf(Pair("", 0)), 0, 0, 0, 0, ignored = false, infested = false, lastModified = Date(21/11/2022), "potus", 0, 0, "", 0, 0), "", "The Garden does not have any requests", ""))))
+    var petitions: List<GardenMemberResponse> by mutableStateOf(value = listOf(GardenMemberResponse(garden = NewGardenResponse("GARDEN", 0, ""), "OWNER", GardenUser(0, "", 0, PotusResponse(actions = mapOf(Pair("watering", ActionResponse(lastTime = Date(21/11/2022)))), alive = true, createdDate = Date(21/11/2022), currencyGenerators = mapOf(Pair("", 0)), 0, 0, 0, 0, ignored = false, infested = false, lastModified = Date(21/11/2022), "potus", 0, 0, "", 0, 0), "", "The Garden does not have any requests", ""))))
 
     fun getState(): String {
         if(user == null)
@@ -53,15 +53,21 @@ class TokenStateViewModel: ViewModel(){
     }
 
     fun allGardens(gardens: GardenListResponse?) {
-        this.gardens = gardens?.gardens!!
+        if (gardens != null) {
+            this.gardens = gardens.gardens
+        }
     }
 
     fun myInvitations(invitations: GardenListResponse?){
-        this.invitations = invitations?.gardens!!
+        if (invitations != null) {
+            this.invitations = invitations.gardens
+        }
     }
 
     fun myPetitions(petitions: GardenPetitionsResponse?){
-        this.petitions = petitions?.petitions!!
+        if (petitions != null) {
+            this.petitions = petitions.petitions
+        }
     }
 }
 

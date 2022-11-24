@@ -10,10 +10,10 @@ import retrofit2.http.*
 interface APIService {
 
     @GET
-    suspend fun getUser(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<UserResponse>
+    suspend fun getUser(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
 
     @GET
-    suspend fun getGarden(@Header("Authorization") token:String, @Url url:String): Response<GardenResponse>
+    suspend fun getGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenResponse>
 
     @GET
     suspend fun getGardenList(@Header("Authorization") token:String, @Url url:String): Response<GardenListResponse>
