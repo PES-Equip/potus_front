@@ -26,7 +26,7 @@ import com.potus.potus_front.API.requests.GardenInvitationRequest
 import com.potus.potus_front.API.requests.GardenRequest
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.RoseRed
@@ -36,9 +36,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-@Preview
 @Composable
-fun GardenManagementScreen() {
+fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetitions: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -50,11 +49,12 @@ fun GardenManagementScreen() {
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
-            waterLevel = 100, //user.potus.waterLevel,
-            collection = 100, //user.currency,
-            username = "JoeBiden", //user.username,
+            waterLevel = user.potus.waterLevel,
+            collection = user.currency,
+            username = user.username,
             addedWater = 0,
-            addedLeaves = 0
+            addedLeaves = 0,
+            onNavigateToProfile = { onNavigateToProfile() }
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             Spacer(modifier = Modifier.size(8.dp))
@@ -190,7 +190,7 @@ fun GardenManagementScreen() {
                             )
                     }
 
-                    /* SWITCHER: redirect to HomeScreen */
+                    onNavigateToHome()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = RoseRed),
                 modifier = Modifier
@@ -216,7 +216,7 @@ fun GardenManagementScreen() {
                             )
                     }
 
-                    /* SWITCHER: redirect to HomeScreen */
+                    onNavigateToHome()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
                 modifier = Modifier
@@ -228,6 +228,6 @@ fun GardenManagementScreen() {
                 Text(text = "DELETE GARDEN", color = Daffodil)
             }
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_peticions_jardi), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_jardi))
+        GardenBottomBar(painterResource(id = R.drawable.icona_peticions_jardi), onNavigateToPetitions, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_jardi), onNavigateToGarden)
     }
 }
