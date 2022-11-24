@@ -30,7 +30,9 @@ import com.potus.potus_front.API.requests.DeleteAccountRequest
 import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.MainActivity
 import com.potus.potus_front.R
+import com.potus.potus_front.composables.CenterArea
 import com.potus.potus_front.google.models.TokenState
+import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +46,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit) {
     val tokenState = TokenState.current
-    val user = TokenState.current.user!!
+    val user = TokenState.current.user
     var username by remember { mutableStateOf(user?.username) }
     var email by remember { mutableStateOf(user?.email) }
 
@@ -80,7 +82,7 @@ fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit) {
                     notification.value = "Cancelled"
                     onNavigateToHome()
                 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
+                colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
 
             ) {
                 Text(text = "Cancel")
@@ -110,34 +112,13 @@ fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit) {
                     }
 
                 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
+                colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
 
             ) {
                 Text(text = "Save")
             }
         }
-        Image(
-            painter = painterResource(id = R.drawable.basic), "",
-            modifier = Modifier
-                .size(240.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 4.dp, end = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Name", modifier = Modifier.width(100.dp))
-            TextField(
-                value = name,
-                onValueChange = { name = it },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                )
-            )
-        }
+        CenterArea(plantState)
 
         Row(
             modifier = Modifier
@@ -176,31 +157,9 @@ fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit) {
             }
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.Top
-        ) {
-            Text(
-                text = "Bio", modifier = Modifier
-                    .width(100.dp)
-                    .padding(top = 8.dp)
-            )
-            TextField(
-                value = bio,
-                onValueChange = { bio = it },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                ),
-                singleLine = false,
-                modifier = Modifier.height(150.dp)
-            )
-        }
         Button(
             onClick = {
-                CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.Main).launch {
 
                     val deleteAccountRequest = username?.let { DeleteAccountRequest(it) }
                     val call = getRetrofit().create(APIService::class.java)

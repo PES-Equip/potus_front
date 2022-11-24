@@ -87,7 +87,7 @@ fun RegisterScreen(onNavigateToHome: () -> Unit) {
             Button(
 
                 onClick = {
-                    CoroutineScope(Dispatchers.IO).launch {
+                    CoroutineScope(Dispatchers.Main).launch {
 
                         val registerUserRequest = RegisterUserRequest(textState.value.text)
                         val call = getRetrofit().create(APIService::class.java)
