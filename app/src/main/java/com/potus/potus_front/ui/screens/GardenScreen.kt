@@ -27,7 +27,7 @@ import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.response.data_models.SimplifiedGardenMember
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
@@ -36,16 +36,14 @@ import java.util.*
 import kotlin.random.Random
 
 
-@Preview
 @Composable
-fun GardenScreen() {
+fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> Unit, onNavigateToShop: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToChat: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!
     val members = remember { mutableStateOf(listOf(SimplifiedGardenMember("THERE ARE NO USERS IN THIS GARDEN", "OWNER"))) }
-    val invitedUser = remember { mutableStateOf(TextFieldValue()) }
 
     LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()
@@ -70,11 +68,12 @@ fun GardenScreen() {
             collection = user.currency,
             username = user.username,
             addedWater = 0,
-            addedLeaves = 0
+            addedLeaves = 0,
+            onNavigateToProfile = { onNavigateToProfile() }
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             Spacer(modifier = Modifier.size(8.dp))
-            Surface(modifier = Modifier.fillMaxWidth().clickable(onClick = { /* SWITCHER: a GardenManagementScreen */ }), color = Color.Transparent) {
+            Surface(modifier = Modifier.fillMaxWidth().clickable(onClick = { onNavigateToManagement() }), color = Color.Transparent) {
                 Text(
                     //text = "MY GARDEN",
                     text = tokenState.user?.garden_info?.garden?.name.toString(),
@@ -87,7 +86,7 @@ fun GardenScreen() {
             //MembersList(listOf(Pair("Me", "OWNER"), Pair("You", "ADMIN"), Pair("He", "ADMIN"), Pair("She", "ADMIN"), Pair("They", "ADMIN")))
             MembersList(members.value)
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_mercat), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_xat))
+        GardenBottomBar(painterResource(id = R.drawable.icona_mercat), onNavigateToShop, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_xat), onNavigateToChat)
     }
 }
 

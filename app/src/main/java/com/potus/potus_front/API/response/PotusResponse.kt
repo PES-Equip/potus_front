@@ -6,7 +6,7 @@ data class PotusResponse(
     var actions: Map<String, ActionResponse>,
     var alive: Boolean,
     var createdDate: Date,
-    var currencyGenerators: List<Pair<String,Int>>,
+    var currencyGenerators: Map<String, Int>,
     var currencyMultiplier: Int,
     var eventBonus: Int,
     var festivityBonus: Int,
