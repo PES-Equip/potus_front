@@ -18,17 +18,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.GardenInvitationRequest
-import com.potus.potus_front.API.requests.GardenRequest
 import com.potus.potus_front.API.response.*
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.RoseRed
@@ -36,12 +34,10 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 
-@Preview
 @Composable
-fun PetitionsToGardensScreen() {
+fun PetitionsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToPetitions: () -> Unit, onNavigateToManagement: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
     val openDialog = remember { mutableStateOf(false) }
     val error = remember { mutableStateOf(200) }
 
@@ -73,36 +69,36 @@ fun PetitionsToGardensScreen() {
             collection = user.currency,
             username = user.username,
             addedWater = 0,
-            addedLeaves = 0
+            addedLeaves = 0,
+            onNavigateToProfile = { onNavigateToProfile() }
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
-            PetitionsList(tokenState.petitions)
+            PetitionsList(tokenState.petitions, onNavigateToPetitions)
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_gestio_jardi), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_jardi))
+        GardenBottomBar(painterResource(id = R.drawable.icona_gestio_jardi), onNavigateToManagement, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_jardi), onNavigateToGarden)
     }
 }
 
 @Composable
-fun PetitionsList (petitions: List<GardenMemberResponse>) {
+fun PetitionsList (petitions: List<GardenMemberResponse>, onNavigateToPetitions: () -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(petitions.size) {
-                arrayItem -> PetitionItem(petition = petitions[arrayItem])
+                arrayItem -> PetitionItem(petition = petitions[arrayItem], onNavigateToPetitions)
         }
     }
 }
 
 @Composable
-fun PetitionItem(petition: GardenMemberResponse) {
+fun PetitionItem(petition: GardenMemberResponse, onNavigateToPetitions: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!
-    var joinedGarden = remember { mutableStateOf(Triple("You do not have any pending invitations.", 0, "NO INVITATIONS")) }
     var toggled by remember { mutableStateOf(false) }
 
     Column(
@@ -136,7 +132,7 @@ fun PetitionItem(petition: GardenMemberResponse) {
             }
         }
         else {
-            Column() {
+            Column {
                 Row(modifier = Modifier.align(Alignment.Start)) {
                     Image(
                         painter = painterResource(id = R.drawable.icona_peticions_jardi), "",
@@ -178,7 +174,7 @@ fun PetitionItem(petition: GardenMemberResponse) {
                                     }
                                 }
 
-                                /* SWITCHER: to the Garden */
+                                onNavigateToPetitions()
                             })
                             .padding(8.dp)
                             .width(184.dp)
@@ -212,7 +208,7 @@ fun PetitionItem(petition: GardenMemberResponse) {
                                         )
                                 }
 
-                                /* SWITCHER: to itself (InvitationsToGardenScreen) */
+                                onNavigateToPetitions()
                             })
                             .padding(8.dp)
                             .width(184.dp)

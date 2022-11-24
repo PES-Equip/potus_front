@@ -18,16 +18,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
-import com.potus.potus_front.API.requests.GardenRequest
 import com.potus.potus_front.API.response.NewGardenResponse
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.RoseRed
@@ -37,16 +35,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-@Preview
 @Composable
-fun InvitationsToGardensScreen() {
+fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToSelection: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!
 
-    LaunchedEffect(Dispatchers.IO) {
+    /*LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()
             .create(APIService::class.java)
             .getInvitationList(
@@ -61,7 +58,7 @@ fun InvitationsToGardensScreen() {
             error.value = call.code()
             openDialog.value = true
         }
-    }
+    }*/
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
@@ -69,31 +66,32 @@ fun InvitationsToGardensScreen() {
             collection = user.currency,
             username = user.username,
             addedWater = 0,
-            addedLeaves = 0
+            addedLeaves = 0,
+            onNavigateToProfile = { onNavigateToProfile() }
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
-            InvitationsList(tokenState.invitations)
-            //InvitationsList(listOf(Triple("We are testing things. Don't worry!", 100000, "TESTS")))
+            //InvitationsList(tokenState.invitations, onNavigateToGarden, onNavigateToInvitations)
+            InvitationsList(listOf(NewGardenResponse("Christmas gang :)", 100000, "Fum, fum, fum"), NewGardenResponse("Developer's corner", 100000, "So tired..."), NewGardenResponse("Bosc", 100000, "Els originals!")), onNavigateToGarden, onNavigateToInvitations)
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_seleccio_jardi), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_nou_jardi))
+        GardenBottomBar(painterResource(id = R.drawable.icona_seleccio_jardi), onNavigateToSelection, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_nou_jardi), onNavigateToCreation)
     }
 }
 
 @Composable
-fun InvitationsList (invitations: List<NewGardenResponse>) {
+fun InvitationsList (invitations: List<NewGardenResponse>, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(invitations.size) {
-                arrayItem -> InvitationItem(invitation = invitations[arrayItem])
+                arrayItem -> InvitationItem(invitation = invitations[arrayItem], onNavigateToGarden, onNavigateToInvitations)
         }
     }
 }
 
 @Composable
-fun InvitationItem(invitation: NewGardenResponse) {
+fun InvitationItem(invitation: NewGardenResponse, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -163,16 +161,16 @@ fun InvitationItem(invitation: NewGardenResponse) {
                                             garden = askedGardenName
                                         )
 
-                                        if (call.isSuccessful) {
-                                            call.body()?.let { joinedGarden.value = Triple(it.garden.name, it.garden.members_num, it.garden.description) }
-                                        } else {
-                                            //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
-                                            error.value = call.code()
-                                            openDialog.value = true
-                                        }
+                                    if (call.isSuccessful) {
+                                        call.body()?.let { joinedGarden.value = Triple(it.garden.name, it.garden.members_num, it.garden.description) }
+                                    } else {
+                                        //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
+                                        error.value = call.code()
+                                        openDialog.value = true
+                                    }
                                 }
 
-                                /* SWITCHER: to the Garden */
+                                onNavigateToGarden()
                             })
                             .padding(8.dp)
                             .width(184.dp)
@@ -204,7 +202,7 @@ fun InvitationItem(invitation: NewGardenResponse) {
                                     )
                             }
 
-                                /* SWITCHER: to itself (InvitationsToGardenScreen) */
+                                onNavigateToInvitations()
                             })
                             .padding(8.dp)
                             .width(184.dp)

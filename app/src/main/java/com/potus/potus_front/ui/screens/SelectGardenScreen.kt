@@ -17,35 +17,32 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
-import com.potus.potus_front.API.requests.GardenRequest
-import com.potus.potus_front.API.response.GardenListResponse
 import com.potus.potus_front.API.response.NewGardenResponse
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
-@Preview
 @Composable
-fun SelectGardenScreen() {
+fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!
 
-    LaunchedEffect(Dispatchers.IO) {
+    /*LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()
             .create(APIService::class.java)
             .getGardenList(
@@ -54,13 +51,14 @@ fun SelectGardenScreen() {
             )
 
         if (call.isSuccessful) {
+            Timber.tag("HERE!").d(call.body()?.toString())
             call.body()?.let { tokenState.allGardens(it) }
         } else {
             //ERROR MESSAGES, IF ANY
             error.value = call.code()
             openDialog.value = true
         }
-    }
+    }*/
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
@@ -68,12 +66,14 @@ fun SelectGardenScreen() {
             collection = user.currency,
             username = user.username,
             addedWater = 0,
-            addedLeaves = 0
+            addedLeaves = 0,
+            onNavigateToProfile = { onNavigateToProfile() }
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
-            GardenList(tokenState.gardens)
+            GardenList(listOf(NewGardenResponse("We Are The Champions", 3, "You should ask to join us."), NewGardenResponse("#1 GARDEN IN THE WORLD", 0, "Admire us!"), NewGardenResponse("WOOOHOOOOOOO", 0, "HEEEEY"), NewGardenResponse("Christmas gang :)", 156, "Fum, fum, fum"), NewGardenResponse("Developer's corner", 1, "So tired..."), NewGardenResponse("Knights of the PIC Table", 0, "Hehe."), NewGardenResponse("NO-NAME", 0, "Join us! We do bite ;)"), NewGardenResponse("Bosc", 6, "Els originals!")))
+            //GardenList(tokenState.gardens)
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_nou_jardi))
+        GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), onNavigateToInvitations, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_nou_jardi), onNavigateToCreation)
     }
 }
 
