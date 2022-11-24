@@ -18,18 +18,18 @@ import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.GardenRequest
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
-@Preview
 @Composable
-fun CreateGardenScreen() {
+fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToSelection: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -45,7 +45,8 @@ fun CreateGardenScreen() {
             collection = user.currency,
             username = user.username,
             addedWater = 0,
-            addedLeaves = 0
+            addedLeaves = 0,
+            onNavigateToProfile = { onNavigateToProfile() }
         )
         Column(modifier = Modifier.weight(1f).background(color = Daffodil)) {
             var newGardenName = remember { mutableStateOf(TextFieldValue()) }
@@ -93,6 +94,7 @@ fun CreateGardenScreen() {
                                     newGardensMembers.value = it.members_num
                                     newGardensDescription.value = it.description
                                 }
+                                Timber.tag("CREATED!").d(call.body().toString())
                             } else {
                                 //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
                                 error.value = call.code()
@@ -100,9 +102,7 @@ fun CreateGardenScreen() {
                             }
                     }
 
-                    /* ÉS MOLT PROBABLE QUE CALGUI FER UNA JOIN REQUEST I UNA ACCEPTACIÓ DIRECTA PER PART DEL JARDÍ */
-
-                    /* SWITCHER: a la vista del nou Jardi */
+                    onNavigateToGarden()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                 modifier = Modifier
@@ -115,6 +115,6 @@ fun CreateGardenScreen() {
                 Text(text = "Create and Join!", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = SoothingGreen)
             }
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), painterResource(id = R.drawable.basic), painterResource(id = R.drawable.icona_seleccio_jardi))
+        GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), onNavigateToInvitations, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_seleccio_jardi), onNavigateToSelection)
     }
 }
