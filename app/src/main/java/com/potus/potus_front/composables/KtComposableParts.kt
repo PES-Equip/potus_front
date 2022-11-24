@@ -41,10 +41,7 @@ import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -204,9 +201,13 @@ fun CenterArea(plantState:String) {
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
-fun BottomBar(updateWaterLevel: (Int) -> Unit,
-              updateLeaveRecollection:(Int) -> Unit
+fun BottomBar(
+    updateWaterLevel: (Int) -> Unit,
+    updateLeaveRecollection:(Int) -> Unit,
+    onNavigateToGarden: () -> Unit,
+    onNavigateToSelection: () -> Unit
 ) {
     val heightBottomBar = 192.dp
     val heightCircle = 125.dp
@@ -216,6 +217,8 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
 
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = ""
+
+    val user = TokenState.current.user!!
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -266,7 +269,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
-                                            var jObjErr = JSONObject(Ebody.string())
+                                            val jObjErr = JSONObject(Ebody.string())
                                             actionString = jObjErr.getString("message")
                                         }
                                     }
@@ -315,7 +318,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
-                                            var jObjErr = JSONObject(Ebody.string())
+                                            val jObjErr = JSONObject(Ebody.string())
                                             actionString = jObjErr.getString("message")
                                         }
                                     }
@@ -338,7 +341,11 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                 painter = painterResource(id = R.drawable.icona_jardi),
                 "",
                 modifier = Modifier
-                    .clickable(onClick = { /* SWITCHER: if user does not have a Garden: to SelectGardenScreen; if user has Garden: to GardenScreen */ })
+                    .clickable(onClick = {
+                        /* SWITCHER: if user does not have a Garden: to SelectGardenScreen; if user has Garden: to GardenScreen */
+                        if (user.garden_info != null) onNavigateToGarden()
+                        else onNavigateToSelection()
+                    })
                     .padding(8.dp)
                     .size(heightCircle)
                     .align(Alignment.Center)
@@ -349,7 +356,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
 }
 
 @Composable
-fun GardenBottomBar(leftImage: Painter, centerImage: Painter, rightImage: Painter) {
+fun GardenBottomBar(leftImage: Painter, onNavigateToLeft : () -> Unit,  centerImage: Painter, onNavigateToCenter : () -> Unit, rightImage: Painter, onNavigateToRight : () -> Unit) {
     val heightBottomBar = 96.dp
     val heightCircle = 160.dp
     val heightTotal = heightBottomBar+heightCircle/2
@@ -384,7 +391,7 @@ fun GardenBottomBar(leftImage: Painter, centerImage: Painter, rightImage: Painte
                             painter = leftImage,
                             "",
                             modifier = Modifier
-                                .clickable(onClick = { /* SWITCHER: s'haurà de fer en funció de la imatge que li arribi! */ })
+                                .clickable(onClick = { onNavigateToLeft() })
                                 .padding(8.dp)
                                 .size(heightButton)
                                 .align(Alignment.CenterVertically)
@@ -404,7 +411,7 @@ fun GardenBottomBar(leftImage: Painter, centerImage: Painter, rightImage: Painte
                             painter = rightImage,
                             "",
                             modifier = Modifier
-                                .clickable(onClick = { /* SWITCHER: s'haurà de fer en funció de la imatge que li arribi! */ })
+                                .clickable(onClick = { onNavigateToRight() })
                                 .padding(8.dp)
                                 .size(heightButton)
                                 .align(Alignment.CenterVertically)
@@ -424,7 +431,7 @@ fun GardenBottomBar(leftImage: Painter, centerImage: Painter, rightImage: Painte
                     painter = centerImage,
                     "",
                     modifier = Modifier
-                        .clickable(onClick = { /* SWITCHER: s'haurà de fer en funció de la imatge que li arribi! */ })
+                        .clickable(onClick = { onNavigateToCenter() })
                         .padding(8.dp)
                         .size(heightCircle - 32.dp)
                         .align(Alignment.Center)
