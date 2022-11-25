@@ -43,7 +43,7 @@ fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGard
     val tokenState = TokenState.current
     val user = tokenState.user!!
 
-    /*LaunchedEffect(Dispatchers.IO) {
+    LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()
             .create(APIService::class.java)
             .getInvitationList(
@@ -58,7 +58,7 @@ fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGard
             error.value = call.code()
             openDialog.value = true
         }
-    }*/
+    }
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
@@ -70,8 +70,8 @@ fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGard
             onNavigateToProfile = { onNavigateToProfile() }
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
-            //InvitationsList(tokenState.invitations, onNavigateToGarden, onNavigateToInvitations)
-            InvitationsList(listOf(NewGardenResponse("Christmas gang :)", 100000, "Fum, fum, fum"), NewGardenResponse("Developer's corner", 100000, "So tired..."), NewGardenResponse("Bosc", 100000, "Els originals!")), onNavigateToGarden, onNavigateToInvitations)
+            InvitationsList(tokenState.invitations, onNavigateToGarden, onNavigateToInvitations)
+            //InvitationsList(listOf(NewGardenResponse("Christmas gang :)", 100000, "Fum, fum, fum"), NewGardenResponse("Developer's corner", 100000, "So tired..."), NewGardenResponse("Bosc", 100000, "Els originals!")), onNavigateToGarden, onNavigateToInvitations)
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_seleccio_jardi), onNavigateToSelection, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_nou_jardi), onNavigateToCreation)
     }
@@ -167,6 +167,17 @@ fun InvitationItem(invitation: NewGardenResponse, onNavigateToGarden: () -> Unit
                                         //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
                                         error.value = call.code()
                                         openDialog.value = true
+                                    }
+                                }
+
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    val call = getRetrofit().create(APIService::class.java)
+                                        .getUser(
+                                            "Bearer " + tokenState.token,
+                                            "user/profile")
+
+                                    if (call.isSuccessful) {
+                                        tokenState.signUser(call.body())
                                     }
                                 }
 
