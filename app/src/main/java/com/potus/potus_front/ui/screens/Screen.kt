@@ -7,4 +7,10 @@ sealed class Screen(val route: String){
     object RegisterScreen : Screen("register_screen")
     object SwitcherScreen : Screen("switcher_screen")
     object HistoryScreen : Screen("history_screen")
+    object SelectGardenScreen : Screen("select_garden_screen")
+    object CreateGardenScreen : Screen("create_garden_screen")
+    object InvitationsToGardensScreen : Screen("invitations_to_gardens_screen")
+    object GardenScreen : Screen("garden_screen")
+    object GardenManagementScreen : Screen("garden_management_screen")
+    object PetitionsToGardensScreen : Screen("petitions_to_gardens_screen")
 }

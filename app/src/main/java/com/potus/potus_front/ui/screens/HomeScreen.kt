@@ -21,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 
 
 @Composable
-fun HomeScreen(onNavigateToProfile: () -> Unit) {
+fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToSelection: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -76,7 +76,9 @@ fun HomeScreen(onNavigateToProfile: () -> Unit) {
             updateLeaveRecollection = { collectedLeaves ->
                 addedLeaves = collectedLeaves - collection
                 collection = collectedLeaves
-            })
+            },
+            onNavigateToGarden = { onNavigateToGarden() },
+            onNavigateToSelection = { onNavigateToSelection() })
     }
 
     if (openDialog.value) {

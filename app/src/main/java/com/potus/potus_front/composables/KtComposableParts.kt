@@ -45,6 +45,7 @@ import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
+import kotlinx.coroutines.*
 import com.potus.potus_front.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +55,6 @@ import org.json.JSONObject
 import timber.log.Timber
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TopBar(
     waterLevel: Int,
@@ -266,9 +266,13 @@ fun CenterArea(plantState:String) {
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
-fun BottomBar(updateWaterLevel: (Int) -> Unit,
-              updateLeaveRecollection:(Int) -> Unit
+fun BottomBar(
+    updateWaterLevel: (Int) -> Unit,
+    updateLeaveRecollection:(Int) -> Unit,
+    onNavigateToGarden: () -> Unit,
+    onNavigateToSelection: () -> Unit
 ) {
     val heightBottomBar = 192.dp
     val heightCircle = 125.dp
@@ -278,6 +282,9 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
 
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = ""
+
+    val tokenState = TokenState.current
+    val user = tokenState.user!!
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -312,8 +319,6 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                         modifier = Modifier
                             .clickable(onClick = {
                                 GlobalScope.launch(Dispatchers.IO) {
-                                    //CoroutineScope(Dispatchers.IO).launch {
-
                                     val newUpdateActionRequest = ActionRequest("prune")
                                     val call = getRetrofit()
                                         .create(APIService::class.java)
@@ -330,7 +335,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
-                                            var jObjErr = JSONObject(Ebody.string())
+                                            val jObjErr = JSONObject(Ebody.string())
                                             actionString = jObjErr.getString("message")
                                         }
                                     }
@@ -379,7 +384,7 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
-                                            var jObjErr = JSONObject(Ebody.string())
+                                            val jObjErr = JSONObject(Ebody.string())
                                             actionString = jObjErr.getString("message")
                                         }
                                     }
@@ -402,6 +407,22 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                 painter = painterResource(id = R.drawable.icona_jardi),
                 "",
                 modifier = Modifier
+                    .clickable(onClick = {
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val call = getRetrofit().create(APIService::class.java)
+                                .getUser(
+                                    "Bearer " + tokenState.token,
+                                    "user/profile")
+
+                            if (call.isSuccessful) {
+                                tokenState.signUser(call.body())
+                            }
+                        }
+
+                        if (user.garden_info != null) onNavigateToGarden()
+                        else onNavigateToSelection()
+                    })
                     .padding(8.dp)
                     .size(heightCircle)
                     .align(Alignment.Center)
@@ -409,6 +430,99 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                     .background(color = SoothingGreen))
         }
     }
+}
+
+@Composable
+fun GardenBottomBar(
+    leftImage: Painter,
+    onNavigateToLeft : () -> Unit,
+    centerImage: Painter,
+    onNavigateToCenter : () -> Unit,
+    rightImage: Painter,
+    onNavigateToRight : () -> Unit
+) {
+    val heightBottomBar = 96.dp
+    val heightCircle = 160.dp
+    val heightTotal = heightBottomBar+heightCircle/2
+    val heightButton = 80.dp
+    val widthButton = 96.dp
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(heightTotal)) {
+            BoxWithConstraints(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(heightBottomBar)
+                    .background(BraveGreen)
+            ) {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(heightTotal)
+                ) {
+                    Surface(
+                        color = SoothingGreen,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .align(Alignment.CenterVertically)
+                            .width(widthButton)
+                            .height(heightButton)
+                            .clip(RoundedCornerShape(10.dp))
+                    ) {
+                        Image(
+                            painter = leftImage,
+                            "",
+                            modifier = Modifier
+                                .clickable(onClick = { onNavigateToLeft() })
+                                .padding(8.dp)
+                                .size(heightButton)
+                                .align(Alignment.CenterVertically)
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Surface(
+                        color = SoothingGreen,
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .align(Alignment.CenterVertically)
+                            .width(widthButton)
+                            .height(heightButton)
+                            .clip(RoundedCornerShape(10.dp))
+                    ) {
+                        Image(
+                            painter = rightImage,
+                            "",
+                            modifier = Modifier
+                                .clickable(onClick = { onNavigateToRight() })
+                                .padding(8.dp)
+                                .size(heightButton)
+                                .align(Alignment.CenterVertically)
+                        )
+                    }
+                }
+            }
+            Surface(
+                color = BraveGreen,
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle / 2))
+                    .align(Alignment.TopCenter)
+                    .size(heightCircle)
+                    .clip(CircleShape)
+            ) {
+                Image(
+                    painter = centerImage,
+                    "",
+                    modifier = Modifier
+                        .clickable(onClick = { onNavigateToCenter() })
+                        .padding(8.dp)
+                        .size(heightCircle - 32.dp)
+                        .align(Alignment.Center)
+                        .clip(CircleShape)
+                        .background(color = SoothingGreen))
+            }
+        }
 }
 
 @Composable
