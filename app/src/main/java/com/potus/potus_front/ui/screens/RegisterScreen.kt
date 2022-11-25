@@ -54,8 +54,8 @@ fun RegisterScreen(onNavigateToHome: () -> Unit) {
             mutableStateOf(false)
         }
         val textState = remember { mutableStateOf(TextFieldValue()) }
-        Column {
-            Spacer(modifier = Modifier.fillMaxWidth())
+        Column (modifier = Modifier.fillMaxHeight()) {
+            Spacer(modifier = Modifier.size(32.dp))
 
             //canviar imatge a register
             Image(painter = painterResource(id = R.drawable.logintext), "",
@@ -87,7 +87,7 @@ fun RegisterScreen(onNavigateToHome: () -> Unit) {
             Button(
 
                 onClick = {
-                    CoroutineScope(Dispatchers.IO).launch {
+                    CoroutineScope(Dispatchers.Main).launch {
 
                         val registerUserRequest = RegisterUserRequest(textState.value.text)
                         val call = getRetrofit().create(APIService::class.java)

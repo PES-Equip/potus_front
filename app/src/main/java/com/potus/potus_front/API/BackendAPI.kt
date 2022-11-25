@@ -1,9 +1,6 @@
 package com.potus.potus_front.API
 
-import com.potus.potus_front.API.requests.ActionRequest
-import com.potus.potus_front.API.requests.ChangeUsernameRequest
-import com.potus.potus_front.API.requests.InformLocationRequest
-import com.potus.potus_front.API.requests.RegisterUserRequest
+import com.potus.potus_front.API.requests.*
 import com.potus.potus_front.API.response.ActionResponse
 import com.potus.potus_front.API.response.GasesResponse
 import com.potus.potus_front.API.response.PotusResponse
@@ -29,6 +26,9 @@ interface APIService {
 
     @POST
     suspend fun changeUsername(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ChangeUsernameRequest): Response<UserResponse>
+
+    @DELETE
+    suspend fun deleteAccount(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
 
     @POST
     suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>

@@ -50,10 +50,11 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             RegisterScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
         composable(HomeScreen.route) {
-            HomeScreen { navController.navigate(ProfileScreen.route) }
+            HomeScreen() { navController.navigate(ProfileScreen.route) }
         }
         composable(route = ProfileScreen.route) {
-            ProfileScreen()
+            ProfileScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                    onNavigateToAuth = { navController.navigate(AuthScreen.route) })
         }
     }
 }
