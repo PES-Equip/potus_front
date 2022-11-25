@@ -23,9 +23,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.potus.potus_front.models.TokenState
-import com.potus.potus_front.models.TokenStateViewModel
-import com.potus.potus_front.ui.screens.ApplicationSwitcher
+import com.potus.potus_front.google.models.TokenState
+import com.potus.potus_front.google.models.TokenStateViewModel
+import com.potus.potus_front.ui.screens.Navigation
 import com.potus.potus_front.ui.theme.Potus_frontTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
@@ -56,15 +56,12 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    // color = MaterialTheme.colors.background
                     color = MaterialTheme.colors.background
 
                 ) {
                     CompositionLocalProvider(TokenState provides tokenStateViewModel) {
-                        ApplicationSwitcher()
-                        //AuthScreen()
+                        Navigation()
                     }
-                    //Navigation(tokenViewModel)
                 }
             }
         }
@@ -72,9 +69,9 @@ class MainActivity : ComponentActivity() {
 
     private fun getLastLocation() : Pair<Double,Double> {
         //IF WE DO NOT HAVE THE USER'S PERMISSION TO ACCESS THEIR LOCATION OR THE REQUEST FAILS:
-        // THE DEFAULT RETURNED LOCATION WILL BE (0,0)
-        var lat = 0.0
-        var lon = 0.0
+        // THE DEFAULT RETURNED LOCATION WILL BE THE LONGITUDE AND LATITUDE OF BARCELONA
+        var lat = 41.39
+        var lon = 2.15
         //If we do not have permission to access the user's location, ask for it
         if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //Request the user's permission

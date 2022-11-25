@@ -21,6 +21,8 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.startIntentSenderForResult
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.ApiException
@@ -28,7 +30,7 @@ import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.R
 import com.potus.potus_front.google.*
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.component.SignInButtons
 import com.potus.potus_front.ui.theme.BraveGreen
 import kotlinx.coroutines.CoroutineScope
@@ -45,8 +47,7 @@ import timber.log.Timber
 @ExperimentalMaterialApi
 @Composable
 
-fun AuthScreen() {
-    val coroutineScope = rememberCoroutineScope()
+fun AuthScreen(onNavigateToSwitcher: () -> Unit) {
     var text by remember { mutableStateOf<String?>(null) }
     val tokenState = TokenState.current
     val signInRequestCode = 1
@@ -60,8 +61,9 @@ fun AuthScreen() {
                 } else {
                     if(account.idToken != null) {
                         tokenState.signToken(account.idToken!!)
+                        onNavigateToSwitcher()
                     }
-                    else{
+                    else {
                         text = "Google sign in failed"
                     }
                 }
@@ -77,23 +79,6 @@ fun AuthScreen() {
                 authResultLauncher.launch(signInRequestCode)
             }
         )
-    /*
-    token?.let {
-        CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIService::class.java).getUser("Bearer $token","user/profile")
-
-            val body = call.body()
-            if(call.isSuccessful){
-                Timber.d("OK")
-            }
-            else{
-                Timber.d("BAD")
-            }
-        }
-
-    }
-
-     */
 }
 
 
@@ -103,9 +88,6 @@ fun AuthView(
     errorText: String?,
     onClick: () -> Unit
 ) {
-
-
-
     var isLoading by remember { mutableStateOf(false) }
 
     Scaffold {
@@ -114,9 +96,7 @@ fun AuthView(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-        )
-
-        {
+        ) {
             Image(painter = painterResource(id = R.drawable.titol), "",
                 modifier = Modifier.height(150.dp)
                     .size(360.dp)
@@ -136,9 +116,6 @@ fun AuthView(
                     isLoading = true
                     onClick()
                 }
-
-
-
             )
 
             errorText?.let {
