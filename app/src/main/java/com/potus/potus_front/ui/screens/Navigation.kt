@@ -53,8 +53,14 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             HomeScreen() { navController.navigate(ProfileScreen.route) }
         }
         composable(route = ProfileScreen.route) {
-            ProfileScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                    onNavigateToAuth = { navController.navigate(AuthScreen.route) })
+            ProfileScreen(
+                    onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                    onNavigateToAuth = { navController.navigate(AuthScreen.route) },
+                    onNavigateToHistory = { navController.navigate(HistoryScreen.route) }
+            )
+        }
+        composable(HistoryScreen.route) {
+            HistoryScreen(onNavigateToProfile = { navController.navigate(ProfileScreen.route) })
         }
     }
 }
