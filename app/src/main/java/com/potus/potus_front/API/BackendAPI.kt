@@ -50,6 +50,9 @@ interface APIService {
     suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>
 
     @POST
+    suspend fun revivePotus(@Header("Authorization") token:String, @Url url:String, @Body requestModel: PotusReviveRequest): Response<PotusResponse>
+
+    @POST
     suspend fun createGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest): Response<NewGardenResponse>
 
     @POST

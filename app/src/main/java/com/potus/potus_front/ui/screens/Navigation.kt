@@ -38,6 +38,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                             "NEW" -> navController.navigate(RegisterScreen.route)
                             "CONFIRMED" -> navController.navigate(HomeScreen.route)
                         }
+                        //if (tokenState.getState() == "NEW") navController.navigate(RegisterScreen.route)
+                        //else if (tokenState.getState() == "CONFIRMED") navController.navigate(HomeScreen.route)
                     }
                 }
             } else {
@@ -48,11 +50,12 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             RegisterScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
         composable(HomeScreen.route) {
-            HomeScreen(
+            if (TokenState.current.user?.potus?.alive == true) HomeScreen(
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) },
                 onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }
             )
+            else RevivePopup(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
         composable(route = ProfileScreen.route) {
             ProfileScreen(
@@ -95,9 +98,9 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             GardenScreen(
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToManagement = { navController.navigate(GardenManagementScreen.route) },
-                    //TO BE IMPLEMENTED
+                //TO BE IMPLEMENTED
                 onNavigateToShop = { navController.navigate(GardenScreen.route) },
-                    //TO BE IMPLEMENTED
+                //TO BE IMPLEMENTED
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
                 onNavigateToChat = { navController.navigate(GardenScreen.route) }
             )
