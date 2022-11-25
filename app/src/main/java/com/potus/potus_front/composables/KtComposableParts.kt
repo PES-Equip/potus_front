@@ -44,7 +44,6 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.*
 import org.json.JSONObject
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TopBar(
     waterLevel: Int,
@@ -218,7 +217,8 @@ fun BottomBar(
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = ""
 
-    val user = TokenState.current.user!!
+    val tokenState = TokenState.current
+    val user = tokenState.user!!
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -342,7 +342,18 @@ fun BottomBar(
                 "",
                 modifier = Modifier
                     .clickable(onClick = {
-                        /* SWITCHER: if user does not have a Garden: to SelectGardenScreen; if user has Garden: to GardenScreen */
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val call = getRetrofit().create(APIService::class.java)
+                                .getUser(
+                                    "Bearer " + tokenState.token,
+                                    "user/profile")
+
+                            if (call.isSuccessful) {
+                                tokenState.signUser(call.body())
+                            }
+                        }
+
                         if (user.garden_info != null) onNavigateToGarden()
                         else onNavigateToSelection()
                     })
@@ -356,7 +367,14 @@ fun BottomBar(
 }
 
 @Composable
-fun GardenBottomBar(leftImage: Painter, onNavigateToLeft : () -> Unit,  centerImage: Painter, onNavigateToCenter : () -> Unit, rightImage: Painter, onNavigateToRight : () -> Unit) {
+fun GardenBottomBar(
+    leftImage: Painter,
+    onNavigateToLeft : () -> Unit,
+    centerImage: Painter,
+    onNavigateToCenter : () -> Unit,
+    rightImage: Painter,
+    onNavigateToRight : () -> Unit
+) {
     val heightBottomBar = 96.dp
     val heightCircle = 160.dp
     val heightTotal = heightBottomBar+heightCircle/2

@@ -42,7 +42,7 @@ fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations:
     val tokenState = TokenState.current
     val user = tokenState.user!!
 
-    /*LaunchedEffect(Dispatchers.IO) {
+    LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()
             .create(APIService::class.java)
             .getGardenList(
@@ -51,14 +51,14 @@ fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations:
             )
 
         if (call.isSuccessful) {
-            Timber.tag("HERE!").d(call.body()?.toString())
+            //Timber.tag("HERE!").d(call.body()?.toString())
             call.body()?.let { tokenState.allGardens(it) }
         } else {
             //ERROR MESSAGES, IF ANY
             error.value = call.code()
             openDialog.value = true
         }
-    }*/
+    }
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
@@ -70,8 +70,8 @@ fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations:
             onNavigateToProfile = { onNavigateToProfile() }
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
-            GardenList(listOf(NewGardenResponse("We Are The Champions", 3, "You should ask to join us."), NewGardenResponse("#1 GARDEN IN THE WORLD", 0, "Admire us!"), NewGardenResponse("WOOOHOOOOOOO", 0, "HEEEEY"), NewGardenResponse("Christmas gang :)", 156, "Fum, fum, fum"), NewGardenResponse("Developer's corner", 1, "So tired..."), NewGardenResponse("Knights of the PIC Table", 0, "Hehe."), NewGardenResponse("NO-NAME", 0, "Join us! We do bite ;)"), NewGardenResponse("Bosc", 6, "Els originals!")))
-            //GardenList(tokenState.gardens)
+            //GardenList(listOf(NewGardenResponse("We Are The Champions", 3, "You should ask to join us."), NewGardenResponse("#1 GARDEN IN THE WORLD", 0, "Admire us!"), NewGardenResponse("WOOOHOOOOOOO", 0, "HEEEEY"), NewGardenResponse("Christmas gang :)", 156, "Fum, fum, fum"), NewGardenResponse("Developer's corner", 1, "So tired..."), NewGardenResponse("Knights of the PIC Table", 0, "Hehe."), NewGardenResponse("NO-NAME", 0, "Join us! We do bite ;)"), NewGardenResponse("Bosc", 6, "Els originals!")))
+            GardenList(tokenState.gardens)
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), onNavigateToInvitations, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_nou_jardi), onNavigateToCreation)
     }
