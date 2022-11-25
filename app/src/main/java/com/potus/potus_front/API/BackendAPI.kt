@@ -31,6 +31,9 @@ interface APIService {
     @GET
     suspend fun getGases(@Header("Authorization") token:String, @Url url:String, @Query("latitude") latitude : Double, @Query("length") length : Double): Response<GasesResponse>
 
+    @GET
+    suspend fun getHistory(@Header("Authorization") token:String, @Url url:String): Response<List<HistoryResponse>>
+
     @POST
     suspend fun registerUser(@Header("Authorization") token:String, @Url url:String, @Body requestModel: RegisterUserRequest): Response<UserResponse>
 
