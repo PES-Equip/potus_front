@@ -16,13 +16,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.PotusReviveRequest
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
@@ -30,9 +29,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-@Preview
 @Composable
-fun RevivePopup() {
+fun RevivePopup(onNavigateToHome: () -> Unit) {
     Surface(modifier = Modifier
         .fillMaxSize(),
         color = BraveGreen
@@ -41,8 +39,8 @@ fun RevivePopup() {
         val sidePadding = 60.dp
         val verticalPadding = 200.dp
         val textState = remember { mutableStateOf(TextFieldValue()) }
-        var displayErrorText = false
-        var errorText = ""
+        var displayErrorText = remember { mutableStateOf(false) }
+        var errorText = remember { mutableStateOf("") }
 
         Surface(modifier = Modifier
             .padding(
@@ -113,12 +111,15 @@ fun RevivePopup() {
                             val Ebody = call.errorBody()
 
                             if (call.isSuccessful && body != null) {
-                                tokenState.user?.let { tokenState.user!!.potus = body }
+                                tokenState.user?.let {
+                                    tokenState.user!!.potus = body
+                                    onNavigateToHome
+                                }
                             } else {
                                 if (Ebody != null) {
                                     var jObjErr = JSONObject(Ebody.string())
-                                    errorText = jObjErr.getString("message")
-                                    displayErrorText = true
+                                    errorText.value = jObjErr.getString("message")
+                                    displayErrorText.value = true
                                 }
                             }
                         }
@@ -132,9 +133,9 @@ fun RevivePopup() {
                 Spacer(modifier = Modifier.weight(0.1f))
             }
         }
-        if(displayErrorText) {
-            Toast.makeText(LocalContext.current, errorText, Toast.LENGTH_SHORT).show()
-            displayErrorText = false
+        if(displayErrorText.value) {
+            Toast.makeText(LocalContext.current, errorText.value, Toast.LENGTH_SHORT).show()
+            displayErrorText.value = false
         }
     }
 }

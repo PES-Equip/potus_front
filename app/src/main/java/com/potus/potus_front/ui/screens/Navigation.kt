@@ -50,7 +50,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             RegisterScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
         composable(HomeScreen.route) {
-            HomeScreen() { navController.navigate(ProfileScreen.route) }
+            if (TokenState.current.user?.potus?.alive == true) HomeScreen() { navController.navigate(ProfileScreen.route) }
+            else RevivePopup(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
         composable(route = ProfileScreen.route) {
             ProfileScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
