@@ -28,6 +28,9 @@ interface APIService {
     @GET
     suspend fun getGardenPetitionList(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<List<GardenMemberResponse>>
 
+    @GET
+    suspend fun getGases(@Header("Authorization") token:String, @Url url:String, @Query("latitude") latitude : Double, @Query("length") length : Double): Response<GasesResponse>
+
     @POST
     suspend fun registerUser(@Header("Authorization") token:String, @Url url:String, @Body requestModel: RegisterUserRequest): Response<UserResponse>
 
@@ -36,6 +39,9 @@ interface APIService {
 
     @POST
     suspend fun changeUsername(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ChangeUsernameRequest): Response<UserResponse>
+
+    @DELETE
+    suspend fun deleteAccount(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
 
     @POST
     suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>

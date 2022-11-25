@@ -55,7 +55,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             )
         }
         composable(route = ProfileScreen.route) {
-            ProfileScreen()
+            ProfileScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                    onNavigateToAuth = { navController.navigate(AuthScreen.route) })
         }
         composable(route = SelectGardenScreen.route) {
             SelectGardenScreen(
