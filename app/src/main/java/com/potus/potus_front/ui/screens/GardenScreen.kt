@@ -43,7 +43,7 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
 
     val tokenState = TokenState.current
     val user = tokenState.user!!
-    val members = remember { mutableStateOf(listOf(SimplifiedGardenMember("THERE ARE NO USERS IN THIS GARDEN", "OWNER"))) }
+    val members = remember { mutableStateOf(setOf(SimplifiedGardenMember("THERE ARE NO USERS IN THIS GARDEN", "OWNER"))) }
 
     LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()
@@ -54,7 +54,7 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
             )
 
         if (call.isSuccessful) {
-            call.body()?.let { members.value = it.members }
+            call.body()?.let { members.value = it }
         } else {
             //ERROR MESSAGES, IF ANY
             error.value = call.code()
@@ -75,8 +75,8 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
             Spacer(modifier = Modifier.size(8.dp))
             Surface(modifier = Modifier.fillMaxWidth().clickable(onClick = { onNavigateToManagement() }), color = Color.Transparent) {
                 Text(
-                    //text = "MY GARDEN",
-                    text = tokenState.user?.garden_info?.garden?.name.toString(),
+                    text = "MY GARDEN",
+                    //text = tokenState.user?.garden_info?.garden?.name.toString(),
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = BraveGreen,
@@ -91,14 +91,14 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
 }
 
 @Composable
-fun MembersList (members: List<SimplifiedGardenMember>) {
+fun MembersList (members: Set<SimplifiedGardenMember>) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(members.size) {
-                arrayItem -> MemberItem(member = members[arrayItem])
+                arrayItem -> MemberItem(member = members.elementAt(arrayItem))
         }
     }
 }

@@ -52,21 +52,21 @@ class TokenStateViewModel: ViewModel(){
         this.location = location
     }
 
-    fun allGardens(gardens: GardenListResponse?) {
+    fun allGardens(gardens: List<NewGardenResponse>?) {
         if (gardens != null) {
-            this.gardens = gardens.gardens
+            this.gardens = gardens
         }
     }
 
-    fun myInvitations(invitations: GardenListResponse?){
+    fun myInvitations(invitations: List<NewGardenResponse>?){
         if (invitations != null) {
-            this.invitations = invitations.gardens
+            this.invitations = invitations
         }
     }
 
-    fun myPetitions(petitions: GardenPetitionsResponse?){
+    fun myPetitions(petitions: List<GardenMemberResponse>?){
         if (petitions != null) {
-            this.petitions = petitions.petitions
+            this.petitions = petitions
         }
     }
 }

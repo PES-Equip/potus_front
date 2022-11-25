@@ -2,6 +2,7 @@ package com.potus.potus_front.API
 
 import com.potus.potus_front.API.requests.*
 import com.potus.potus_front.API.response.*
+import com.potus.potus_front.API.response.data_models.SimplifiedGardenMember
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,16 +17,16 @@ interface APIService {
     suspend fun getGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenResponse>
 
     @GET
-    suspend fun getGardenList(@Header("Authorization") token:String, @Url url:String): Response<GardenListResponse>
+    suspend fun getGardenList(@Header("Authorization") token:String, @Url url:String): Response<List<NewGardenResponse>>
 
     @GET
-    suspend fun getGardenMembers(@Header("Authorization") token:String, @Url url:String): Response<GardenMembersResponse>
+    suspend fun getGardenMembers(@Header("Authorization") token:String, @Url url:String): Response<Set<SimplifiedGardenMember>>
 
     @GET
-    suspend fun getInvitationList(@Header("Authorization") token:String, @Url url:String): Response<GardenListResponse>
+    suspend fun getInvitationList(@Header("Authorization") token:String, @Url url:String): Response<List<NewGardenResponse>>
 
     @GET
-    suspend fun getGardenPetitionList(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenPetitionsResponse>
+    suspend fun getGardenPetitionList(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<List<GardenMemberResponse>>
 
     @POST
     suspend fun registerUser(@Header("Authorization") token:String, @Url url:String, @Body requestModel: RegisterUserRequest): Response<UserResponse>
@@ -55,7 +56,7 @@ interface APIService {
     suspend fun changeGardenDescription(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenDescriptionRequest): Response<NewGardenResponse>
 
     @POST
-    suspend fun acceptGardenPetition(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest): Response<GardenPetitionsResponse>
+    suspend fun acceptGardenPetition(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest): Response<List<GardenMemberResponse>>
 
     @DELETE
     suspend fun refuseToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String)

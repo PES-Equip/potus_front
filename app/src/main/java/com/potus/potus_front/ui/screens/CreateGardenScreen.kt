@@ -102,6 +102,17 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                             }
                     }
 
+                    CoroutineScope(Dispatchers.IO).launch {
+                    val call = getRetrofit().create(APIService::class.java)
+                            .getUser(
+                                "Bearer " + tokenState.token,
+                                "user/profile")
+
+                        if (call.isSuccessful) {
+                            tokenState.signUser(call.body())
+                        }
+                    }
+
                     onNavigateToGarden()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
