@@ -25,7 +25,8 @@ fun HomeScreen(onNavigateToProfile: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
-    val user = TokenState.current.user!!
+    val tokenState = TokenState.current
+    val user = tokenState.user!!
     var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
     var collection by remember { mutableStateOf(user.currency) }
     var addedWater by remember { mutableStateOf(0) }
@@ -33,7 +34,6 @@ fun HomeScreen(onNavigateToProfile: () -> Unit) {
     var plantState by remember { mutableStateOf("DEFAULT") }
     //var thematicEvent by remember { mutableStateOf("DEFAULT") }
 
-    val tokenState = TokenState.current
     LaunchedEffect(Dispatchers.IO) {
         val newUpdateStateRequest = InformLocationRequest(latitude = tokenState.location.first, length = tokenState.location.second)
         val call = getRetrofit()
