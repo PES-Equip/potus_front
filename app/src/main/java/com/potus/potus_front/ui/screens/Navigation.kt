@@ -38,6 +38,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                             "NEW" -> navController.navigate(RegisterScreen.route)
                             "CONFIRMED" -> navController.navigate(HomeScreen.route)
                         }
+                        //if (tokenState.getState() == "NEW") navController.navigate(RegisterScreen.route)
+                        //else if (tokenState.getState() == "CONFIRMED") navController.navigate(HomeScreen.route)
                     }
                 }
             } else {
@@ -48,70 +50,12 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             RegisterScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
         composable(HomeScreen.route) {
-            HomeScreen(
-                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
-                onNavigateToGarden = { navController.navigate(GardenScreen.route) },
-                onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }
-            )
+            if (TokenState.current.user?.potus?.alive == true) HomeScreen() { navController.navigate(ProfileScreen.route) }
+            else RevivePopup(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
         composable(route = ProfileScreen.route) {
             ProfileScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
                     onNavigateToAuth = { navController.navigate(AuthScreen.route) })
-        }
-        composable(route = SelectGardenScreen.route) {
-            SelectGardenScreen(
-                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
-                onNavigateToInvitations = { navController.navigate(InvitationsToGardensScreen.route) },
-                onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToCreation = { navController.navigate(CreateGardenScreen.route) }
-            )
-        }
-        composable(route = CreateGardenScreen.route) {
-            CreateGardenScreen(
-                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
-                onNavigateToGarden = { navController.navigate(GardenScreen.route) },
-                onNavigateToInvitations = { navController.navigate(InvitationsToGardensScreen.route) },
-                onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }
-            )
-        }
-        composable(route = InvitationsToGardensScreen.route) {
-            InvitationsToGardensScreen(
-                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
-                onNavigateToGarden = { navController.navigate(GardenScreen.route) },
-                onNavigateToInvitations = { navController.navigate(InvitationsToGardensScreen.route) },
-                onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) },
-                onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToCreation = { navController.navigate(CreateGardenScreen.route) }
-            )
-        }
-        composable(route = GardenScreen.route) {
-            GardenScreen(
-                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
-                onNavigateToManagement = { navController.navigate(GardenManagementScreen.route) },
-                    //TO BE IMPLEMENTED
-                onNavigateToShop = { navController.navigate(GardenScreen.route) },
-                    //TO BE IMPLEMENTED
-                onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToChat = { navController.navigate(GardenScreen.route) }
-            )
-        }
-        composable(route = GardenManagementScreen.route) {
-            GardenManagementScreen(
-                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
-                onNavigateToPetitions = { navController.navigate(PetitionsToGardensScreen.route) },
-                onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToGarden = { navController.navigate(GardenScreen.route) }
-            )
-        }
-        composable(route = PetitionsToGardensScreen.route) {
-            PetitionsToGardensScreen(
-                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
-                onNavigateToPetitions = { navController.navigate(PetitionsToGardensScreen.route) },
-                onNavigateToManagement = { navController.navigate(GardenManagementScreen.route) },
-                onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToGarden = { navController.navigate(GardenScreen.route) }
-            )
         }
     }
 }
