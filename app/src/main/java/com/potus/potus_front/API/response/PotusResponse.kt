@@ -3,7 +3,7 @@ package com.potus.potus_front.API.response
 import java.util.*
 
 data class PotusResponse(
-
+    var name: String,
     var health: Int,
     var waterLevel: Int,
     var createdDate: Date,

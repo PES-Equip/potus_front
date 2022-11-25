@@ -1,25 +1,23 @@
 package com.potus.potus_front.API
 
-import com.potus.potus_front.API.requests.ActionRequest
-import com.potus.potus_front.API.requests.InformLocationRequest
-import com.potus.potus_front.API.requests.RegisterUserRequest
+import com.potus.potus_front.API.requests.*
 import com.potus.potus_front.API.response.ActionResponse
+import com.potus.potus_front.API.response.GasesResponse
 import com.potus.potus_front.API.response.HistoryResponse
 import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface APIService {
 
     @GET
     suspend fun getUser(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
+
+    @GET
+    suspend fun getGases(@Header("Authorization") token:String, @Url url:String, @Query("latitude") latitude : Double, @Query("length") length : Double): Response<GasesResponse>
 
     @GET
     suspend fun getHistory(@Header("Authorization") token:String, @Url url:String): Response<HistoryResponse>
@@ -29,6 +27,12 @@ interface APIService {
 
     @POST
     suspend fun actions(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ActionRequest): Response<UserResponse>
+
+    @POST
+    suspend fun changeUsername(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ChangeUsernameRequest): Response<UserResponse>
+
+    @DELETE
+    suspend fun deleteAccount(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
 
     @POST
     suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>

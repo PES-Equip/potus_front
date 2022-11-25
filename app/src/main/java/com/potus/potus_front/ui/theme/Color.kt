@@ -12,3 +12,10 @@ val BraveGreen = Color(0xFF82AF5A)
 val GraveStoneGray = Color(0x30FFFFDD)
 val EarthBrown = Color(0xFF6C4D24)
 val Daffodil = Color(0xFFFFF2CC)
+
+val noDanger = Color(0xFF2DC937)
+val Low = Color(0xFF99C140)
+val Moderate = Color(0xFFE7B416)
+val High = Color(0xFFDB7B2B)
+val Hazardous = Color(0xFFCC3232)
+

@@ -5,7 +5,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

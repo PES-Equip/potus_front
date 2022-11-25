@@ -1,4 +1,4 @@
-package com.potus.potus_front.models
+package com.potus.potus_front.google.models
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
