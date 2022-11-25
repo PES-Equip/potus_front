@@ -17,11 +17,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.RegisterUserRequest
 import com.potus.potus_front.R
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,9 +34,8 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @ExperimentalCoroutinesApi
 @ExperimentalMaterialApi
-@Preview
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(onNavigateToHome: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     val tokenState = TokenState.current
     val openDialog = remember { mutableStateOf(false)  }
@@ -54,10 +54,10 @@ fun RegisterScreen() {
             mutableStateOf(false)
         }
         val textState = remember { mutableStateOf(TextFieldValue()) }
-        Column {
+        Column (modifier = Modifier.fillMaxHeight()) {
             Spacer(modifier = Modifier.size(32.dp))
 
-
+            //canviar imatge a register
             Image(painter = painterResource(id = R.drawable.logintext), "",
                 modifier = Modifier
                     .size(200.dp)
@@ -87,7 +87,7 @@ fun RegisterScreen() {
             Button(
 
                 onClick = {
-                    CoroutineScope(Dispatchers.IO).launch {
+                    CoroutineScope(Dispatchers.Main).launch {
 
                         val registerUserRequest = RegisterUserRequest(textState.value.text)
                         val call = getRetrofit().create(APIService::class.java)
@@ -95,6 +95,7 @@ fun RegisterScreen() {
 
                         if (call.isSuccessful) {
                             tokenState.signUser(call.body())
+                            onNavigateToHome()
                         } else {
                             openDialog.value =true
                             //Timber.d("BAD")
@@ -110,7 +111,7 @@ fun RegisterScreen() {
                     .padding(16.dp),
                 shape = MaterialTheme.shapes.medium
             ) {
-                Text(text = "Log In")
+                Text(text = "Register")
             }
             if (openDialog.value) {
 

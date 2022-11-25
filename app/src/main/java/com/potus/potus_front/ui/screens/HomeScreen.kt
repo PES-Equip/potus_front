@@ -8,35 +8,32 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
-import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.API.requests.InformLocationRequest
 import com.potus.potus_front.composables.BottomBar
 import com.potus.potus_front.composables.CenterArea
+import com.potus.potus_front.composables.GasesWindow
 import com.potus.potus_front.composables.TopBar
-import com.potus.potus_front.models.TokenState
+import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.SoothingGreen
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onNavigateToProfile: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
-    val user = TokenState.current.user!!
+    val tokenState = TokenState.current
+    val user = tokenState.user!!
     var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
     var collection by remember { mutableStateOf(user.currency) }
     var addedWater by remember { mutableStateOf(0) }
     var addedLeaves by remember { mutableStateOf(0) }
     var plantState by remember { mutableStateOf("DEFAULT") }
-    var thematicEvent by remember { mutableStateOf("DEFAULT") }
+    //var thematicEvent by remember { mutableStateOf("DEFAULT") }
 
-    val tokenState = TokenState.current
     LaunchedEffect(Dispatchers.IO) {
         val newUpdateStateRequest = InformLocationRequest(latitude = tokenState.location.first, length = tokenState.location.second)
         val call = getRetrofit()
@@ -63,10 +60,13 @@ fun HomeScreen() {
             collection = collection,
             username = user.username,
             addedWater = addedWater,
-            addedLeaves = addedLeaves
+            addedLeaves = addedLeaves,
+            onNavigateToProfile = { onNavigateToProfile() }
         )
+        GasesWindow()
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
-            CenterArea(thematicEvent, plantState)
+            //CenterArea(thematicEvent, plantState)
+            CenterArea(plantState)
         }
         BottomBar(
             updateWaterLevel = { newWaterLevel ->
