@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -261,8 +262,11 @@ fun CenterArea(plantState:String) {
                         .align(Alignment.Center)
                 )
             }
+            Text(
+                modifier = Modifier.align(BottomCenter),
+                text = TokenState.current.user?.potus?.name.toString(), fontWeight = FontWeight.Bold, fontSize = 30.sp, color = BraveGreen, textAlign = TextAlign.Center
+            )
         }
-        Text(text = TokenState.current.user?.potus?.name.toString(), fontWeight = FontWeight.Bold, fontSize = 30.sp, color = BraveGreen, textAlign = TextAlign.Center)
     }
 }
 
