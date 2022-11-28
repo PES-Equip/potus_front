@@ -3,6 +3,7 @@ package com.potus.potus_front.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
@@ -131,37 +132,39 @@ fun RowItem(item: HistoryResponse) {
     Surface(
         color = GraveStoneGray,
         modifier = Modifier.clip(RoundedCornerShape(16.dp))) {
-        Column(modifier = Modifier
+        LazyColumn(modifier = Modifier
             .fillMaxHeight()
             .width(360.dp)
         ) {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 16.dp)) {
-                CenterArea(plantState = "DEFAULT")
-            }
-            Text(
-                text = item.name,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally),
-                fontSize = 50.sp,
-                fontWeight = FontWeight.Bold,
-                fontStyle = FontStyle.Italic,
-                textAlign = TextAlign.Center
-            )
+            items(3) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(all = 16.dp)
+                ) {
+                    CenterArea(plantState = "DEFAULT")
+                }
+                Text(
+                    text = item.name,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    fontSize = 50.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic,
+                    textAlign = TextAlign.Center
+                )
 
-            Text(
-                text = "Adoption Date: " + item.createdDate + "\n\n"
-                 + "Death Date: " + item.deathDate,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 64.dp, start = 32.dp, end = 32.dp),
-                fontSize = 25.sp,
-                fontStyle = FontStyle.Italic,
-                textAlign = TextAlign.Center
-            )
+                Text(
+                    text = "Adoption Date: " + item.createdDate + "\n\n"
+                            + "Death Date: " + item.deathDate,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 64.dp, start = 32.dp, end = 32.dp),
+                    fontSize = 25.sp,
+                    fontStyle = FontStyle.Italic,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
