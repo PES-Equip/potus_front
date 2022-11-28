@@ -3,6 +3,7 @@ package com.potus.potus_front.API
 import com.potus.potus_front.API.requests.*
 import com.potus.potus_front.API.response.*
 import com.potus.potus_front.API.response.data_models.SimplifiedGardenMember
+import com.potus.potus_front.API.response.data_models.UserGardenInfo
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -50,7 +51,7 @@ interface APIService {
     suspend fun revivePotus(@Header("Authorization") token:String, @Url url:String, @Body requestModel: PotusReviveRequest): Response<PotusResponse>
 
     @POST
-    suspend fun createGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest): Response<NewGardenResponse>
+    suspend fun createGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest): Response<UserGardenInfo>
 
     @POST
     suspend fun askToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String)

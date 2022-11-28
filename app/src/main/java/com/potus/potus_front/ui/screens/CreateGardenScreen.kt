@@ -90,9 +90,7 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
 
                             if (call.isSuccessful) {
                                 call.body()?.let {
-                                    newGardensName.value = it.name
-                                    newGardensMembers.value = it.members_num
-                                    newGardensDescription.value = it.description
+                                    user.garden_info = it
                                 }
                                 Timber.tag("CREATED!").d(call.body().toString())
                             } else {
@@ -100,17 +98,6 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                                 error.value = call.code()
                                 openDialog.value = true
                             }
-                    }
-
-                    CoroutineScope(Dispatchers.IO).launch {
-                    val call = getRetrofit().create(APIService::class.java)
-                            .getUser(
-                                "Bearer " + tokenState.token,
-                                "user/profile")
-
-                        if (call.isSuccessful) {
-                            tokenState.signUser(call.body())
-                        }
                     }
 
                     onNavigateToGarden()

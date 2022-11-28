@@ -75,8 +75,8 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
             Spacer(modifier = Modifier.size(8.dp))
             Surface(modifier = Modifier.fillMaxWidth().clickable(onClick = { onNavigateToManagement() }), color = Color.Transparent) {
                 Text(
-                    text = "MY GARDEN",
-                    //text = tokenState.user?.garden_info?.garden?.name.toString(),
+                    //text = "MY GARDEN",
+                    text = tokenState.user?.garden_info?.garden?.name.toString(),
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = BraveGreen,
