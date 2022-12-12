@@ -55,7 +55,8 @@ fun TopBar(
     username: String,
     addedWater: Int,
     addedLeaves: Int,
-    onNavigateToProfile: () -> Unit
+    onNavigateToProfile: () -> Unit,
+    onNavigateToShop: () -> Unit
 ) {
     Row(
         Modifier
@@ -113,7 +114,14 @@ fun TopBar(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .padding(start = 4.dp)
-                    .size(24.dp),
+                    .size(24.dp)
+                    .clickable(
+                        enabled = true,
+                        onClickLabel = "Clickable image",
+                        onClick = {
+                            onNavigateToShop()
+                        }
+                    ),
                 painter = painterResource(id = R.drawable.icona_currency),
                 contentDescription = "")
             Text(modifier = Modifier

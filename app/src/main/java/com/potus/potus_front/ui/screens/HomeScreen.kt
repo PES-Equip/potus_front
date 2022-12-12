@@ -61,7 +61,8 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit) {
             username = user.username,
             addedWater = addedWater,
             addedLeaves = addedLeaves,
-            onNavigateToProfile = { onNavigateToShop() }
+            onNavigateToProfile = { onNavigateToProfile() },
+            onNavigateToShop = { onNavigateToShop()}
         )
         GasesWindow()
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {

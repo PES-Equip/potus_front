@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,7 +25,7 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.Dispatchers
 
 @Composable
-fun ShopScreen() {
+fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -64,12 +65,14 @@ fun ShopScreen() {
             username = user.username,
             addedWater = addedWater,
             addedLeaves = addedLeaves,
-            onNavigateToProfile = { }
+            onNavigateToProfile = {onNavigateToProfile()},
+            onNavigateToShop = { }
         )
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
-                .padding(8.dp),
+                ,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Image(
@@ -80,15 +83,16 @@ fun ShopScreen() {
 
             Image(
                 painter = painterResource(id = R.drawable.store_clerk), "",
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .size(240.dp)
+                    .size(300.dp)
                     )
 
         }
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(8.dp),
+                    ,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Image(
@@ -106,6 +110,12 @@ fun ShopScreen() {
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Text(text = "Price: 500")
+            Image(
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .size(24.dp),
+                painter = painterResource(id = R.drawable.icona_currency),
+                contentDescription = "")
 
         }
             Row(
@@ -122,6 +132,15 @@ fun ShopScreen() {
 
                 ) {
                     Text(text = "Buy fertilizer")
+                }
+                Button(
+                    onClick = {
+                        onNavigateToHome()
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
+
+                ) {
+                    Text(text = "Go back to your Potus")
                 }
             }
 

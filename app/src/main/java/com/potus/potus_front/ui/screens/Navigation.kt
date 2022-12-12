@@ -54,7 +54,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                 onNavigateToShop = { navController.navigate(ShopScreen.route) })
         }
         composable(ShopScreen.route) {
-            ShopScreen()
+            ShopScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                onNavigateToProfile = { navController.navigate(ProfileScreen.route) })
         }
         composable(route = ProfileScreen.route) {
             ProfileScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
