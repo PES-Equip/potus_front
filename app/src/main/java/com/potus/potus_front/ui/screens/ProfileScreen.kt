@@ -79,7 +79,6 @@ fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit) {
         ) {
             Button(
                 onClick = {
-                    notification.value = "Cancelled"
                     onNavigateToHome()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)

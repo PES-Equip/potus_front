@@ -1,27 +1,30 @@
 package com.potus.potus_front.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.InformLocationRequest
+import com.potus.potus_front.R
 import com.potus.potus_front.composables.BottomBar
 import com.potus.potus_front.composables.CenterArea
 import com.potus.potus_front.composables.GasesWindow
 import com.potus.potus_front.composables.TopBar
 import com.potus.potus_front.google.models.TokenState
+import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.Dispatchers
 
-
 @Composable
-fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit) {
+fun ShopScreen() {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -61,45 +64,69 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit) {
             username = user.username,
             addedWater = addedWater,
             addedLeaves = addedLeaves,
-            onNavigateToProfile = { onNavigateToShop() }
+            onNavigateToProfile = { }
         )
-        GasesWindow()
-        Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
-            //CenterArea(thematicEvent, plantState)
-            CenterArea(plantState)
+        Row(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.bubble_text), "",
+                modifier = Modifier
+                    .size(240.dp)
+                    )
+
+            Image(
+                painter = painterResource(id = R.drawable.store_clerk), "",
+                modifier = Modifier
+                    .size(240.dp)
+                    )
+
         }
-        BottomBar(
-            updateWaterLevel = { newWaterLevel ->
-                addedWater = newWaterLevel - waterLevelState
-                waterLevelState = newWaterLevel
-            },
-            updateLeaveRecollection = { collectedLeaves ->
-                addedLeaves = collectedLeaves - collection
-                collection = collectedLeaves
-            })
-    }
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.fertilizer_bonus), "",
+                    modifier = Modifier
+                        .size(240.dp)
 
-    if (openDialog.value) {
+                )
 
-        AlertDialog(
-            onDismissRequest = {
-                // Dismiss the dialog when the user clicks outside the dialog or on the back
-                // button. If you want to disable that functionality, simply use an empty
-                // onCloseRequest.
-                openDialog.value = false
-            },
-            text = {
-                Text(
-                    text = "ERROR " + error.value + "! Could not establish a working connection")
-            },
-            confirmButton = {
+            }
+        Row(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Text(text = "Price: 500")
+
+        }
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Button(
                     onClick = {
-                        openDialog.value = false
-                    }) {
-                    Text("Ok")
+
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
+
+                ) {
+                    Text(text = "Buy fertilizer")
                 }
             }
-        )
+
+
     }
+
 }
+
