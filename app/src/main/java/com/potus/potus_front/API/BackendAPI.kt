@@ -28,6 +28,9 @@ interface APIService {
 
     @POST
     suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>
+
+    @POST
+    suspend fun buyBonus(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
 }
 
 fun getRetrofit(): Retrofit {
