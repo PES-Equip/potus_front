@@ -71,7 +71,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
         }
     }
 
-    Column(Modifier.background(color = SoothingGreen)) {
+    Column(Modifier.background(color = SoothingGreen),verticalArrangement = Arrangement.spacedBy(1.dp)) {
         TopBar(
             waterLevel = waterLevelState,
             collection = collection,
@@ -88,44 +88,37 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                 ,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.bubble_text), "",
-                modifier = Modifier
-                    .size(240.dp)
-                    )
 
             Image(
-                painter = painterResource(id = R.drawable.store_clerk), "",
-                contentScale = ContentScale.Fit,
+                painter = painterResource(id = R.drawable.newtext), "",
                 modifier = Modifier
-                    .size(300.dp)
+                    .size(400.dp)
                     )
+
+
 
         }
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    ,
-                horizontalArrangement = Arrangement.SpaceBetween
+
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.fertilizer_bonus), "",
                     modifier = Modifier
-                        .size(240.dp)
+                        .size(150.dp)
 
                 )
 
             }
         Row(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(8.dp),
+                .align(Alignment.CenterHorizontally),
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Text(text = "Price: 500")
             Image(
                 modifier = Modifier
-                    .padding(start = 4.dp)
                     .size(24.dp),
                 painter = painterResource(id = R.drawable.icona_currency),
                 contentDescription = "")
@@ -133,8 +126,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
         }
             Row(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(8.dp),
+                    .align(Alignment.CenterHorizontally),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
