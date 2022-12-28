@@ -32,8 +32,14 @@ Completed Sprint 2 tasks:
 - Frontend - Show Garden Selection screen [#230, BF]
 - Frontend - Show Garden Join Petitions [#232, BF]
 
-Underway Sprint 2 tasks:
+Completed Sprint 3 tasks and issues:
+
+- 
+
+Underway Sprint 3 tasks and issues:
 
 - Improve Potus basics [#181, MH]
+- Frontend - Garden's members are not shown [#257, BF]
+- Frontend - Garden's management screen is not scrollable [#258, BF]
 
 [This is the develop branch]
