@@ -50,7 +50,7 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
             .create(APIService::class.java)
             .getGardenMembers(
                 "Bearer " + tokenState.token,
-                "garden/profile/members"
+                "gardens/profile/members"
             )
 
         if (call.isSuccessful) {
