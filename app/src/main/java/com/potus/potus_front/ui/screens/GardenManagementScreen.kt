@@ -56,7 +56,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             Spacer(modifier = Modifier.size(8.dp))
             LazyColumn(
-                modifier = Modifier.align(Alignment.Start).padding(8.dp).clip(RoundedCornerShape(10.dp)).background(SoothingGreen).fillMaxWidth(),
+                modifier = Modifier.align(Alignment.Start).padding(8.dp).fillMaxWidth(),
                 contentPadding = PaddingValues(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
