@@ -40,7 +40,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
-    val user = tokenState.user!!
+    val user = tokenState.user!!.user
     val description = remember { mutableStateOf(TextFieldValue()) }
     val invitedUser = remember { mutableStateOf(TextFieldValue()) }
 
@@ -63,7 +63,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                 item {
                     Text(
                         //text = "MY GARDEN",
-                        text = tokenState.user?.garden_info?.garden?.name.toString(),
+                        text = tokenState.user?.user?.garden_info?.garden?.name.toString(),
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -81,7 +81,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                         )
                         Text(
                             //text = "0",
-                            text = tokenState.user?.garden_info?.garden?.members_num.toString(),
+                            text = tokenState.user?.user?.garden_info?.garden?.members_num.toString(),
                             fontSize = 20.sp,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(start = 8.dp)
@@ -103,7 +103,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                             label = {
                                 Text(
                                     //text = "Test description."
-                                    text = tokenState.user?.garden_info?.garden?.description.toString(),
+                                    text = tokenState.user?.user?.garden_info?.garden?.description.toString(),
                                 )
                             },
                             modifier = Modifier
@@ -128,7 +128,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
 
                                 if (call.isSuccessful) {
                                     call.body()?.let {
-                                        tokenState.user?.garden_info?.garden?.description =
+                                        tokenState.user?.user?.garden_info?.garden?.description =
                                             it.description
                                     }
                                 } else {
@@ -174,7 +174,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                             onClick = {
                                 CoroutineScope(Dispatchers.IO).launch {
                                     val garden =
-                                        tokenState.user?.garden_info?.garden?.name.toString()
+                                        tokenState.user?.user?.garden_info?.garden?.name.toString()
                                     val receiver = invitedUser.value.toString()
                                     getRetrofit().create(APIService::class.java)
                                         .sendGardenInvitation(
@@ -229,7 +229,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                             /* SHOULD ASK FOR CONFIRMATION THROUGH A POP-UP */
 
                             val askedGardenName =
-                                tokenState.user?.garden_info?.garden?.name.toString()
+                                tokenState.user?.user?.garden_info?.garden?.name.toString()
                             CoroutineScope(Dispatchers.IO).launch {
                                 getRetrofit()
                                     .create(APIService::class.java)

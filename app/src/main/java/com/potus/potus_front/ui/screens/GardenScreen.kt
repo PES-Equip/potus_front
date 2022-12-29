@@ -39,7 +39,7 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
-    val user = tokenState.user!!
+    val user = tokenState.user!!.user
     val members = remember { mutableStateOf(setOf(SimplifiedGardenMember("THERE ARE NO USERS IN THIS GARDEN", "OWNER"))) }
 
     LaunchedEffect(Dispatchers.IO) {
@@ -73,7 +73,7 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
             Surface(modifier = Modifier.fillMaxWidth().clickable(onClick = { onNavigateToManagement() }), color = Color.Transparent) {
                 Text(
                     //text = "MY GARDEN",
-                    text = tokenState.user?.garden_info?.garden?.name.toString(),
+                    text = tokenState.user?.user?.garden_info?.garden?.name.toString(),
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     color = BraveGreen,

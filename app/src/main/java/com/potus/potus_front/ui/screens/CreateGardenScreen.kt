@@ -34,7 +34,7 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
-    val user = tokenState.user!!
+    val user = tokenState.user!!.user
     var newGardensName = remember { mutableStateOf("NEW GARDEN") }
     var newGardensMembers = remember { mutableStateOf(0) }
     var newGardensDescription = remember { mutableStateOf("") }

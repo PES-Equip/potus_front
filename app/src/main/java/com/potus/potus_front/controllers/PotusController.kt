@@ -13,7 +13,7 @@ import timber.log.Timber
 fun getWater(): Int {
     // Here a call to the backend service will be performed to get the actual water level.
 
-    return TokenState.current.user?.potus?.waterLevel ?: 100
+    return TokenState.current.user?.user?.potus?.waterLevel ?: 100
 }
 
 fun getLeaves(): Int {

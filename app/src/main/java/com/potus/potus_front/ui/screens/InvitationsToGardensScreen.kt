@@ -41,7 +41,7 @@ fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGard
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
-    val user = tokenState.user!!
+    val user = tokenState.user!!.user
 
     LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()

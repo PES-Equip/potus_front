@@ -50,7 +50,7 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             RegisterScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
         composable(HomeScreen.route) {
-            if (TokenState.current.user?.potus?.alive == true) HomeScreen(
+            if (TokenState.current.user?.user?.potus?.alive == true) HomeScreen(
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) },
                 onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }

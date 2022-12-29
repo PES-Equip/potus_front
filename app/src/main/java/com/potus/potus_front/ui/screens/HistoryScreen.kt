@@ -40,7 +40,7 @@ fun HistoryScreen(onNavigateToProfile: () -> Unit) {
     val error = remember { mutableStateOf("") }
     var anyPotusDead = remember { mutableStateOf(true) }
 
-    val user = TokenState.current.user!!
+    val user = TokenState.current.user!!.user
 
     var histEntries = remember {
         mutableStateOf(listOf(HistoryResponse(createdDate = Date(22/11/2022), deathDate = Date(24/11/2022), ""))) }

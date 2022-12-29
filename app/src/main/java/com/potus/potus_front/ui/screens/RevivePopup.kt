@@ -112,7 +112,7 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
 
                             if (call.isSuccessful && body != null) {
                                 tokenState.user?.let {
-                                    tokenState.user!!.potus = body
+                                    tokenState.user!!.user.potus = body
                                     onNavigateToHome
                                 }
                             } else {

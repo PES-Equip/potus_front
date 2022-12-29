@@ -264,7 +264,7 @@ fun CenterArea(plantState:String) {
             }
             Text(
                 modifier = Modifier.align(BottomCenter),
-                text = TokenState.current.user?.potus?.name.toString(), fontWeight = FontWeight.Bold, fontSize = 30.sp, color = BraveGreen, textAlign = TextAlign.Center
+                text = TokenState.current.user?.user?.potus?.name.toString(), fontWeight = FontWeight.Bold, fontSize = 30.sp, color = BraveGreen, textAlign = TextAlign.Center
             )
         }
     }
@@ -288,7 +288,7 @@ fun BottomBar(
     var actionString = ""
 
     val tokenState = TokenState.current
-    val user = tokenState.user!!
+    val user = tokenState.user!!.user
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -335,7 +335,7 @@ fun BottomBar(
                                     val Ebody = call.errorBody()
                                     if (call.isSuccessful) {
                                         tokenState.signUser(body)
-                                        tokenState.user?.currency?.let { updateLeaveRecollection(it) }
+                                        tokenState.user?.user?.currency?.let { updateLeaveRecollection(it) }
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
@@ -384,7 +384,7 @@ fun BottomBar(
                                     val Ebody = call.errorBody()
                                     if (call.isSuccessful) {
                                         tokenState.signUser(call.body())
-                                        tokenState.user?.potus?.let { updateWaterLevel(it.waterLevel) }
+                                        tokenState.user?.user?.potus?.let { updateWaterLevel(it.waterLevel) }
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
