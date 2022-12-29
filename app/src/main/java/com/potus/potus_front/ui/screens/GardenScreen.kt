@@ -17,9 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
@@ -32,7 +30,6 @@ import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.Dispatchers
-import java.util.*
 import kotlin.random.Random
 
 
@@ -105,9 +102,9 @@ fun MembersList (members: Set<SimplifiedGardenMember>) {
 
 @Composable
 fun MemberItem(member: SimplifiedGardenMember) {
-    var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2_5", "PM10", "PS", "SO2")
+    val gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2_5", "PM10", "PS", "SO2")
     var toggled by remember { mutableStateOf(false) }
-    var randomAvatar = gases[Random.nextInt(gases.size)]
+    val randomAvatar = gases[Random.nextInt(gases.size)]
 
     Column(
         modifier = Modifier
@@ -130,7 +127,7 @@ fun MemberItem(member: SimplifiedGardenMember) {
             ) { CenterArea(randomAvatar) }
             if (!toggled) {
                 Text(
-                    text = member.user,
+                    text = member.username,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = BraveGreen,
@@ -140,7 +137,7 @@ fun MemberItem(member: SimplifiedGardenMember) {
             else {
                 Surface (modifier = Modifier.fillMaxWidth(), color = Color.Transparent) {
                     Text(
-                        text = "\n" + member.user + "\n\nRole: " + member.role + "\n",
+                        text = "\n" + member.username + "\n\nRole: " + member.role + "\n",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 16.dp).align(CenterVertically)
