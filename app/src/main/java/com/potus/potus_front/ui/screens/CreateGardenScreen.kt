@@ -12,7 +12,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
@@ -28,7 +27,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import timber.log.Timber
 
 
 @Composable
@@ -49,7 +47,7 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
             onNavigateToProfile = { onNavigateToProfile() }
         )
         Column(modifier = Modifier.weight(1f).background(color = Daffodil)) {
-            var newGardenName = remember { mutableStateOf(TextFieldValue()) }
+            val newGardenName = remember { mutableStateOf(TextFieldValue()) }
 
             Spacer(modifier = Modifier.size(96.dp))
             Image(
@@ -94,19 +92,18 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                                 cBody?.let {
                                     user.garden_info = it
                                 }
-                                Timber.tag("CREATED!").d(cBody.toString())
+                                onNavigateToGarden()
                             } else {
                                 //ERROR MESSAGES, IF ANY
                                 openDialog.value = true
                                 if (eBody != null) {
-                                    val jObjErr = JSONObject(eBody.string())
-                                    actionString = jObjErr.getString("message")
+                                    actionString =  if (newGardenName.value.text.isEmpty()) "Namespace is empty"
+                                                    else if (newGardenName.value.text.length < 3) "The Garden's name must have at least 3 characters"
+                                                    else if (newGardenName.value.text.length > 30) "The Garden's name must have less than 30 characters"
+                                                    else JSONObject(eBody.string()).getString("message")
                                 }
                             }
                     }
-
-                    if (user.garden_info != null)
-                        onNavigateToGarden()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                 modifier = Modifier
