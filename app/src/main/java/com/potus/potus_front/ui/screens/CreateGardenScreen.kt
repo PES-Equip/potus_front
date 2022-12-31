@@ -1,5 +1,6 @@
 package com.potus.potus_front.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -7,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -25,13 +27,14 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import timber.log.Timber
 
 
 @Composable
 fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToSelection: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    val error = remember { mutableStateOf(200)  }
+    var actionString = ""
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
@@ -88,15 +91,18 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                                     newGardenRequest
                                 )
 
+                            val eBody = call.errorBody()
                             if (call.isSuccessful) {
                                 call.body()?.let {
                                     user.garden_info = it
                                 }
                                 Timber.tag("CREATED!").d(call.body().toString())
                             } else {
-                                //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
-                                error.value = call.code()
-                                openDialog.value = true
+                                //ERROR MESSAGES, IF ANY
+                                if (eBody != null) {
+                                    val jObjErr = JSONObject(eBody.string())
+                                    actionString = jObjErr.getString("message")
+                                }
                             }
                     }
 
@@ -112,6 +118,10 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
             ) {
                 Text(text = "Create and Join!", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = SoothingGreen)
             }
+        }
+        if (openDialog.value) {
+            Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_SHORT).show()
+            openDialog.value = false
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), onNavigateToInvitations, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_seleccio_jardi), onNavigateToSelection)
     }
