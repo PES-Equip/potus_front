@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit, onNavigateToHistory: () -> Unit) {
     val tokenState = TokenState.current
-    val user = TokenState.current.user
+    val user = TokenState.current.user?.user
     var username by remember { mutableStateOf(user?.username) }
     var email by remember { mutableStateOf(user?.email) }
 

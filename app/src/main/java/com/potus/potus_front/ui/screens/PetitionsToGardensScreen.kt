@@ -42,7 +42,7 @@ fun PetitionsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToPetiti
     val error = remember { mutableStateOf(200) }
 
     val tokenState = TokenState.current
-    val user = tokenState.user!!
+    val user = tokenState.user!!.user
 
     LaunchedEffect(Dispatchers.IO) {
         val garden = user.garden_info.garden.name
@@ -98,7 +98,7 @@ fun PetitionItem(petition: GardenMemberResponse, onNavigateToPetitions: () -> Un
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
-    val user = tokenState.user!!
+    val user = tokenState.user!!.user
     var toggled by remember { mutableStateOf(false) }
 
     Column(

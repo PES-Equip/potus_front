@@ -25,7 +25,7 @@ class TokenStateViewModel: ViewModel(){
     fun getState(): String {
         if(user == null)
             return "NOTLOGGED"
-        return user!!.status
+        return user!!.user.status
     }
 
     fun signUser(user: UserResponse?){
@@ -49,7 +49,7 @@ class TokenStateViewModel: ViewModel(){
 
     fun myPotus(potus: PotusResponse?){
         if (potus != null) {
-            this.user?.potus = potus
+            this.user?.user?.potus = potus
         }
     }
 

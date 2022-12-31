@@ -26,7 +26,7 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, 
     val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
-    val user = tokenState.user!!
+    val user = tokenState.user!!.user
     var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
     var collection by remember { mutableStateOf(user.currency) }
     var addedWater by remember { mutableStateOf(0) }
@@ -46,7 +46,7 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, 
 
         if (call.isSuccessful) {
             tokenState.myPotus(call.body())
-            tokenState.user?.potus?.let { plantState = it.state }
+            tokenState.user?.user?.potus?.let { plantState = it.state }
         } else {
             //ERROR MESSAGES, IF ANY
             error.value = call.code()

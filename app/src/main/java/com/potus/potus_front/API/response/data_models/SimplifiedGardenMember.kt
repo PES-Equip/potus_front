@@ -4,6 +4,6 @@ import org.jetbrains.annotations.NotNull
 
 data class SimplifiedGardenMember(
     @NotNull
-    var user: String,
+    var username: String,
     var role: String
 )
