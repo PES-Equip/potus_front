@@ -117,7 +117,7 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
             }
         }
         if (openDialog.value) {
-            Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_SHORT).show()
+            Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_LONG).show()
             openDialog.value = false
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), onNavigateToInvitations, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_seleccio_jardi), onNavigateToSelection)
