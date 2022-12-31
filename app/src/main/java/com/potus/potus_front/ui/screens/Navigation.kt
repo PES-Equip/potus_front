@@ -38,8 +38,6 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                             "NEW" -> navController.navigate(RegisterScreen.route)
                             "CONFIRMED" -> navController.navigate(HomeScreen.route)
                         }
-                        //if (tokenState.getState() == "NEW") navController.navigate(RegisterScreen.route)
-                        //else if (tokenState.getState() == "CONFIRMED") navController.navigate(HomeScreen.route)
                     }
                 }
             } else {
