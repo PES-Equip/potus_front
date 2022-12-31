@@ -38,9 +38,6 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
-    var newGardensName = remember { mutableStateOf("NEW GARDEN") }
-    var newGardensMembers = remember { mutableStateOf(0) }
-    var newGardensDescription = remember { mutableStateOf("") }
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
@@ -91,14 +88,16 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                                     newGardenRequest
                                 )
 
+                            val cBody = call.body()
                             val eBody = call.errorBody()
                             if (call.isSuccessful) {
-                                call.body()?.let {
+                                cBody?.let {
                                     user.garden_info = it
                                 }
-                                Timber.tag("CREATED!").d(call.body().toString())
+                                Timber.tag("CREATED!").d(cBody.toString())
                             } else {
                                 //ERROR MESSAGES, IF ANY
+                                openDialog.value = true
                                 if (eBody != null) {
                                     val jObjErr = JSONObject(eBody.string())
                                     actionString = jObjErr.getString("message")
@@ -106,7 +105,8 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                             }
                     }
 
-                    onNavigateToGarden()
+                    if (user.garden_info != null)
+                        onNavigateToGarden()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                 modifier = Modifier
