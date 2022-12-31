@@ -34,12 +34,13 @@ Completed Sprint 2 tasks:
 
 Completed Sprint 3 tasks and issues:
 
-- 
+- Frontend - User login call needs to be updated for trophies [#259, BF]
 
 Underway Sprint 3 tasks and issues:
 
 - Improve Potus basics [#181, MH]
 - Frontend - Garden's members are not shown [#257, BF]
 - Frontend - Garden's management screen is not scrollable [#258, BF]
+- Frontend - No feedback is given to to the user when creating a Garden [#260, BF]
 
 [This is the develop branch]
