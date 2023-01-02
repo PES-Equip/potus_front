@@ -38,11 +38,11 @@ import java.util.*
 fun HistoryScreen(onNavigateToProfile: () -> Unit) {
     val openDialog = remember { mutableStateOf(false) }
     val error = remember { mutableStateOf("") }
-    var anyPotusDead = remember { mutableStateOf(true) }
+    val anyPotusDead = remember { mutableStateOf(true) }
 
     val user = TokenState.current.user!!.user
 
-    var histEntries = remember {
+    val histEntries = remember {
         mutableStateOf(listOf(HistoryResponse(createdDate = Date(22/11/2022), deathDate = Date(24/11/2022), ""))) }
 
     val tokenState = TokenState.current
@@ -61,7 +61,7 @@ fun HistoryScreen(onNavigateToProfile: () -> Unit) {
             else { anyPotusDead.value = false }
         } else {
             //ERROR MESSAGES, IF ANY
-            var jObjErr = call.errorBody()?.string()?.let { JSONObject(it) }
+            val jObjErr = call.errorBody()?.string()?.let { JSONObject(it) }
             if (jObjErr != null) {
                 error.value = jObjErr.getString("message")
             }
@@ -106,7 +106,7 @@ fun Historial(entries: List<HistoryResponse>, print: Boolean) {
         }
     }
     else {
-        Column(){
+        Column {
             Spacer(modifier = Modifier.weight(0.1f))
             Surface(
                 color = GraveStoneGray,

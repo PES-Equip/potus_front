@@ -37,8 +37,8 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
     ) {
         val tokenState = TokenState.current
         val textState = remember { mutableStateOf(TextFieldValue()) }
-        var displayErrorText = remember { mutableStateOf(false) }
-        var errorText = remember { mutableStateOf("") }
+        val displayErrorText = remember { mutableStateOf(false) }
+        val errorText = remember { mutableStateOf("") }
 
         Column {
             Spacer(modifier = Modifier.weight(0.075f))
@@ -115,7 +115,7 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                                         newRevivePotusRequest
                                     )
                                 val body = call.body()
-                                val Ebody = call.errorBody()
+                                val ebody = call.errorBody()
 
                                 if (call.isSuccessful && body != null) {
                                     tokenState.user?.let {
@@ -123,8 +123,8 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                                         onNavigateToHome
                                     }
                                 } else {
-                                    if (Ebody != null) {
-                                        var jObjErr = JSONObject(Ebody.string())
+                                    if (ebody != null) {
+                                        val jObjErr = JSONObject(ebody.string())
                                         errorText.value = jObjErr.getString("message")
                                         displayErrorText.value = true
                                     }
