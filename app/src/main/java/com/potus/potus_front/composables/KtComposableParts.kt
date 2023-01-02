@@ -1,5 +1,7 @@
 package com.potus.potus_front.composables
 
+import android.graphics.Typeface.BOLD
+import android.graphics.fonts.FontStyle
 import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
@@ -22,6 +24,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -31,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
@@ -41,13 +46,16 @@ import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
+import kotlinx.coroutines.*
+import com.potus.potus_front.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import timber.log.Timber
+import kotlin.math.roundToInt
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TopBar(
     waterLevel: Int,
@@ -135,22 +143,50 @@ fun TopBar(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GasesWindow() {
+    val openDialog = remember { mutableStateOf(false)  }
+    val error = remember { mutableStateOf(200)  }
+
+    val tokenState = TokenState.current
+
+    LaunchedEffect(Dispatchers.IO) {
+        val call = getRetrofit()
+            .create(APIService::class.java)
+            .getGases(
+                "Bearer " + tokenState.token,
+                "airquality/region",
+                latitude = tokenState.location.first,
+                length = tokenState.location.second
+            )
+
+        if (call.isSuccessful) {
+            tokenState.regionalGases(call.body())
+        } else {
+            //ERROR MESSAGES, IF ANY
+            error.value = call.code()
+            openDialog.value = true
+        }
+    }
+
     Column(modifier = Modifier.fillMaxWidth()) {
-        var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2.5", "PM10", "PS", "SO2")
+        //var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2_5", "PM10", "PS", "SO2")
+        val gasesInfo = tokenState.gases.registry
+        var gases = gasesInfo.keys
         var toggled by remember { mutableStateOf(false) }
 
         Spacer(modifier = Modifier.height(32.dp))
         LazyVerticalGrid(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
+                .align(CenterHorizontally)
                 .width(360.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(color = Daffodil)
                 .toggleable(value = toggled, onValueChange = { toggled = it })
                 .animateContentSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.Center,
             cells = GridCells.Fixed(4)) {
                 var numberOfCells = 4
-                if (toggled) numberOfCells = gases.size
+                if (toggled or (gasesInfo.size < 4)) numberOfCells = gasesInfo.size
                 items(count = numberOfCells) {
                 Row(
                     modifier = Modifier
@@ -159,7 +195,34 @@ fun GasesWindow() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = gases[it], fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
+                    val gas = gasesInfo[gases.elementAt(it)]
+                    var color = Color.Gray
+                    when (gas?.dangerLevel) {
+                        "NoDanger" -> color = noDanger
+                        "Low" -> color = Low
+                        "Moderate" -> color = Moderate
+                        "High" -> color = High
+                        "Hazardous" -> color = Hazardous
+                    }
+                    Column(
+                        horizontalAlignment = CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = gas!!.name,
+                            textAlign = Center,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = color
+                        )
+                        Text(
+                            text = ((gas.value * 100.0).roundToInt()/100.0).toString() + " " + gas.unit,
+                            textAlign = Center,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = color
+                        )
+                    }
                 }
             }
         }
@@ -207,14 +270,21 @@ fun CenterArea(plantState:String) {
                         .align(Alignment.Center)
                 )
             }
+            Text(
+                modifier = Modifier.align(BottomCenter),
+                text = TokenState.current.user?.user?.potus?.name.toString(), fontWeight = FontWeight.Bold, fontSize = 30.sp, color = BraveGreen, textAlign = TextAlign.Center
+            )
         }
-        Text(text = TokenState.current.user?.potus?.name.toString(), fontWeight = FontWeight.Bold, fontSize = 30.sp, color = BraveGreen, textAlign = TextAlign.Center)
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
-fun BottomBar(updateWaterLevel: (Int) -> Unit,
-              updateLeaveRecollection:(Int) -> Unit
+fun BottomBar(
+    updateWaterLevel: (Int) -> Unit,
+    updateLeaveRecollection:(Int) -> Unit,
+    onNavigateToGarden: () -> Unit,
+    onNavigateToSelection: () -> Unit
 ) {
     val heightBottomBar = 192.dp
     val heightCircle = 125.dp
@@ -224,6 +294,9 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
 
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = ""
+
+    val tokenState = TokenState.current
+    val user = tokenState.user!!.user
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -258,8 +331,6 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                         modifier = Modifier
                             .clickable(onClick = {
                                 GlobalScope.launch(Dispatchers.IO) {
-                                    //CoroutineScope(Dispatchers.IO).launch {
-
                                     val newUpdateActionRequest = ActionRequest("prune")
                                     val call = getRetrofit()
                                         .create(APIService::class.java)
@@ -272,11 +343,11 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                     val Ebody = call.errorBody()
                                     if (call.isSuccessful) {
                                         tokenState.signUser(body)
-                                        tokenState.user?.currency?.let { updateLeaveRecollection(it) }
+                                        tokenState.user?.user?.currency?.let { updateLeaveRecollection(it) }
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
-                                            var jObjErr = JSONObject(Ebody.string())
+                                            val jObjErr = JSONObject(Ebody.string())
                                             actionString = jObjErr.getString("message")
                                         }
                                     }
@@ -321,11 +392,11 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                                     val Ebody = call.errorBody()
                                     if (call.isSuccessful) {
                                         tokenState.signUser(call.body())
-                                        tokenState.user?.potus?.let { updateWaterLevel(it.waterLevel) }
+                                        tokenState.user?.user?.potus?.let { updateWaterLevel(it.waterLevel) }
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
-                                            var jObjErr = JSONObject(Ebody.string())
+                                            val jObjErr = JSONObject(Ebody.string())
                                             actionString = jObjErr.getString("message")
                                         }
                                     }
@@ -348,6 +419,22 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                 painter = painterResource(id = R.drawable.icona_jardi),
                 "",
                 modifier = Modifier
+                    .clickable(onClick = {
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val call = getRetrofit().create(APIService::class.java)
+                                .getUser(
+                                    "Bearer " + tokenState.token,
+                                    "user/profile")
+
+                            if (call.isSuccessful) {
+                                tokenState.signUser(call.body())
+                            }
+                        }
+
+                        if (user.garden_info != null) onNavigateToGarden()
+                        else onNavigateToSelection()
+                    })
                     .padding(8.dp)
                     .size(heightCircle)
                     .align(Alignment.Center)
@@ -355,6 +442,99 @@ fun BottomBar(updateWaterLevel: (Int) -> Unit,
                     .background(color = SoothingGreen))
         }
     }
+}
+
+@Composable
+fun GardenBottomBar(
+    leftImage: Painter,
+    onNavigateToLeft : () -> Unit,
+    centerImage: Painter,
+    onNavigateToCenter : () -> Unit,
+    rightImage: Painter,
+    onNavigateToRight : () -> Unit
+) {
+    val heightBottomBar = 96.dp
+    val heightCircle = 160.dp
+    val heightTotal = heightBottomBar+heightCircle/2
+    val heightButton = 80.dp
+    val widthButton = 96.dp
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(heightTotal)) {
+            BoxWithConstraints(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(heightBottomBar)
+                    .background(BraveGreen)
+            ) {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(heightTotal)
+                ) {
+                    Surface(
+                        color = SoothingGreen,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .align(Alignment.CenterVertically)
+                            .width(widthButton)
+                            .height(heightButton)
+                            .clip(RoundedCornerShape(10.dp))
+                    ) {
+                        Image(
+                            painter = leftImage,
+                            "",
+                            modifier = Modifier
+                                .clickable(onClick = { onNavigateToLeft() })
+                                .padding(8.dp)
+                                .size(heightButton)
+                                .align(Alignment.CenterVertically)
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Surface(
+                        color = SoothingGreen,
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .align(Alignment.CenterVertically)
+                            .width(widthButton)
+                            .height(heightButton)
+                            .clip(RoundedCornerShape(10.dp))
+                    ) {
+                        Image(
+                            painter = rightImage,
+                            "",
+                            modifier = Modifier
+                                .clickable(onClick = { onNavigateToRight() })
+                                .padding(8.dp)
+                                .size(heightButton)
+                                .align(Alignment.CenterVertically)
+                        )
+                    }
+                }
+            }
+            Surface(
+                color = BraveGreen,
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle / 2))
+                    .align(Alignment.TopCenter)
+                    .size(heightCircle)
+                    .clip(CircleShape)
+            ) {
+                Image(
+                    painter = centerImage,
+                    "",
+                    modifier = Modifier
+                        .clickable(onClick = { onNavigateToCenter() })
+                        .padding(8.dp)
+                        .size(heightCircle - 32.dp)
+                        .align(Alignment.Center)
+                        .clip(CircleShape)
+                        .background(color = SoothingGreen))
+            }
+        }
 }
 
 @Composable

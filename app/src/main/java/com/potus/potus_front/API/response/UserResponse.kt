@@ -1,10 +1,9 @@
 package com.potus.potus_front.API.response
 
+import com.potus.potus_front.API.response.data_models.User
+import com.potus.potus_front.API.response.data_models.UserTrophy
+
 data class UserResponse(
-    var username: String,
-    var email: String,
-    var currency: Int,
-    var potus: PotusResponse,
-    var status: String,
-    var message: String
+    var user: User,
+    var trophies: List<UserTrophy>
 )

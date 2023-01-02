@@ -21,11 +21,12 @@ import kotlinx.coroutines.Dispatchers
 
 
 @Composable
-fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit) {
+fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToSelection: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
-    val user = TokenState.current.user!!
+    val tokenState = TokenState.current
+    val user = tokenState.user!!.user
     var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
     var collection by remember { mutableStateOf(user.currency) }
     var addedWater by remember { mutableStateOf(0) }
@@ -33,7 +34,6 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit) {
     var plantState by remember { mutableStateOf("DEFAULT") }
     //var thematicEvent by remember { mutableStateOf("DEFAULT") }
 
-    val tokenState = TokenState.current
     LaunchedEffect(Dispatchers.IO) {
         val newUpdateStateRequest = InformLocationRequest(latitude = tokenState.location.first, length = tokenState.location.second)
         val call = getRetrofit()
@@ -46,7 +46,7 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit) {
 
         if (call.isSuccessful) {
             tokenState.myPotus(call.body())
-            tokenState.user?.potus?.let { plantState = it.state }
+            tokenState.user?.user?.potus?.let { plantState = it.state }
         } else {
             //ERROR MESSAGES, IF ANY
             error.value = call.code()
@@ -77,7 +77,9 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit) {
             updateLeaveRecollection = { collectedLeaves ->
                 addedLeaves = collectedLeaves - collection
                 collection = collectedLeaves
-            })
+            },
+            onNavigateToGarden = { onNavigateToGarden() },
+            onNavigateToSelection = { onNavigateToSelection() })
     }
 
     if (openDialog.value) {

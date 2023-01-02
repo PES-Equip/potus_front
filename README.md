@@ -15,6 +15,7 @@ Completed Sprint 1 tasks:
 
 Completed Sprint 2 tasks:
 
+- Show profile information [#63, MV]
 - Plant events [#86, BF]
 - Thematic events [#92, BF]
 - Frontend - Show garden information [#116, BF]
@@ -25,14 +26,20 @@ Completed Sprint 2 tasks:
 - Frontend - Update the description interface [#127, BF]
 - Frontend - Invite user interface [#130, BF]
 - Frontend - Show the invitation to the invited user [#131, BF]
-- Revive Potus [#184, MH]
+- Popup to show yesterday's gases [#180, BF]
+- Frontend - Screen [#187, MH]
+- Frontend - Pop Up / Screen [#188, MH]
 - Frontend - Show Garden Selection screen [#230, BF]
 - Frontend - Show Garden Join Petitions [#232, BF]
 
-Underway Sprint 2 tasks:
+Completed Sprint 3 tasks and issues:
 
-- Show profile information [#63, MV]
-- Popup to show yesterday's gases [#180, BF]
+- 
+
+Underway Sprint 3 tasks and issues:
+
 - Improve Potus basics [#181, MH]
+- Frontend - Garden's members are not shown [#257, BF]
+- Frontend - Garden's management screen is not scrollable [#258, BF]
 
 [This is the develop branch]

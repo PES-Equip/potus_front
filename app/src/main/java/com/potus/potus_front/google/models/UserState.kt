@@ -16,7 +16,7 @@ class UserStateViewModel: ViewModel(){
         if(user == null)
             return "NOTLOGGED"
 
-        return user!!.status
+        return user!!.user.status
     }
 
 
