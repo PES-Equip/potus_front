@@ -35,6 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import timber.log.Timber
 
 
 @Composable
@@ -216,6 +217,8 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                             builder.setTitle("EXIT")
                             builder.setMessage("Are you sure you want to leave the Garden?")
                             builder.setPositiveButton("LEAVE") { dialog, which ->
+                                user.garden_info = null
+
                                 CoroutineScope(Dispatchers.IO).launch {
                                     getRetrofit()
                                         .create(APIService::class.java)
@@ -224,6 +227,8 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                             "gardens/profile"
                                         )
                                 }
+
+                                Timber.tag("DOES IT FUCKING WORK?").d("Succesfully ")
 
                                 onNavigateToHome()
                             }
@@ -248,8 +253,10 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                         onClick = {
                             val builder = AlertDialog.Builder(popUpContext)
                             builder.setTitle("DELETE")
-                            builder.setMessage("Are you sure you want to delete the Garden?")
+                            builder.setMessage("Are you sure you want to delete this Garden?")
                             builder.setPositiveButton("DELETE") { dialog, which ->
+                                user.garden_info = null
+
                                 CoroutineScope(Dispatchers.IO).launch {
                                     getRetrofit()
                                         .create(APIService::class.java)
