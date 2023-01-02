@@ -31,7 +31,7 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, 
     var collection by remember { mutableStateOf(user.currency) }
     var addedWater by remember { mutableStateOf(0) }
     var addedLeaves by remember { mutableStateOf(0) }
-    var plantState by remember { mutableStateOf("DEFAULT") }
+    var plantState by remember { mutableStateOf(    "DEFAULT") }
     //var thematicEvent by remember { mutableStateOf("DEFAULT") }
 
     LaunchedEffect(Dispatchers.IO) {

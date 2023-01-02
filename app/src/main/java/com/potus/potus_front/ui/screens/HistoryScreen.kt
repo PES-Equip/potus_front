@@ -35,7 +35,7 @@ import org.json.JSONObject
 import java.util.*
 
 @Composable
-fun HistoryScreen(onNavigateToProfile: () -> Unit) {
+fun HistoryScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false) }
     val error = remember { mutableStateOf("") }
     var anyPotusDead = remember { mutableStateOf(true) }
@@ -76,7 +76,8 @@ fun HistoryScreen(onNavigateToProfile: () -> Unit) {
             username = "Mr. Simon", //user.username,
             addedWater = 0, //addedWater,
             addedLeaves = 0, //addedLeaves
-            onNavigateToProfile = { onNavigateToProfile() }
+            onNavigateToProfile = { onNavigateToProfile() },
+            onNavigateToShop = { onNavigateToShop()}
         )
         Historial(entries = histEntries.value, anyPotusDead.value)
     }

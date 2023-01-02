@@ -36,7 +36,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
-    val user = TokenState.current.user!!
+    val user = TokenState.current.user!!.user
     var username by remember { mutableStateOf(user?.username) }
     var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
     var collection by remember { mutableStateOf(user.currency) }
@@ -63,7 +63,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
 
         if (call.isSuccessful) {
             tokenState.myPotus(call.body())
-            tokenState.user?.potus?.let { plantState = it.state }
+            tokenState.user?.user?.potus?.let { plantState = it.state }
         } else {
             //ERROR MESSAGES, IF ANY
             error.value = call.code()
@@ -131,7 +131,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
             ) {
                 Button(
                     onClick = {
-                        /*
+
 
                         CoroutineScope(Dispatchers.Main).launch {
 
@@ -141,8 +141,8 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                                 getRetrofit().create(APIService::class.java)
                                     .buyBonus(
                                         "Bearer " + tokenState.token,
-                                        "potus/store/buy",
-                                        it
+                                        "potus/store/buy/" +
+                                        it.modifier
                                     )
                             }
 
@@ -154,7 +154,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                             }
                         }
 
-                         */
+
 
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)

@@ -32,7 +32,7 @@ import timber.log.Timber
 
 
 @Composable
-fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToSelection: () -> Unit) {
+fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToSelection: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = ""
 
@@ -46,7 +46,9 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
             username = user.username,
             addedWater = 0,
             addedLeaves = 0,
-            onNavigateToProfile = { onNavigateToProfile() }
+            onNavigateToProfile = { onNavigateToProfile() },
+            onNavigateToShop = { onNavigateToShop()}
+
         )
         Column(modifier = Modifier.weight(1f).background(color = Daffodil)) {
             var newGardenName = remember { mutableStateOf(TextFieldValue()) }

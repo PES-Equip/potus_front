@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetitions: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
+fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetitions: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -51,7 +51,8 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
             username = user.username,
             addedWater = 0,
             addedLeaves = 0,
-            onNavigateToProfile = { onNavigateToProfile() }
+            onNavigateToProfile = { onNavigateToProfile() },
+            onNavigateToShop = { onNavigateToShop()}
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             Spacer(modifier = Modifier.size(8.dp))

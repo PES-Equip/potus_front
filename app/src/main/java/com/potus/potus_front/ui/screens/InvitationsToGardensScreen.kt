@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToSelection: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit) {
+fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToSelection: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -67,7 +67,8 @@ fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGard
             username = user.username,
             addedWater = 0,
             addedLeaves = 0,
-            onNavigateToProfile = { onNavigateToProfile() }
+            onNavigateToProfile = { onNavigateToProfile() },
+            onNavigateToShop = { onNavigateToShop()}
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             InvitationsList(tokenState.invitations, onNavigateToGarden, onNavigateToInvitations)

@@ -35,7 +35,7 @@ import timber.log.Timber
 
 
 @Composable
-fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit) {
+fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -67,7 +67,8 @@ fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations:
             username = user.username,
             addedWater = 0,
             addedLeaves = 0,
-            onNavigateToProfile = { onNavigateToProfile() }
+            onNavigateToProfile = { onNavigateToProfile() },
+            onNavigateToShop = { onNavigateToShop()}
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             //GardenList(listOf(NewGardenResponse("We Are The Champions", 3, "You should ask to join us."), NewGardenResponse("#1 GARDEN IN THE WORLD", 0, "Admire us!"), NewGardenResponse("WOOOHOOOOOOO", 0, "HEEEEY"), NewGardenResponse("Christmas gang :)", 156, "Fum, fum, fum"), NewGardenResponse("Developer's corner", 1, "So tired..."), NewGardenResponse("Knights of the PIC Table", 0, "Hehe."), NewGardenResponse("NO-NAME", 0, "Join us! We do bite ;)"), NewGardenResponse("Bosc", 6, "Els originals!")))
