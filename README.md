@@ -43,6 +43,7 @@ Underway Sprint 3 tasks and issues:
 - Frontend - Garden's management screen is not scrollable [#258, BF]
 - Frontend - No feedback is given to to the user when creating a Garden [#260, BF]
 - ... [#261, MH]
-- Frontend - Garden's call to invite new user gives issues [#262, BF]
+- Frontend - Garden's call to invite new user does not give feedback [#262, BF]
+- Frontend - Add confirmation pop-up to EXIT and DELETE Garden buttons [#263, BF]
 
 [This is the develop branch]
