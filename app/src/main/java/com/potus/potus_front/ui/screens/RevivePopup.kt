@@ -42,96 +42,100 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
         var displayErrorText = remember { mutableStateOf(false) }
         var errorText = remember { mutableStateOf("") }
 
-        Surface(modifier = Modifier
-            .padding(
-                start = sidePadding,
-                end = sidePadding,
-                top = verticalPadding,
-                bottom = verticalPadding
+        Column {
+            Spacer(modifier = Modifier.weight(0.075f))
+            
+            Surface(modifier = Modifier
+                .weight(0.85f)
+                .clip(RoundedCornerShape(46.dp)),
+                color = Color.White
             )
-            .clip(RoundedCornerShape(46.dp)),
-            color = Color.White
-        )
-        {
-            Column(modifier = Modifier.fillMaxWidth()) {
+            {
+                Column(modifier = Modifier.fillMaxWidth()) {
 
-                Spacer(modifier = Modifier.weight(0.2f))
+                    Spacer(modifier = Modifier.weight(0.2f))
 
-                Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = "Your Potus\nDied",
-                    fontSize = 30.sp,
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.DarkGray,
-                    textAlign = TextAlign.Center
+                    Text(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        text = "Your Potus\nDied",
+                        fontSize = 30.sp,
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.DarkGray,
+                        textAlign = TextAlign.Center
                     )
 
-                Spacer(modifier = Modifier.weight(0.15f))
+                    Spacer(modifier = Modifier.weight(0.15f))
 
-                Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                        .padding(all = 16.dp),
-                    text = "Your Potus has died! \n\n" +
-                            "Your buddy is now part of your past Potus collection. \n\n" +
-                            "Now, pick a name for your next Potus!",
-                    fontSize = 16.sp,
-                    color = Color.DarkGray,
-                    textAlign = TextAlign.Center)
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(all = 16.dp),
+                        text = "Your Potus has died! \n\n" +
+                                "Your buddy is now part of your past Potus collection. \n\n" +
+                                "Now, pick a name for your next Potus!",
+                        fontSize = 16.sp,
+                        color = Color.DarkGray,
+                        textAlign = TextAlign.Center
+                    )
 
-                Spacer(modifier = Modifier.weight(0.1f))
+                    Spacer(modifier = Modifier.weight(0.1f))
 
-                OutlinedTextField(
-                    value = textState.value,
-                    onValueChange = { textState.value = it },
-                    label = { Text(text = "New name") },
-                    maxLines = 1,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    shape = MaterialTheme.shapes.medium
-                )
+                    OutlinedTextField(
+                        value = textState.value,
+                        onValueChange = { textState.value = it },
+                        label = { Text(text = "New name") },
+                        maxLines = 1,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        shape = MaterialTheme.shapes.medium
+                    )
 
-                Spacer(modifier = Modifier.weight(0.1f))
+                    Spacer(modifier = Modifier.weight(0.1f))
 
-                Button(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = {
-                        CoroutineScope(Dispatchers.IO).launch {
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            CoroutineScope(Dispatchers.IO).launch {
 
-                            val newRevivePotusRequest = PotusReviveRequest(textState.value.toString())
-                            val call = getRetrofit()
-                                .create(APIService::class.java)
-                                .revivePotus(
-                                    "Bearer " + tokenState.token,
-                                    "user/profile/potus",
-                                    newRevivePotusRequest
-                                )
-                            val body = call.body()
-                            val Ebody = call.errorBody()
+                                val newRevivePotusRequest =
+                                    PotusReviveRequest(textState.value.toString())
+                                val call = getRetrofit()
+                                    .create(APIService::class.java)
+                                    .revivePotus(
+                                        "Bearer " + tokenState.token,
+                                        "user/profile/potus",
+                                        newRevivePotusRequest
+                                    )
+                                val body = call.body()
+                                val Ebody = call.errorBody()
 
-                            if (call.isSuccessful && body != null) {
-                                tokenState.user?.let {
-                                    tokenState.user!!.user.potus = body
-                                    onNavigateToHome
-                                }
-                            } else {
-                                if (Ebody != null) {
-                                    var jObjErr = JSONObject(Ebody.string())
-                                    errorText.value = jObjErr.getString("message")
-                                    displayErrorText.value = true
+                                if (call.isSuccessful && body != null) {
+                                    tokenState.user?.let {
+                                        tokenState.user!!.user.potus = body
+                                        onNavigateToHome
+                                    }
+                                } else {
+                                    if (Ebody != null) {
+                                        var jObjErr = JSONObject(Ebody.string())
+                                        errorText.value = jObjErr.getString("message")
+                                        displayErrorText.value = true
+                                    }
                                 }
                             }
-                        }
-                        // navigate
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
-                ) {
-                    Text(text = "Revive your Son")
-                }
+                            // navigate
+                        },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
+                    ) {
+                        Text(text = "Revive your Son")
+                    }
 
-                Spacer(modifier = Modifier.weight(0.1f))
+                    Spacer(modifier = Modifier.weight(0.1f))
+                }
             }
+            
+            Spacer(modifier = Modifier.weight(0.075f))
         }
         if(displayErrorText.value) {
             Toast.makeText(LocalContext.current, errorText.value, Toast.LENGTH_SHORT).show()

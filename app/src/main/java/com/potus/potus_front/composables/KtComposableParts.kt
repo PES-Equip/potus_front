@@ -237,7 +237,8 @@ fun CenterArea(plantState:String) {
     ) {
         //Spacer(modifier = Modifier.height(16.dp))
         Box(modifier = Modifier
-            .align(Alignment.CenterHorizontally))
+            .align(Alignment.CenterHorizontally)
+            .weight(0.8f))
         {
             Image(
                 painter = test,
@@ -262,11 +263,18 @@ fun CenterArea(plantState:String) {
                         .align(Alignment.Center)
                 )
             }
+        }
+        Box(modifier = Modifier.weight(0.125f)){
             Text(
                 modifier = Modifier.align(BottomCenter),
-                text = TokenState.current.user?.user?.potus?.name.toString(), fontWeight = FontWeight.Bold, fontSize = 30.sp, color = BraveGreen, textAlign = TextAlign.Center
+                text = TokenState.current.user?.user?.potus?.name.toString(),
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp,
+                color = BraveGreen,
+                textAlign = Center
             )
         }
+        Spacer(modifier = Modifier.weight(0.075f))
     }
 }
 
@@ -335,7 +343,11 @@ fun BottomBar(
                                     val Ebody = call.errorBody()
                                     if (call.isSuccessful) {
                                         tokenState.signUser(body)
-                                        tokenState.user?.user?.currency?.let { updateLeaveRecollection(it) }
+                                        tokenState.user?.user?.currency?.let {
+                                            updateLeaveRecollection(
+                                                it
+                                            )
+                                        }
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
@@ -414,10 +426,12 @@ fun BottomBar(
                     .clickable(onClick = {
 
                         CoroutineScope(Dispatchers.IO).launch {
-                            val call = getRetrofit().create(APIService::class.java)
+                            val call = getRetrofit()
+                                .create(APIService::class.java)
                                 .getUser(
                                     "Bearer " + tokenState.token,
-                                    "user/profile")
+                                    "user/profile"
+                                )
 
                             if (call.isSuccessful) {
                                 tokenState.signUser(call.body())
@@ -510,7 +524,11 @@ fun GardenBottomBar(
             Surface(
                 color = BraveGreen,
                 modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle / 2))
+                    .padding(
+                        start = 10.dp,
+                        end = 10.dp,
+                        bottom = (heightBottomBar - heightCircle / 2)
+                    )
                     .align(Alignment.TopCenter)
                     .size(heightCircle)
                     .clip(CircleShape)

@@ -78,7 +78,9 @@ fun HistoryScreen(onNavigateToProfile: () -> Unit) {
             addedLeaves = 0, //addedLeaves
             onNavigateToProfile = { onNavigateToProfile() }
         )
+        Spacer(modifier = Modifier.weight(0.1f))
         Historial(entries = histEntries.value, anyPotusDead.value)
+        Spacer(modifier = Modifier.weight(0.1f))
     }
 
     if (openDialog.value) {
@@ -104,25 +106,32 @@ fun Historial(entries: List<HistoryResponse>, print: Boolean) {
         }
     }
     else {
-        Surface(
-            color = GraveStoneGray,
-            modifier = Modifier.clip(RoundedCornerShape(16.dp))) {
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .padding(all = 16.dp)
-            ) {
-                Text(
-                    text = "No Dead Potus Found",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center),
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic,
-                    textAlign = TextAlign.Center,
-                    color = Color.DarkGray
-                )
+        Column(){
+            Spacer(modifier = Modifier.weight(0.1f))
+            Surface(
+                color = GraveStoneGray,
+                modifier = Modifier
+                    .weight(0.8f)
+                    .padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(16.dp))) {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(all = 16.dp)
+                ) {
+                    Text(
+                        text = "No Dead Potus Found",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Center),
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Italic,
+                        textAlign = TextAlign.Center,
+                        color = Color.DarkGray
+                    )
+                }
             }
+            Spacer(modifier = Modifier.weight(0.1f))
         }
     }
 }
@@ -131,7 +140,7 @@ fun Historial(entries: List<HistoryResponse>, print: Boolean) {
 fun RowItem(item: HistoryResponse) {
     Surface(
         color = GraveStoneGray,
-        modifier = Modifier.clip(RoundedCornerShape(16.dp))) {
+        modifier = Modifier.clip(RoundedCornerShape(16.dp)).padding(horizontal = 16.dp)) {
         LazyColumn(modifier = Modifier
             .fillMaxHeight()
             .width(360.dp)
