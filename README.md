@@ -42,5 +42,7 @@ Underway Sprint 3 tasks and issues:
 - Frontend - Garden's members are not shown [#257, BF]
 - Frontend - Garden's management screen is not scrollable [#258, BF]
 - Frontend - No feedback is given to to the user when creating a Garden [#260, BF]
+- ... [#261, MH]
+- Frontend - Garden's call to invite new user gives issues [#262, BF]
 
 [This is the develop branch]
