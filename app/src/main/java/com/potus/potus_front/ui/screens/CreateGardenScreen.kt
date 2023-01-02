@@ -23,17 +23,15 @@ import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.SoothingGreen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
-import timber.log.Timber
 
 
 @Composable
 fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToSelection: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = ""
+    val goToGarden = remember { mutableStateOf(false)  }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
@@ -77,34 +75,35 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
             Spacer(modifier = Modifier.size(16.dp))
             Button(
                 onClick = {
-                    CoroutineScope(Dispatchers.IO).launch {
+                    runBlocking {
                         val newGardenRequest = GardenRequest(name = newGardenName.value.text)
-                        Timber.tag("NAME").d("Written name is %s", newGardenName.value.text)
-                            val call = getRetrofit()
-                                .create(APIService::class.java)
-                                .createGarden(
-                                    "Bearer " + tokenState.token,
-                                    "gardens",
-                                    newGardenRequest
-                                )
 
-                            val cBody = call.body()
-                            val eBody = call.errorBody()
-                            if (call.isSuccessful) {
-                                cBody?.let {
-                                    user.garden_info = it
-                                }
-                                onNavigateToGarden()
-                            } else {
-                                //ERROR MESSAGES, IF ANY
-                                openDialog.value = true
-                                if (eBody != null) {
-                                    actionString =  if (newGardenName.value.text.isEmpty()) "Namespace is empty"
-                                                    else if (newGardenName.value.text.length < 3) "The Garden's name must have at least 3 characters"
-                                                    else if (newGardenName.value.text.length > 30) "The Garden's name must have less than 30 characters"
-                                                    else JSONObject(eBody.string()).getString("message")
-                                }
+                        val call = getRetrofit()
+                            .create(APIService::class.java)
+                            .createGarden(
+                                "Bearer " + tokenState.token,
+                                "gardens",
+                                newGardenRequest
+                            )
+
+                        val eBody = call.errorBody()
+                        if (call.isSuccessful) {
+                            call.body()?.let {
+                                user.garden_info = it
                             }
+                            onNavigateToGarden()
+                        } else {
+                            //ERROR MESSAGES, IF ANY
+                            openDialog.value = true
+                            if (eBody != null) {
+                                actionString = JSONObject(eBody.string()).getString("message")
+                            } else {
+                                actionString =  if (newGardenName.value.text.isEmpty()) "Namespace is empty"
+                                                else if (newGardenName.value.text.length < 3) "Name must have at least 3 characters"
+                                                else if (newGardenName.value.text.length > 30) "Name must have less than 30 characters"
+                                                else "Name is invalid"
+                            }
+                        }
                     }
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
