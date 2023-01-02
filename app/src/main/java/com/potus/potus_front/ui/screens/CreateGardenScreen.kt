@@ -27,6 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import timber.log.Timber
 
 
 @Composable
@@ -78,6 +79,7 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                 onClick = {
                     CoroutineScope(Dispatchers.IO).launch {
                         val newGardenRequest = GardenRequest(name = newGardenName.value.text)
+                        Timber.tag("NAME").d("Written name is is %s", newGardenName.value.text)
                             val call = getRetrofit()
                                 .create(APIService::class.java)
                                 .createGarden(

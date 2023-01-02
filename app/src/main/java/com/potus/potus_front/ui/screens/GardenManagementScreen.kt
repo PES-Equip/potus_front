@@ -196,7 +196,6 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                         }
                     }
                 }
-            //Spacer(modifier = Modifier.size(64.dp))
                 item {
                     Button(
                         onClick = {
