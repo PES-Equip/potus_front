@@ -53,7 +53,10 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) },
                 onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }
             )
-            else RevivePopup(onNavigateToHome = { navController.navigate(HomeScreen.route) })
+            else navController.navigate(RevivePopup.route)
+        }
+        composable(RevivePopup.route) {
+            RevivePopup(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
         composable(route = ProfileScreen.route) {
             ProfileScreen(

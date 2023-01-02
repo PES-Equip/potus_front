@@ -118,7 +118,7 @@ fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit, on
                 Text(text = "Save")
             }
         }
-        CenterArea(plantState)
+        CenterArea("DEFAULT", true)
 
         Row(
             modifier = Modifier

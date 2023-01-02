@@ -151,7 +151,7 @@ fun RowItem(item: HistoryResponse) {
                         .fillMaxWidth()
                         .padding(all = 16.dp)
                 ) {
-                    CenterArea(plantState = "DEFAULT")
+                    CenterArea(plantState = "DEFAULT", true)
                 }
                 Text(
                     text = item.name,

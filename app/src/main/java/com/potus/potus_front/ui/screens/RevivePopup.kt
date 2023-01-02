@@ -36,8 +36,6 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
         color = BraveGreen
     ) {
         val tokenState = TokenState.current
-        val sidePadding = 60.dp
-        val verticalPadding = 200.dp
         val textState = remember { mutableStateOf(TextFieldValue()) }
         var displayErrorText = remember { mutableStateOf(false) }
         var errorText = remember { mutableStateOf("") }
@@ -47,18 +45,24 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
             
             Surface(modifier = Modifier
                 .weight(0.85f)
+                .padding(horizontal = 16.dp)
                 .clip(RoundedCornerShape(46.dp)),
                 color = Color.White
             )
             {
-                Column(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()) {
 
-                    Spacer(modifier = Modifier.weight(0.2f))
+                    Spacer(modifier = Modifier.weight(0.15f))
 
                     Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .weight(0.3f)
+                            .align(Alignment.CenterHorizontally),
                         text = "Your Potus\nDied",
-                        fontSize = 30.sp,
+                        fontSize = 50.sp,
                         fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.Bold,
                         color = Color.DarkGray,
@@ -69,12 +73,12 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
 
                     Text(
                         modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(all = 16.dp),
+                            .weight(0.45f)
+                            .align(Alignment.CenterHorizontally),
                         text = "Your Potus has died! \n\n" +
                                 "Your buddy is now part of your past Potus collection. \n\n" +
                                 "Now, pick a name for your next Potus!",
-                        fontSize = 16.sp,
+                        fontSize = 20.sp,
                         color = Color.DarkGray,
                         textAlign = TextAlign.Center
                     )
@@ -82,20 +86,22 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                     Spacer(modifier = Modifier.weight(0.1f))
 
                     OutlinedTextField(
+                        modifier = Modifier
+                            .weight(0.15f)
+                            .fillMaxWidth(),
                         value = textState.value,
                         onValueChange = { textState.value = it },
                         label = { Text(text = "New name") },
                         maxLines = 1,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
                         shape = MaterialTheme.shapes.medium
                     )
 
-                    Spacer(modifier = Modifier.weight(0.1f))
+                    Spacer(modifier = Modifier.weight(0.15f))
 
                     Button(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .weight(0.15f)
+                            .align(Alignment.CenterHorizontally),
                         onClick = {
                             CoroutineScope(Dispatchers.IO).launch {
 

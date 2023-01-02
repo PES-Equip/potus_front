@@ -134,7 +134,7 @@ fun TopBar(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun GasesWindow() {
+fun GasesWindow(onToggleText: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -172,7 +172,10 @@ fun GasesWindow() {
                 .width(360.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(color = Daffodil)
-                .toggleable(value = toggled, onValueChange = { toggled = it })
+                .toggleable(value = toggled, onValueChange = {
+                    toggled = it
+                    onToggleText()
+                })
                 .animateContentSize(),
             verticalArrangement = Arrangement.Center,
             horizontalArrangement = Arrangement.Center,
@@ -223,7 +226,7 @@ fun GasesWindow() {
 
 @Composable
 //fun CenterArea(thematicEvent:String, plantState:String) {
-fun CenterArea(plantState:String) {
+fun CenterArea(plantState:String, textDisplay:Boolean) {
     //val plant = PlantEvents(plantState)
     //val test = ThematicEvents(thematicEvent)
     val overallState = JoinedEvents(plantState)
@@ -264,15 +267,17 @@ fun CenterArea(plantState:String) {
                 )
             }
         }
-        Box(modifier = Modifier.weight(0.125f)){
-            Text(
-                modifier = Modifier.align(BottomCenter),
-                text = TokenState.current.user?.user?.potus?.name.toString(),
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                color = BraveGreen,
-                textAlign = Center
-            )
+        if(textDisplay){
+            Box(modifier = Modifier.weight(0.125f)){
+                Text(
+                    modifier = Modifier.align(BottomCenter),
+                    text = TokenState.current.user?.user?.potus?.name.toString(),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    color = BraveGreen,
+                    textAlign = Center
+                )
+            }
         }
         Spacer(modifier = Modifier.weight(0.075f))
     }
