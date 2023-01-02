@@ -1,5 +1,6 @@
 package com.potus.potus_front.ui.screens
 
+import android.app.AlertDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -32,15 +34,18 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 
 @Composable
 fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetitions: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    val error = remember { mutableStateOf(200)  }
+    var actionString = ""
+    val popUpContext = LocalContext.current
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
+    val garden = tokenState.user?.user?.garden_info?.garden?.name.toString()
     val description = remember { mutableStateOf(TextFieldValue()) }
     val invitedUser = remember { mutableStateOf(TextFieldValue()) }
 
@@ -53,24 +58,30 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
             addedLeaves = 0,
             onNavigateToProfile = { onNavigateToProfile() }
         )
-        Column(modifier = Modifier.weight(1f).background(Daffodil)) {
+        Column(modifier = Modifier
+            .weight(1f)
+            .background(Daffodil)) {
             Spacer(modifier = Modifier.size(8.dp))
             LazyColumn(
-                modifier = Modifier.align(Alignment.Start).padding(8.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(8.dp)
+                    .fillMaxWidth(),
                 contentPadding = PaddingValues(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 item {
                     Text(
                         //text = "MY GARDEN",
-                        text = tokenState.user?.user?.garden_info?.garden?.name.toString(),
+                        text = garden,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(start = 16.dp, top = 16.dp)
                     )
                     Row(
-                        modifier = Modifier.align(Alignment.Start)
+                        modifier = Modifier
+                            .align(Alignment.Start)
                             .padding(start = 16.dp, end = 8.dp)
                     ) {
                         Text(
@@ -88,7 +99,8 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                         )
                     }
                     Row(
-                        modifier = Modifier.align(Alignment.Start)
+                        modifier = Modifier
+                            .align(Alignment.Start)
                             .padding(start = 16.dp, end = 8.dp)
                     ) {
                         Text(
@@ -116,8 +128,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                     Button(
                         onClick = {
                             CoroutineScope(Dispatchers.IO).launch {
-                                val newGardenDescriptionRequest =
-                                    GardenDescriptionRequest(description = description.value.text)
+                                val newGardenDescriptionRequest = GardenDescriptionRequest(description = description.value.text)
                                 val call = getRetrofit()
                                     .create(APIService::class.java)
                                     .changeGardenDescription(
@@ -126,15 +137,16 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                         newGardenDescriptionRequest
                                     )
 
+                                val eBody = call.errorBody()
                                 if (call.isSuccessful) {
                                     call.body()?.let {
-                                        tokenState.user?.user?.garden_info?.garden?.description =
-                                            it.description
+                                        tokenState.user?.user?.garden_info?.garden?.description = it.description
                                     }
                                 } else {
-                                    //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
-                                    error.value = call.code()
                                     openDialog.value = true
+                                    if (eBody != null) {
+                                        actionString = JSONObject(eBody.string()).getString("message")
+                                    }
                                 }
                             }
                         },
@@ -148,11 +160,14 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                         Text(text = "Change description", color = Daffodil)
                     }
                 }
-            //Spacer(modifier = Modifier.size(8.dp))
                 item {
                     Row(
-                        modifier = Modifier.align(Alignment.Start).padding(8.dp)
-                            .clip(RoundedCornerShape(10.dp)).background(BraveGreen).fillMaxWidth()
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(BraveGreen)
+                            .fillMaxWidth()
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.icona_convidar_jardi), "",
@@ -173,9 +188,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                         Button(
                             onClick = {
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val garden =
-                                        tokenState.user?.user?.garden_info?.garden?.name.toString()
-                                    val receiver = invitedUser.value.toString()
+                                    val receiver = invitedUser.value.text
                                     getRetrofit().create(APIService::class.java)
                                         .sendGardenInvitation(
                                             "Bearer " + tokenState.token,
@@ -199,18 +212,26 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                 item {
                     Button(
                         onClick = {
-                            /* SHOULD ASK FOR CONFIRMATION THROUGH A POP-UP */
+                            val builder = AlertDialog.Builder(popUpContext)
+                            builder.setTitle("EXIT")
+                            builder.setMessage("Are you sure you want to leave the Garden?")
+                            builder.setPositiveButton("LEAVE") { dialog, which ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    getRetrofit()
+                                        .create(APIService::class.java)
+                                        .exitGarden(
+                                            "Bearer " + tokenState.token,
+                                            "gardens/profile"
+                                        )
+                                }
 
-                            CoroutineScope(Dispatchers.IO).launch {
-                                getRetrofit()
-                                    .create(APIService::class.java)
-                                    .exitGarden(
-                                        "Bearer " + tokenState.token,
-                                        "gardens/profile"
-                                    )
+                                onNavigateToHome()
                             }
-
-                            onNavigateToHome()
+                            builder.setNegativeButton("STAY") { dialog, which ->
+                                dialog.dismiss()
+                            }
+                            val dialog = builder.create()
+                            dialog.show()
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = RoseRed),
                         modifier = Modifier
@@ -225,21 +246,26 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                 item {
                     Button(
                         onClick = {
-                            /* SHOULD ASK FOR CONFIRMATION THROUGH A POP-UP */
-
-                            val askedGardenName =
-                                tokenState.user?.user?.garden_info?.garden?.name.toString()
-                            CoroutineScope(Dispatchers.IO).launch {
-                                getRetrofit()
-                                    .create(APIService::class.java)
-                                    .removeGarden(
-                                        "Bearer " + tokenState.token,
-                                        "gardens/$askedGardenName",
-                                        garden = askedGardenName
-                                    )
+                            val builder = AlertDialog.Builder(popUpContext)
+                            builder.setTitle("DELETE")
+                            builder.setMessage("Are you sure you want to delete the Garden?")
+                            builder.setPositiveButton("DELETE") { dialog, which ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    getRetrofit()
+                                        .create(APIService::class.java)
+                                        .removeGarden(
+                                            "Bearer " + tokenState.token,
+                                            "gardens/$garden",
+                                            garden = garden
+                                        )
+                                }
+                                onNavigateToHome()
                             }
-
-                            onNavigateToHome()
+                            builder.setNegativeButton("CANCEL") { dialog, which ->
+                                dialog.dismiss()
+                            }
+                            val dialog = builder.create()
+                            dialog.show()
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
                         modifier = Modifier
