@@ -536,7 +536,57 @@ fun GardenBottomBar(
             }
         }
 }
+@Composable
+fun GardenBottomBar(
+    centerImage: Painter,
+    onNavigateToCenter : () -> Unit,
 
+) {
+    val heightBottomBar = 96.dp
+    val heightCircle = 160.dp
+    val heightTotal = heightBottomBar+heightCircle/2
+    val heightButton = 80.dp
+    val widthButton = 96.dp
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(heightTotal)) {
+        BoxWithConstraints(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(heightBottomBar)
+                .background(BraveGreen)
+        ) {
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(heightTotal)
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+        }
+        Surface(
+            color = BraveGreen,
+            modifier = Modifier
+                .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle / 2))
+                .align(Alignment.TopCenter)
+                .size(heightCircle)
+                .clip(CircleShape)
+        ) {
+            Image(
+                painter = centerImage,
+                "",
+                modifier = Modifier
+                    .clickable(onClick = { onNavigateToCenter() })
+                    .padding(8.dp)
+                    .size(heightCircle - 32.dp)
+                    .align(Alignment.Center)
+                    .clip(CircleShape)
+                    .background(color = SoothingGreen))
+        }
+    }
+}
 @Composable
 fun JoinedEvents(state:String): List<Painter> {
     // AS IMPLEMENTED IN THE BACKEND, PLANT EVENTS AND THEMATIC EVENTS ARE EXCLUSIVE OF EACH OTHER
@@ -631,3 +681,4 @@ fun ThematicEvents(event:String): Painter {
         else -> { return painterResource(id = R.drawable.test_basic) }
     }
 }
+
