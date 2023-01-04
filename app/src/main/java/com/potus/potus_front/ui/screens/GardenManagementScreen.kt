@@ -1,6 +1,7 @@
 package com.potus.potus_front.ui.screens
 
 import android.app.AlertDialog
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -110,181 +111,206 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                             color = BraveGreen,
                             textAlign = TextAlign.Center
                         )
-                        OutlinedTextField(
-                            value = description.value,
-                            onValueChange = { description.value = it },
-                            label = {
-                                Text(
-                                    //text = "Test description."
-                                    text = tokenState.user?.user?.garden_info?.garden?.description.toString(),
-                                )
-                            },
-                            modifier = Modifier
-                                .width(296.dp)
-                                .height(128.dp)
-                                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                                .align(CenterVertically)
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            CoroutineScope(Dispatchers.IO).launch {
-                                val newGardenDescriptionRequest = GardenDescriptionRequest(description = description.value.text)
-                                val call = getRetrofit()
-                                    .create(APIService::class.java)
-                                    .changeGardenDescription(
-                                        "Bearer " + tokenState.token,
-                                        "gardens/profile",
-                                        newGardenDescriptionRequest
+                        if (user.garden_info?.role != "NORMAL") {
+                            OutlinedTextField(
+                                value = description.value,
+                                onValueChange = { description.value = it },
+                                label = {
+                                    Text(
+                                        //text = "Test description."
+                                        text = tokenState.user?.user?.garden_info?.garden?.description.toString(),
                                     )
-
-                                val eBody = call.errorBody()
-                                if (call.isSuccessful) {
-                                    call.body()?.let {
-                                        tokenState.user?.user?.garden_info?.garden?.description = it.description
-                                    }
-                                } else {
-                                    openDialog.value = true
-                                    if (eBody != null) {
-                                        actionString = JSONObject(eBody.string()).getString("message")
-                                    }
-                                }
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .align(CenterHorizontally),
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Text(text = "Change description", color = Daffodil)
+                                },
+                                modifier = Modifier
+                                    .width(296.dp)
+                                    .height(128.dp)
+                                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                                    .align(CenterVertically)
+                            )
+                        }
+                        else {
+                            Text(
+                                text = tokenState.user?.user?.garden_info?.garden?.description.toString(),
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
                     }
-                }
-                item {
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.Start)
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(BraveGreen)
-                            .fillMaxWidth()
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.icona_convidar_jardi), "",
-                            modifier = Modifier
-                                .size(64.dp)
-                                .align(CenterVertically)
-                                .padding(start = 8.dp)
-                        )
-                        OutlinedTextField(
-                            value = invitedUser.value,
-                            onValueChange = { invitedUser.value = it },
-                            label = { Text(text = "Invite User") },
-                            modifier = Modifier
-                                .width(200.dp)
-                                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                                .align(CenterVertically)
-                        )
+                    if (user.garden_info?.role != "NORMAL") {
                         Button(
                             onClick = {
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val receiver = invitedUser.value.text
-                                    getRetrofit().create(APIService::class.java)
-                                        .sendGardenInvitation(
+                                    val newGardenDescriptionRequest =
+                                        GardenDescriptionRequest(description = description.value.text)
+                                    val call = getRetrofit()
+                                        .create(APIService::class.java)
+                                        .changeGardenDescription(
                                             "Bearer " + tokenState.token,
-                                            "gardens/$garden/requests/$receiver",
-                                            garden = garden,
-                                            user = receiver
+                                            "gardens/profile",
+                                            newGardenDescriptionRequest
                                         )
+
+                                    val eBody = call.errorBody()
+                                    if (call.isSuccessful) {
+                                        call.body()?.let {
+                                            tokenState.user?.user?.garden_info?.garden?.description =
+                                                it.description
+                                        }
+                                    } else {
+                                        openDialog.value = true
+                                        if (eBody != null) {
+                                            actionString =
+                                                JSONObject(eBody.string()).getString("message")
+                                        }
+                                    }
                                 }
                             },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp)
-                                .align(CenterVertically),
+                                .align(CenterHorizontally),
                             shape = MaterialTheme.shapes.medium
                         ) {
-                            Text(text = "Send!", color = Daffodil)
+                            Text(text = "Change description", color = Daffodil)
                         }
                     }
                 }
-                item {
-                    Button(
-                        onClick = {
-                            val builder = AlertDialog.Builder(popUpContext)
-                            builder.setTitle("EXIT")
-                            builder.setMessage("Are you sure you want to leave the Garden?")
-                            builder.setPositiveButton("LEAVE") { dialog, which ->
-                                user.garden_info = null
-
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    getRetrofit()
-                                        .create(APIService::class.java)
-                                        .exitGarden(
-                                            "Bearer " + tokenState.token,
-                                            "gardens/profile"
-                                        )
-                                }
-
-                                Timber.tag("DOES IT FUCKING WORK?").d("Succesfully ")
-
-                                onNavigateToHome()
+                if (user.garden_info?.role != "NORMAL") {
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.Start)
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(BraveGreen)
+                                .fillMaxWidth()
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.icona_convidar_jardi), "",
+                                modifier = Modifier
+                                    .size(64.dp)
+                                    .align(CenterVertically)
+                                    .padding(start = 8.dp)
+                            )
+                            OutlinedTextField(
+                                value = invitedUser.value,
+                                onValueChange = { invitedUser.value = it },
+                                label = { Text(text = "Invite User") },
+                                modifier = Modifier
+                                    .width(200.dp)
+                                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                                    .align(CenterVertically)
+                            )
+                            Button(
+                                onClick = {
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        val receiver = invitedUser.value.text
+                                        getRetrofit().create(APIService::class.java)
+                                            .sendGardenInvitation(
+                                                "Bearer " + tokenState.token,
+                                                "gardens/$garden/requests/$receiver",
+                                                garden = garden,
+                                                user = receiver
+                                            )
+                                    }
+                                },
+                                colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp)
+                                    .align(CenterVertically),
+                                shape = MaterialTheme.shapes.medium
+                            ) {
+                                Text(text = "Send!", color = Daffodil)
                             }
-                            builder.setNegativeButton("STAY") { dialog, which ->
-                                dialog.dismiss()
-                            }
-                            val dialog = builder.create()
-                            dialog.show()
-                        },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = RoseRed),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .align(CenterHorizontally),
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Text(text = "Leave Garden", color = Daffodil)
+                        }
                     }
                 }
-                item {
-                    Button(
-                        onClick = {
-                            val builder = AlertDialog.Builder(popUpContext)
-                            builder.setTitle("DELETE")
-                            builder.setMessage("Are you sure you want to delete this Garden?")
-                            builder.setPositiveButton("DELETE") { dialog, which ->
-                                user.garden_info = null
+                if (user.garden_info?.role != "OWNER") {
+                    item {
+                        Button(
+                            onClick = {
+                                val builder = AlertDialog.Builder(popUpContext)
+                                builder.setTitle("EXIT")
+                                builder.setMessage("Are you sure you want to leave the Garden?")
+                                builder.setPositiveButton("LEAVE") { dialog, which ->
+                                    user.garden_info = null
 
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    getRetrofit()
-                                        .create(APIService::class.java)
-                                        .removeGarden(
-                                            "Bearer " + tokenState.token,
-                                            "gardens/$garden",
-                                            garden = garden
-                                        )
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        getRetrofit()
+                                            .create(APIService::class.java)
+                                            .exitGarden(
+                                                "Bearer " + tokenState.token,
+                                                "gardens/profile"
+                                            )
+                                    }
+
+                                    Timber.tag("DOES IT FUCKING WORK?").d("Succesfully ")
+
+                                    onNavigateToHome()
                                 }
-                                onNavigateToHome()
-                            }
-                            builder.setNegativeButton("CANCEL") { dialog, which ->
-                                dialog.dismiss()
-                            }
-                            val dialog = builder.create()
-                            dialog.show()
-                        },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .align(CenterHorizontally),
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Text(text = "DELETE GARDEN", color = Daffodil)
+                                builder.setNegativeButton("STAY") { dialog, which ->
+                                    dialog.dismiss()
+                                }
+                                val dialog = builder.create()
+                                dialog.show()
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = RoseRed),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .align(CenterHorizontally),
+                            shape = MaterialTheme.shapes.medium
+                        ) {
+                            Text(text = "Leave Garden", color = Daffodil)
+                        }
+                    }
+                }
+                if (user.garden_info?.role == "OWNER") {
+                    item {
+                        Button(
+                            onClick = {
+                                val builder = AlertDialog.Builder(popUpContext)
+                                builder.setTitle("DELETE")
+                                builder.setMessage("Are you sure you want to delete this Garden?")
+                                builder.setPositiveButton("DELETE") { dialog, which ->
+                                    user.garden_info = null
+
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        getRetrofit()
+                                            .create(APIService::class.java)
+                                            .removeGarden(
+                                                "Bearer " + tokenState.token,
+                                                "gardens/$garden",
+                                                garden = garden
+                                            )
+                                    }
+                                    onNavigateToHome()
+                                }
+                                builder.setNegativeButton("CANCEL") { dialog, which ->
+                                    dialog.dismiss()
+                                }
+                                val dialog = builder.create()
+                                dialog.show()
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .align(CenterHorizontally),
+                            shape = MaterialTheme.shapes.medium
+                        ) {
+                            Text(text = "DELETE GARDEN", color = Daffodil)
+                        }
                     }
                 }
             }
+        }
+        if (openDialog.value) {
+            Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_SHORT).show()
+            openDialog.value = false
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_peticions_jardi), onNavigateToPetitions, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_jardi), onNavigateToGarden)
     }
