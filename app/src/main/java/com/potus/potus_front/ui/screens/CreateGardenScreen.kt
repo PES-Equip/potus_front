@@ -91,7 +91,6 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                             call.body()?.let {
                                 user.garden_info = it
                             }
-                            onNavigateToGarden()
                         } else {
                             //ERROR MESSAGES, IF ANY
                             openDialog.value = true
@@ -105,6 +104,7 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                             }
                         }
                     }
+                    if (user.garden_info != null) onNavigateToGarden()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                 modifier = Modifier

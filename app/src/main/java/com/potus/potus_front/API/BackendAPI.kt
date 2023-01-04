@@ -15,7 +15,7 @@ interface APIService {
     suspend fun getUser(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
 
     @GET
-    suspend fun getGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenResponse>
+    suspend fun getGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<NewGardenResponse>
 
     @GET
     suspend fun getGardenList(@Header("Authorization") token:String, @Url url:String): Response<List<NewGardenResponse>>

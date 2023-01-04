@@ -47,6 +47,29 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
     val garden = tokenState.user?.user?.garden_info?.garden?.name.toString()
+
+    LaunchedEffect(Dispatchers.IO) {
+        val call = getRetrofit()
+            .create(APIService::class.java)
+            .getGarden(
+                "Bearer " + tokenState.token,
+                "gardens/$garden",
+                garden = garden
+            )
+
+        val eBody = call.errorBody()
+        if (call.isSuccessful) {
+            call.body()?.let {
+                user.garden_info?.garden = it
+            }
+        } else {
+            openDialog.value = true
+            if (eBody != null) {
+                actionString = JSONObject(eBody.string()).getString("message")
+            }
+        }
+    }
+
     val description = remember { mutableStateOf(TextFieldValue()) }
     val invitedUser = remember { mutableStateOf(TextFieldValue()) }
 
@@ -91,7 +114,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                             textAlign = TextAlign.Center
                         )
                         Text(
-                            text = tokenState.user?.user?.garden_info?.garden?.members_num.toString(),
+                            text = user.garden_info?.garden?.members_num.toString(),
                             fontSize = 20.sp,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(start = 8.dp)
@@ -114,7 +137,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                 onValueChange = { description.value = it },
                                 label = {
                                     Text(
-                                        text = tokenState.user?.user?.garden_info?.garden?.description.toString(),
+                                        text = user.garden_info?.garden?.description.toString(),
                                     )
                                 },
                                 modifier = Modifier
@@ -126,7 +149,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                         }
                         else {
                             Text(
-                                text = tokenState.user?.user?.garden_info?.garden?.description.toString(),
+                                text = user.garden_info?.garden?.description.toString(),
                                 fontSize = 20.sp,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(start = 8.dp)
@@ -146,17 +169,16 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                             newGardenDescriptionRequest
                                         )
 
+                                    openDialog.value = true
                                     val eBody = call.errorBody()
                                     if (call.isSuccessful) {
                                         call.body()?.let {
-                                            tokenState.user?.user?.garden_info?.garden?.description =
-                                                it.description
+                                            user.garden_info?.garden?.description = it.description
                                         }
+                                        actionString = "Password was successfully changed!"
                                     } else {
-                                        openDialog.value = true
                                         if (eBody != null) {
-                                            actionString =
-                                                JSONObject(eBody.string()).getString("message")
+                                            actionString = JSONObject(eBody.string()).getString("message")
                                         }
                                     }
                                 }
