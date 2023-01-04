@@ -74,7 +74,6 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
             ) {
                 item {
                     Text(
-                        //text = "MY GARDEN",
                         text = garden,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
@@ -93,7 +92,6 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                             textAlign = TextAlign.Center
                         )
                         Text(
-                            //text = "0",
                             text = tokenState.user?.user?.garden_info?.garden?.members_num.toString(),
                             fontSize = 20.sp,
                             textAlign = TextAlign.Center,
@@ -117,7 +115,6 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                 onValueChange = { description.value = it },
                                 label = {
                                     Text(
-                                        //text = "Test description."
                                         text = tokenState.user?.user?.garden_info?.garden?.description.toString(),
                                     )
                                 },
@@ -141,8 +138,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                         Button(
                             onClick = {
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val newGardenDescriptionRequest =
-                                        GardenDescriptionRequest(description = description.value.text)
+                                    val newGardenDescriptionRequest = GardenDescriptionRequest(description = description.value.text)
                                     val call = getRetrofit()
                                         .create(APIService::class.java)
                                         .changeGardenDescription(
@@ -246,8 +242,6 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                                 "gardens/profile"
                                             )
                                     }
-
-                                    Timber.tag("DOES IT FUCKING WORK?").d("Succesfully ")
 
                                     onNavigateToHome()
                                 }
