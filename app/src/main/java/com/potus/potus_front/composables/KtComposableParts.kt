@@ -1,11 +1,8 @@
 package com.potus.potus_front.composables
 
-import android.graphics.Typeface.BOLD
-import android.graphics.fonts.FontStyle
 import android.widget.Toast
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,25 +13,20 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.runtime.*
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,17 +35,9 @@ import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.R
 import com.potus.potus_front.google.models.TokenState
-import com.potus.potus_front.ui.theme.BraveGreen
-import com.potus.potus_front.ui.theme.Daffodil
-import com.potus.potus_front.ui.theme.SoothingGreen
-import kotlinx.coroutines.*
 import com.potus.potus_front.ui.theme.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 @Composable
@@ -294,8 +278,7 @@ fun BottomBar(
     val heightBottomBar = 192.dp
     val heightCircle = 125.dp
     val heightTotal = heightBottomBar+heightCircle/2
-    val heightButton = 125.dp
-    val widthButton = 140.dp
+    val heightButton = (heightBottomBar.value * 0.7).dp
 
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = ""
@@ -324,7 +307,7 @@ fun BottomBar(
                     modifier = Modifier
                         .padding(start = 8.dp)
                         .align(Alignment.CenterVertically)
-                        .width(widthButton)
+                        .weight(0.25f)
                         .height(heightButton)
                         .clip(RoundedCornerShape(10.dp))
                 ) {
@@ -370,13 +353,13 @@ fun BottomBar(
                     Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_SHORT).show()
                     openDialog.value = false
                 }
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(0.25f))
                 Surface(
                     color = SoothingGreen,
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .align(Alignment.CenterVertically)
-                        .width(widthButton)
+                        .weight(0.25f)
                         .height(heightButton)
                         .clip(RoundedCornerShape(10.dp))
                 ) {
@@ -398,14 +381,14 @@ fun BottomBar(
                                             newUpdateActionRequest
                                         )
 
-                                    val Ebody = call.errorBody()
+                                    val ebody = call.errorBody()
                                     if (call.isSuccessful) {
                                         tokenState.signUser(call.body())
                                         tokenState.user?.user?.potus?.let { updateWaterLevel(it.waterLevel) }
                                     } else {
                                         openDialog.value = true
-                                        if (Ebody != null) {
-                                            val jObjErr = JSONObject(Ebody.string())
+                                        if (ebody != null) {
+                                            val jObjErr = JSONObject(ebody.string())
                                             actionString = jObjErr.getString("message")
                                         }
                                     }
