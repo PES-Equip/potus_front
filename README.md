@@ -51,5 +51,6 @@ Underway Sprint 3 tasks and issues:
 - Frontend - Garden's call to invite new user does not give feedback [#262, BF]
 - Frontend - Apparently user roles are a thing, in Gardens [#264, BF]
 - Frontend - Show block user button [#265, BF]
+- Frontend - Number of members in Garden's management screen in just plain wrong [#266, BF]
 
 [This is the develop branch]
