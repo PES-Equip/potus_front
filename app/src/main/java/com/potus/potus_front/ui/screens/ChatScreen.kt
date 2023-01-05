@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.InformLocationRequest
+import com.potus.potus_front.R
+import com.potus.potus_front.composables.GardenBottomBar
 import com.potus.potus_front.composables.TopBar
 import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
@@ -35,21 +37,17 @@ import org.json.JSONObject
 
 
 @Composable
-fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToSelection: () -> Unit) {
+fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    val error = remember { mutableStateOf(200)  }
+    var actionString = remember { mutableStateOf("")  }
 
     val tokenState = TokenState.current
-    val user = tokenState.user!!
-    var waterLevelState by remember { mutableStateOf(user.potus.waterLevel) }
-    var collection by remember { mutableStateOf(user.currency) }
-    var addedWater by remember { mutableStateOf(0) }
-    var addedLeaves by remember { mutableStateOf(0) }
-    var plantState by remember { mutableStateOf("DEFAULT") }
+    val user = tokenState.user!!.user
+
     // test -> user garden id room = garden id
     val room = "test"
     var chatListener: ChatListener = ChatListener(user.username)
-    var topicHandler: TopicHandler = chatListener.subscribe("/chatroom/$room")
+    val topicHandler: TopicHandler = chatListener.subscribe("/chatroom/$room")
 
     StompMessageSerializer.joinChat(user.username, room)
 
@@ -69,35 +67,13 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, 
 
     chatListener.connect(StompMessageSerializer.url)
 
-    //var thematicEvent by remember { mutableStateOf("DEFAULT") }
-
-    LaunchedEffect(Dispatchers.IO) {
-        val newUpdateStateRequest = InformLocationRequest(latitude = tokenState.location.first, length = tokenState.location.second)
-        val call = getRetrofit()
-            .create(APIService::class.java)
-            .informLocation(
-                "Bearer " + tokenState.token,
-                "potus/events",
-                newUpdateStateRequest
-            )
-
-        if (call.isSuccessful) {
-            tokenState.myPotus(call.body())
-            tokenState.user?.potus?.let { plantState = it.state }
-        } else {
-            //ERROR MESSAGES, IF ANY
-            error.value = call.code()
-            openDialog.value = true
-        }
-    }
-
     Column(Modifier.background(color = SoothingGreen)) {
         TopBar(
-            waterLevel = waterLevelState,
-            collection = collection,
-            username = "CHAT",
-            addedWater = addedWater,
-            addedLeaves = addedLeaves,
+            waterLevel = user.potus.waterLevel,
+            collection = user.currency,
+            username = user.username,
+            addedWater = 0,
+            addedLeaves = 0,
             onNavigateToProfile = { onNavigateToProfile() }
         )
         LazyColumn(
@@ -144,13 +120,12 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, 
         ) {
             Button(
                 onClick = {
-
                     StompMessageSerializer.sendMessage("YEPA", user.username, room)
                 },
             ) {
                 Text("SEND")
             }
-    }
-
+        }
+        GardenBottomBar(painterResource(id = R.drawable.icona_mercat), onNavigateToShop, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_jardi), onNavigateToGarden)
     }
 }
