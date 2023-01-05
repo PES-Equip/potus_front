@@ -49,7 +49,7 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
         }
         composable(HomeScreen.route) {
             if (TokenState.current.user?.user?.potus?.alive == true) HomeScreen(
-                onNavigateToProfile = { navController.navigate(ChatScreen.route) },
+                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) },
                 onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }
             )
@@ -98,9 +98,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                 onNavigateToManagement = { navController.navigate(GardenManagementScreen.route) },
                 //TO BE IMPLEMENTED
                 onNavigateToShop = { navController.navigate(GardenScreen.route) },
-                //TO BE IMPLEMENTED
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToChat = { navController.navigate(GardenScreen.route) }
+                onNavigateToChat = { navController.navigate(ChatScreen.route) }
             )
         }
         composable(route = GardenManagementScreen.route) {
