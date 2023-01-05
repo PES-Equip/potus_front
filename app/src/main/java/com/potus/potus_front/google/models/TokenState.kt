@@ -9,6 +9,7 @@ import com.potus.potus_front.API.response.GasesResponse
 import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
 import com.potus.potus_front.API.response.data_models.GasRegistry
+import com.potus.potus_front.API.response.data_models.UserGardenInfo
 
 class TokenStateViewModel: ViewModel(){
 
@@ -55,7 +56,7 @@ class TokenStateViewModel: ViewModel(){
 
     fun myGarden(garden: NewGardenResponse?){
         if (garden != null) {
-            this.user?.user?.garden_info?.garden = garden
+            this.user?.user?.garden_info = UserGardenInfo(garden = garden, role = "OWNER")
         }
     }
 

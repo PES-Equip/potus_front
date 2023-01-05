@@ -33,10 +33,9 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
     val openDialog = remember { mutableStateOf(false)  }
     val actionString = remember { mutableStateOf("")  }
     val goToGarden = remember { mutableStateOf(false)  }
-    val newGarden = remember { mutableStateOf("") }
 
-    var tokenState = TokenState.current
-    var user = tokenState.user!!.user
+    val tokenState = TokenState.current
+    val user = tokenState.user!!.user
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
@@ -91,18 +90,12 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                         val eBody = call.errorBody()
                         if (call.isSuccessful) {
                             tokenState.myGarden(call.body())
-                            println(user.garden_info!!.garden.name)
                             goToGarden.value = true
                         } else {
                             //ERROR MESSAGES, IF ANY
                             openDialog.value = true
                             if (eBody != null) {
                                 actionString.value = JSONObject(eBody.string()).getString("message")
-                            } else {
-                                actionString.value =    if (newGardenName.value.text.isEmpty()) "Namespace is empty"
-                                                        else if (newGardenName.value.text.length < 3) "Name must have at least 3 characters"
-                                                        else if (newGardenName.value.text.length > 30) "Name must have less than 30 characters"
-                                                        else "Name is invalid"
                             }
                         }
                     }
