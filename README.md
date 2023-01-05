@@ -34,8 +34,14 @@ Completed Sprint 2 tasks:
 
 Completed Sprint 3 tasks and issues:
 
+- Frontend - Garden's members are not shown [#257, BF]
+- Frontend - Garden's management screen is not scrollable [#258, BF]
 - Frontend - User login call needs to be updated for trophies [#259, BF]
+- Frontend - No feedback is given to to the user when creating a Garden [#260, BF]
 - Frontend - Add confirmation pop-up to EXIT and DELETE Garden buttons [#263, BF]
+- Frontend - Garden's call to invite new user does not give feedback [#262, BF]
+- Frontend - Apparently user roles are a thing, in Gardens [#264, BF]
+- Frontend - Number of members in Garden's management screen in just plain wrong [#266, BF]
 
 Underway Sprint 3 tasks and issues:
 
@@ -44,13 +50,7 @@ Underway Sprint 3 tasks and issues:
 - Prune and Watering Animations [#226, MH]
 - Frontend - Store UI Design [#245, MV]
 - Buy a Bonus UI Design [#245, MV]
-- Frontend - Garden's members are not shown [#257, BF]
-- Frontend - Garden's management screen is not scrollable [#258, BF]
-- Frontend - No feedback is given to to the user when creating a Garden [#260, BF]
 - Update responsiveness [#261, MH]
-- Frontend - Garden's call to invite new user does not give feedback [#262, BF]
-- Frontend - Apparently user roles are a thing, in Gardens [#264, BF]
 - Frontend - Show block user button [#265, BF]
-- Frontend - Number of members in Garden's management screen in just plain wrong [#266, BF]
 
 [This is the develop branch]
