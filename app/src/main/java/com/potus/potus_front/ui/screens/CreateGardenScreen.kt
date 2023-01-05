@@ -27,14 +27,16 @@ import kotlinx.coroutines.*
 import org.json.JSONObject
 
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToSelection: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    var actionString = ""
+    val actionString = remember { mutableStateOf("")  }
     val goToGarden = remember { mutableStateOf(false)  }
+    val newGarden = remember { mutableStateOf("") }
 
-    val tokenState = TokenState.current
-    val user = tokenState.user!!.user
+    var tokenState = TokenState.current
+    var user = tokenState.user!!.user
 
     Column(Modifier.background(color = Daffodil)) {
         TopBar(
@@ -75,7 +77,7 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
             Spacer(modifier = Modifier.size(16.dp))
             Button(
                 onClick = {
-                    runBlocking {
+                    GlobalScope.launch(Dispatchers.IO) {
                         val newGardenRequest = GardenRequest(name = newGardenName.value.text)
 
                         val call = getRetrofit()
@@ -88,23 +90,22 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
 
                         val eBody = call.errorBody()
                         if (call.isSuccessful) {
-                            call.body()?.let {
-                                user.garden_info = it
-                            }
+                            tokenState.myGarden(call.body())
+                            println(user.garden_info!!.garden.name)
+                            goToGarden.value = true
                         } else {
                             //ERROR MESSAGES, IF ANY
                             openDialog.value = true
                             if (eBody != null) {
-                                actionString = JSONObject(eBody.string()).getString("message")
+                                actionString.value = JSONObject(eBody.string()).getString("message")
                             } else {
-                                actionString =  if (newGardenName.value.text.isEmpty()) "Namespace is empty"
-                                                else if (newGardenName.value.text.length < 3) "Name must have at least 3 characters"
-                                                else if (newGardenName.value.text.length > 30) "Name must have less than 30 characters"
-                                                else "Name is invalid"
+                                actionString.value =    if (newGardenName.value.text.isEmpty()) "Namespace is empty"
+                                                        else if (newGardenName.value.text.length < 3) "Name must have at least 3 characters"
+                                                        else if (newGardenName.value.text.length > 30) "Name must have less than 30 characters"
+                                                        else "Name is invalid"
                             }
                         }
                     }
-                    if (user.garden_info != null) onNavigateToGarden()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                 modifier = Modifier
@@ -116,10 +117,14 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
             ) {
                 Text(text = "Create and Join!", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = SoothingGreen)
             }
-        }
-        if (openDialog.value) {
-            Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_LONG).show()
-            openDialog.value = false
+            if (openDialog.value) {
+                Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_LONG).show()
+                if (goToGarden.value) {
+                    onNavigateToGarden()
+                    goToGarden.value = false
+                }
+                openDialog.value = false
+            }
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), onNavigateToInvitations, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_seleccio_jardi), onNavigateToSelection)
     }
