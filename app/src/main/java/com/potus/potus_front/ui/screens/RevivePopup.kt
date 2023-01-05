@@ -1,6 +1,7 @@
 package com.potus.potus_front.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -55,11 +57,11 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth()) {
 
-                    Spacer(modifier = Modifier.weight(0.15f))
+                    Spacer(modifier = Modifier.weight(0.125f))
 
                     Text(
                         modifier = Modifier
-                            .weight(0.3f)
+                            .weight(0.4f)
                             .align(Alignment.CenterHorizontally),
                         text = "Your Potus\nDied",
                         fontSize = 50.sp,
@@ -69,11 +71,11 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                         textAlign = TextAlign.Center
                     )
 
-                    Spacer(modifier = Modifier.weight(0.15f))
+                    Spacer(modifier = Modifier.weight(0.125f))
 
                     Text(
                         modifier = Modifier
-                            .weight(0.45f)
+                            .weight(0.5f)
                             .align(Alignment.CenterHorizontally),
                         text = "Your Potus has died! \n\n" +
                                 "Your buddy is now part of your past Potus collection. \n\n" +
@@ -83,20 +85,32 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                         textAlign = TextAlign.Center
                     )
 
-                    Spacer(modifier = Modifier.weight(0.1f))
+                    Spacer(modifier = Modifier.weight(0.075f))
 
                     OutlinedTextField(
                         modifier = Modifier
-                            .weight(0.15f)
+                            .weight(0.2f)
                             .fillMaxWidth(),
                         value = textState.value,
                         onValueChange = { textState.value = it },
                         label = { Text(text = "New name") },
                         maxLines = 1,
-                        shape = MaterialTheme.shapes.medium
+                        shape = MaterialTheme.shapes.medium,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            unfocusedBorderColor = Color.DarkGray,
+                            focusedBorderColor = Color.DarkGray,
+                            disabledBorderColor = Color.DarkGray,
+                            focusedLabelColor = Color.DarkGray,
+                            textColor = Color.DarkGray,
+                            cursorColor = Color.DarkGray,
+                            disabledTextColor = Color.DarkGray,
+                            unfocusedLabelColor = Color.DarkGray,
+                            disabledPlaceholderColor = Color.DarkGray,
+                            placeholderColor = Color.DarkGray
+                        )
                     )
 
-                    Spacer(modifier = Modifier.weight(0.15f))
+                    Spacer(modifier = Modifier.weight(0.1f))
 
                     Button(
                         modifier = Modifier
@@ -134,7 +148,7 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
                     ) {
-                        Text(text = "Revive your Son")
+                        Text(text = "Revive your Potus")
                     }
 
                     Spacer(modifier = Modifier.weight(0.1f))
