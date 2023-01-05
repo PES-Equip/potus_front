@@ -49,7 +49,7 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
         }
         composable(HomeScreen.route) {
             if (TokenState.current.user?.user?.potus?.alive == true) HomeScreen(
-                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
+                onNavigateToProfile = { navController.navigate(ChatScreen.route) },
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) },
                 onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }
             )
@@ -119,6 +119,14 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) }
             )
+        }
+        composable(route = ChatScreen.route){
+            ChatScreen(
+                onNavigateToProfile = { navController.navigate(ChatScreen.route) },
+                onNavigateToGarden = { navController.navigate(GardenScreen.route) },
+                onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }
+            )
+
         }
     }
 }
