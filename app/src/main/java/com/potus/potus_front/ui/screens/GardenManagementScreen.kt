@@ -32,16 +32,15 @@ import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.Daffodil
 import com.potus.potus_front.ui.theme.RoseRed
 import com.potus.potus_front.ui.theme.SoothingGreen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
 
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetitions: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    var actionString = ""
+    var actionString = remember { mutableStateOf("") }
     val popUpContext = LocalContext.current
 
     val tokenState = TokenState.current
@@ -65,7 +64,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
         } else {
             openDialog.value = true
             if (eBody != null) {
-                actionString = JSONObject(eBody.string()).getString("message")
+                actionString.value = JSONObject(eBody.string()).getString("message")
             }
         }
     }
@@ -159,7 +158,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                     if (user.garden_info?.role != "NORMAL") {
                         Button(
                             onClick = {
-                                CoroutineScope(Dispatchers.IO).launch {
+                                GlobalScope.launch(Dispatchers.IO) {
                                     val newGardenDescriptionRequest = GardenDescriptionRequest(description = description.value.text)
                                     val call = getRetrofit()
                                         .create(APIService::class.java)
@@ -175,10 +174,10 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                         call.body()?.let {
                                             user.garden_info?.garden?.description = it.description
                                         }
-                                        actionString = "Password was successfully changed!"
+                                        actionString.value = "About was successfully changed!"
                                     } else {
                                         if (eBody != null) {
-                                            actionString = JSONObject(eBody.string()).getString("message")
+                                            actionString.value = JSONObject(eBody.string()).getString("message")
                                         }
                                     }
                                 }
@@ -224,13 +223,16 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                 onClick = {
                                     CoroutineScope(Dispatchers.IO).launch {
                                         val receiver = invitedUser.value.text
-                                        getRetrofit().create(APIService::class.java)
+                                        val call = getRetrofit().create(APIService::class.java)
                                             .sendGardenInvitation(
                                                 "Bearer " + tokenState.token,
                                                 "gardens/$garden/requests/$receiver",
                                                 garden = garden,
                                                 user = receiver
                                             )
+
+                                        openDialog.value = true
+                                        actionString.value = "Invitation was sent!"
                                     }
                                 },
                                 colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen),
@@ -324,7 +326,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
             }
         }
         if (openDialog.value) {
-            Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_SHORT).show()
+            Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_SHORT).show()
             openDialog.value = false
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_peticions_jardi), onNavigateToPetitions, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_jardi), onNavigateToGarden)
