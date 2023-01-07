@@ -45,7 +45,7 @@ fun PetitionsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToPetiti
     val user = tokenState.user!!.user
 
     LaunchedEffect(Dispatchers.IO) {
-        val garden = user.garden_info.garden.name
+        val garden = user.garden_info!!.garden.name
         val call = getRetrofit()
             .create(APIService::class.java)
             .getGardenPetitionList(
@@ -153,7 +153,7 @@ fun PetitionItem(petition: GardenMemberResponse, onNavigateToPetitions: () -> Un
                         color = BraveGreen,
                         modifier = Modifier
                             .clickable(onClick = {
-                                val garden = user.garden_info.garden.name
+                                val garden = user.garden_info!!.garden.name
                                 val petitioner = petition.user.username
                                 CoroutineScope(Dispatchers.IO).launch {
                                     val petitionRequest = GardenInvitationRequest(garden = garden, user = petitioner)
@@ -195,7 +195,7 @@ fun PetitionItem(petition: GardenMemberResponse, onNavigateToPetitions: () -> Un
                             .clickable(onClick = {
                                 /* ACTION CONFIRMATION POP-UP? */
 
-                                val garden = user.garden_info.garden.name
+                                val garden = user.garden_info!!.garden.name
                                 val petitioner = petition.user.username
                                 CoroutineScope(Dispatchers.IO).launch {
                                     getRetrofit()
