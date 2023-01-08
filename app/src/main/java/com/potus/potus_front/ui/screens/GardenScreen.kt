@@ -95,7 +95,7 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
             Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_SHORT).show()
             openDialog.value = false
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_mercat), onNavigateToShop, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_xat), onNavigateToChat)
+        GardenBottomBar(painterResource(id = R.drawable.icona_meetings), onNavigateToShop, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_xat), onNavigateToChat)
     }
 }
 
