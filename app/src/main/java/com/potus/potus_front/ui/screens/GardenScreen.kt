@@ -41,7 +41,7 @@ import kotlin.random.Random
 
 
 @Composable
-fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> Unit, onNavigateToShop: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToChat: () -> Unit) {
+fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, onNavigateToManagement: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToMeetings: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToChat: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = ""
 
@@ -89,7 +89,7 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
                     textAlign = TextAlign.Center
                 )
             }
-            MembersList(members.value)
+            MembersList(members.value, onNavigateToGarden)
         }
         if (openDialog.value) {
             Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_SHORT).show()
@@ -100,20 +100,20 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToManagement: () -> 
 }
 
 @Composable
-fun MembersList (members: Set<SimplifiedGardenMember>) {
+fun MembersList (members: Set<SimplifiedGardenMember>, onNavigateToGarden: () -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(members.size) {
-                arrayItem -> MemberItem(member = members.elementAt(arrayItem))
+                arrayItem -> MemberItem(member = members.elementAt(arrayItem), onNavigateToGarden)
         }
     }
 }
 
 @Composable
-fun MemberItem(member: SimplifiedGardenMember) {
+fun MemberItem(member: SimplifiedGardenMember, onNavigateToGarden: () -> Unit) {
     val gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2_5", "PM10", "PS", "SO2")
     var toggled by remember { mutableStateOf(false) }
     val randomAvatar = gases[Random.nextInt(gases.size)]
@@ -194,6 +194,7 @@ fun MemberItem(member: SimplifiedGardenMember) {
                                                             requestModel = newChangeMemberRoleRequest
                                                         )
                                                 }
+                                                onNavigateToGarden()
                                             }
                                             builder.setNegativeButton("CANCEL") { dialog, which ->
                                                 dialog.dismiss()
@@ -231,6 +232,7 @@ fun MemberItem(member: SimplifiedGardenMember) {
                                                             requestModel = newChangeMemberRoleRequest
                                                         )
                                                 }
+                                                onNavigateToGarden()
                                             }
                                             builder.setNegativeButton("CANCEL") { dialog, which ->
                                                 dialog.dismiss()
@@ -251,8 +253,7 @@ fun MemberItem(member: SimplifiedGardenMember) {
                                     if (role != "OWNER") {
                                         Button(
                                             onClick = {
-                                                val builder =
-                                                    android.app.AlertDialog.Builder(popUpContext)
+                                                val builder = android.app.AlertDialog.Builder(popUpContext)
                                                 builder.setTitle("GIVE OWNERSHIP")
                                                 builder.setMessage("Are you sure you want to give up this Garden's ownership?")
                                                 builder.setPositiveButton("CEDE") { dialog, which ->
@@ -269,6 +270,7 @@ fun MemberItem(member: SimplifiedGardenMember) {
                                                                 requestModel = newChangeMemberRoleRequest
                                                             )
                                                     }
+                                                    onNavigateToGarden()
                                                 }
                                                 builder.setNegativeButton("KEEP") { dialog, which ->
                                                     dialog.dismiss()
@@ -302,6 +304,7 @@ fun MemberItem(member: SimplifiedGardenMember) {
                                                                 user = username
                                                             )
                                                     }
+                                                    onNavigateToGarden()
                                                 }
                                                 builder.setNegativeButton("CANCEL") { dialog, which ->
                                                     dialog.dismiss()
@@ -324,11 +327,12 @@ fun MemberItem(member: SimplifiedGardenMember) {
                             Button(
                                 onClick = {
                                     val builder = android.app.AlertDialog.Builder(popUpContext)
-                                    builder.setTitle("BLOCK USER")
-                                    builder.setMessage("Are you sure you want to block this user?")
-                                    builder.setPositiveButton("BLOCK") { dialog, which ->
+                                    builder.setTitle("REPORT USER")
+                                    builder.setMessage("Are you sure you want to report this user?")
+                                    builder.setPositiveButton("REPORT") { dialog, which ->
                                         // TODO
-                                        println("BLOCKED!")
+                                        println("REPORTED!")
+                                        onNavigateToGarden()
                                     }
                                     builder.setNegativeButton("CANCEL") { dialog, which ->
                                         dialog.dismiss()
@@ -342,7 +346,7 @@ fun MemberItem(member: SimplifiedGardenMember) {
                                     .padding(8.dp),
                                 shape = MaterialTheme.shapes.medium
                             ) {
-                                Text(text = "BLOCK USER", color = Color.White)
+                                Text(text = "REPORT USER", color = Color.White)
                             }
                         }
                     }
