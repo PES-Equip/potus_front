@@ -77,6 +77,7 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, 
             addedWater = 0,
             addedLeaves = 0,
             onNavigateToProfile = { onNavigateToProfile() }
+            //onNavigateToShop = { onNavigateToShop() }
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             Spacer(modifier = Modifier.size(8.dp))
@@ -95,7 +96,7 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, 
             Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_SHORT).show()
             openDialog.value = false
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_meetings), onNavigateToShop, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_xat), onNavigateToChat)
+        GardenBottomBar(painterResource(id = R.drawable.icona_meetings), onNavigateToMeetings, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_xat), onNavigateToChat)
     }
 }
 
