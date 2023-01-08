@@ -50,6 +50,9 @@ Underway Sprint 3 tasks and issues:
 - Prune and Watering Animations [#226, MH]
 - Frontend - Store UI Design [#245, MV]
 - Buy a Bonus UI Design [#245, MV]
+- Send Message Box - Frontend [#254, BF]
+- Messaging Screen - Frontend [#255, BF]
+- Chat List View - Frontend [#256, BF]
 - Update responsiveness [#261, MH]
 - Frontend - Show block user button [#265, BF]
 

@@ -1,9 +1,6 @@
 package com.potus.potus_front.composables
 
-import android.graphics.Typeface.BOLD
-import android.graphics.fonts.FontStyle
 import android.widget.Toast
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.Image
@@ -53,7 +50,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 @Composable
@@ -76,7 +72,6 @@ fun TopBar(
             .width((username.length * 10).dp)
             .height(30.dp)
             .clip(RoundedCornerShape(15.dp))
-            //.clickable { onNavigateToProfile }
             .background(color = Color(0x0CFFFFFF))){
             ClickableText(
                 modifier = Modifier
