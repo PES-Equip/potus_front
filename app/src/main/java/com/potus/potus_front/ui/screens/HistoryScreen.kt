@@ -60,7 +60,6 @@ fun HistoryScreen(onNavigateToProfile: () -> Unit) {
             }
             else { anyPotusDead.value = false }
         } else {
-            //ERROR MESSAGES, IF ANY
             val jObjErr = call.errorBody()?.string()?.let { JSONObject(it) }
             if (jObjErr != null) {
                 error.value = jObjErr.getString("message")
@@ -71,11 +70,11 @@ fun HistoryScreen(onNavigateToProfile: () -> Unit) {
 
     Column(Modifier.background(color = EarthBrown)) {
         TopBar(
-            waterLevel = user.potus.waterLevel, //waterLevelState,
-            collection = user.currency, //collection,
-            username = "Mr. Simon", //user.username,
-            addedWater = 0, //addedWater,
-            addedLeaves = 0, //addedLeaves
+            waterLevel = user.potus.waterLevel,
+            collection = user.currency,
+            username = "Mr. Simon",
+            addedWater = 0,
+            addedLeaves = 0,
             onNavigateToProfile = { onNavigateToProfile() }
         )
         Spacer(modifier = Modifier.weight(0.1f))
@@ -99,7 +98,6 @@ fun Historial(entries: List<HistoryResponse>, print: Boolean) {
             contentPadding = PaddingValues(16.dp),
             horizontalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            //var entries = arrayListOf<String>("Mr.Simon", "Mr.Simon the II", "Mr.Simon the III")
             items(entries.size) { arrayItem ->
                 RowItem(item = entries[arrayItem])
             }
@@ -162,7 +160,6 @@ fun RowItem(item: HistoryResponse) {
                     fontStyle = FontStyle.Italic,
                     textAlign = TextAlign.Center
                 )
-
                 Text(
                     text = "Adoption Date: " + item.createdDate + "\n\n"
                             + "Death Date: " + item.deathDate,

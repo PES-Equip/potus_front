@@ -124,7 +124,7 @@ fun MemberItem(member: SimplifiedGardenMember) {
                     .size(64.dp)
                     .align(CenterVertically)
                     .padding(start = 8.dp)
-            ) { CenterArea(randomAvatar, true) }
+            ) { CenterArea(randomAvatar, false) }
             if (!toggled) {
                 Text(
                     text = member.username,

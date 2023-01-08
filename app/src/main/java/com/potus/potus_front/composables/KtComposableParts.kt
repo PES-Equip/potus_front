@@ -473,7 +473,7 @@ fun GardenBottomBar(
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .align(Alignment.CenterVertically)
-                            .width(widthButton)
+                            .weight(0.3f)
                             .height(heightButton)
                             .clip(RoundedCornerShape(10.dp))
                     ) {
@@ -487,13 +487,13 @@ fun GardenBottomBar(
                                 .align(Alignment.CenterVertically)
                         )
                     }
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(0.5f))
                     Surface(
                         color = SoothingGreen,
                         modifier = Modifier
                             .padding(end = 8.dp)
                             .align(Alignment.CenterVertically)
-                            .width(widthButton)
+                            .weight(0.3f)
                             .height(heightButton)
                             .clip(RoundedCornerShape(10.dp))
                     ) {
@@ -527,10 +527,11 @@ fun GardenBottomBar(
                     modifier = Modifier
                         .clickable(onClick = { onNavigateToCenter() })
                         .padding(8.dp)
-                        .size(heightCircle - 32.dp)
+                        .fillMaxSize()
                         .align(Alignment.Center)
                         .clip(CircleShape)
-                        .background(color = SoothingGreen))
+                        .background(color = SoothingGreen)
+                        )
             }
         }
 }
