@@ -34,6 +34,9 @@ Completed Sprint 2 tasks:
 
 Completed Sprint 3 tasks and issues:
 
+- Frontend - Username error in potus history screen [#247, MH]
+- Frontend - Revive potus name [#248, MH]
+- Frontend - Potus history is not shown [#251, MH]
 - Frontend - Garden's members are not shown [#257, BF]
 - Frontend - Garden's management screen is not scrollable [#258, BF]
 - Frontend - User login call needs to be updated for trophies [#259, BF]
@@ -42,6 +45,9 @@ Completed Sprint 3 tasks and issues:
 - Frontend - Garden's call to invite new user does not give feedback [#262, BF]
 - Frontend - Apparently user roles are a thing, in Gardens [#264, BF]
 - Frontend - Number of members in Garden's management screen in just plain wrong [#266, BF]
+- Frontend - Design shop sprites [#267, BF]
+- Frontend - Design fertilizer sprite [#268, BF]
+- Frontend - Design meetings icon [#269, BF]
 
 Underway Sprint 3 tasks and issues:
 
@@ -55,5 +61,6 @@ Underway Sprint 3 tasks and issues:
 - Chat List View - Frontend [#256, BF]
 - Update responsiveness [#261, MH]
 - Frontend - Show block user button [#265, BF]
+- 
 
 [This is the develop branch]
