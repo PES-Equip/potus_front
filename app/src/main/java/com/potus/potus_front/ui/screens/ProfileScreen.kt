@@ -107,7 +107,7 @@ fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit, on
             }
         }
 
-        CenterArea(plantState = "SANT_JOAN", textDisplay = true)
+        CenterArea(plantState = plantState, textDisplay = true)
 
         Row(
             modifier = Modifier

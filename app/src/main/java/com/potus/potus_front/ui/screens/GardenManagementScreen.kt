@@ -237,7 +237,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                 },
                                 colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen),
                                 modifier = Modifier
-                                    .weight(0.15f)
+                                    .weight(0.175f)
                                     .padding(8.dp)
                                     .align(CenterVertically),
                                 shape = MaterialTheme.shapes.medium
