@@ -37,7 +37,7 @@ import org.json.JSONObject
 
 
 @Composable
-fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
+fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  onNavigateToMeetings: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = remember { mutableStateOf("")  }
 
@@ -126,6 +126,6 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
                 Text("SEND")
             }
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_mercat), onNavigateToShop, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_jardi), onNavigateToGarden)
+        GardenBottomBar(painterResource(id = R.drawable.icona_meetings), onNavigateToMeetings, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_jardi), onNavigateToGarden)
     }
 }

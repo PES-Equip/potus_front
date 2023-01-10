@@ -126,6 +126,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             ChatScreen(
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToShop = { navController.navigate(GardenScreen.route) },
+                //TO BE IMPLEMENTED (CURRENTLY LEADING BACK TO GARDEN SCREEN)
+                onNavigateToMeetings = { navController.navigate(GardenScreen.route) },
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) }
             )
