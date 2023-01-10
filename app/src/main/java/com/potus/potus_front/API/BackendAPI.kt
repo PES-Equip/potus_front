@@ -2,6 +2,7 @@ package com.potus.potus_front.API
 
 import com.potus.potus_front.API.requests.*
 import com.potus.potus_front.API.response.*
+import com.potus.potus_front.API.response.data_models.Shop
 import com.potus.potus_front.API.response.data_models.SimplifiedGardenMember
 import com.potus.potus_front.API.response.data_models.UserGardenInfo
 import retrofit2.Response
@@ -84,7 +85,7 @@ interface APIService {
     suspend fun removeGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String)
 
     @POST
-    suspend fun buyBonus(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
+    suspend fun buyBonus(@Header("Authorization") token:String, @Url url:String, @Query("modifier") modifier:String): Response<Shop>
 }
 
 fun getRetrofit(): Retrofit {

@@ -29,6 +29,7 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 @Composable
 fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
@@ -124,12 +125,12 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                                         .buyBonus(
                                             "Bearer " + tokenState.token,
                                             "potus/store/buy/" +
-                                                    "WATER_PERMANENT_INCREASE"
+                                                    "WATER_PERMANENT_INCREASE",
+                                            modifier = "WATER_PERMANENT_INCREASE"
                                         )
                                 }
                                 if (call.isSuccessful) {
-                                    notification.value = "Fertilizer bought!"
-                                    tokenState.signUser(call.body())
+                                    notification.value = "Fertilizer bought"
                                 } else {
                                     notification.value = "ERROR"
                                 }
@@ -170,12 +171,12 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                                         .buyBonus(
                                             "Bearer " + tokenState.token,
                                             "potus/store/buy/" +
-                                                    "WATER_PERMANENT_INCREASE"
+                                                    "WATER_PERMANENT_INCREASE",
+                                            modifier = "WATER_PERMANENT_INCREASE"
                                         )
                                 }
                                 if (call.isSuccessful) {
                                     notification.value = "Fertilizer bought!"
-                                    tokenState.signUser(call.body())
                                 } else {
                                     notification.value = "ERROR"
                                 }
@@ -216,14 +217,18 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                                         .buyBonus(
                                             "Bearer " + tokenState.token,
                                             "potus/store/buy/" +
-                                                    "WATER_PERMANENT_INCREASE"
+                                                    "WATER_PERMANENT_INCREASE",
+                                            modifier = "WATER_PERMANENT_INCREASE"
                                         )
                                 }
                                 if (call.isSuccessful) {
                                     notification.value = "Fertilizer bought!"
-                                    tokenState.signUser(call.body())
                                 } else {
-                                    notification.value = "ERROR"
+                                    val Ebody = call.errorBody()
+                                    if (Ebody != null) {
+                                        var jObjErr = JSONObject(Ebody.string())
+                                        notification.value = jObjErr.getString("message")
+                                    }
                                 }
                             }
                         },
