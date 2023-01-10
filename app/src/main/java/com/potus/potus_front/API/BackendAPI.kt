@@ -16,7 +16,7 @@ interface APIService {
     suspend fun getUser(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
 
     @GET
-    suspend fun getGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenResponse>
+    suspend fun getGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<NewGardenResponse>
 
     @GET
     suspend fun getGardenList(@Header("Authorization") token:String, @Url url:String): Response<List<NewGardenResponse>>
@@ -45,9 +45,6 @@ interface APIService {
     @POST
     suspend fun changeUsername(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ChangeUsernameRequest): Response<UserResponse>
 
-    @DELETE
-    suspend fun deleteAccount(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
-
     @POST
     suspend fun informLocation(@Header("Authorization") token:String, @Url url:String, @Body requestModel: InformLocationRequest): Response<PotusResponse>
 
@@ -55,13 +52,16 @@ interface APIService {
     suspend fun revivePotus(@Header("Authorization") token:String, @Url url:String, @Body requestModel: PotusReviveRequest): Response<PotusResponse>
 
     @POST
-    suspend fun createGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest): Response<UserGardenInfo>
+    suspend fun createGarden(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenRequest): Response<NewGardenResponse>
 
     @POST
-    suspend fun askToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String)
+    suspend fun askToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<Unit>
 
     @POST
-    suspend fun sendGardenInvitation(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String, @Query("user") user:String)
+    suspend fun sendGardenInvitation(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String, @Query("user") user:String): Response<Unit>
+
+    @POST
+    suspend fun acceptGardenPetition(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest): Response<List<GardenMemberResponse>>
 
     @PUT
     suspend fun joinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenResponse>
@@ -69,20 +69,26 @@ interface APIService {
     @PUT
     suspend fun changeGardenDescription(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenDescriptionRequest): Response<NewGardenResponse>
 
-    @POST
-    suspend fun acceptGardenPetition(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest): Response<List<GardenMemberResponse>>
+    @PUT
+    suspend fun changeMemberRole(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ChangeMemberRoleRequest, @Query("garden") garden:String, @Query("user") user:String): Response<Unit>
 
     @DELETE
-    suspend fun refuseToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String)
+    suspend fun deleteAccount(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
 
     @DELETE
-    suspend fun refuseGardenPetition(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String, @Query("user") user:String)
+    suspend fun refuseToJoinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<Unit>
 
     @DELETE
-    suspend fun exitGarden(@Header("Authorization") token:String, @Url url:String)
+    suspend fun refuseGardenPetition(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String, @Query("user") user:String): Response<Unit>
 
     @DELETE
-    suspend fun removeGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String)
+    suspend fun exitGarden(@Header("Authorization") token:String, @Url url:String): Response<Unit>
+
+    @DELETE
+    suspend fun removeGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<Unit>
+
+    @PUT
+    suspend fun removeGardenMember(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String, @Query("user") user:String): Response<Unit>
 
     @POST
     suspend fun buyBonus(@Header("Authorization") token:String, @Url url:String, @Query("modifier") modifier:String): Response<List<Shop>>
