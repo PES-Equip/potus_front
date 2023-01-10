@@ -85,7 +85,7 @@ interface APIService {
     suspend fun removeGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String)
 
     @POST
-    suspend fun buyBonus(@Header("Authorization") token:String, @Url url:String, @Query("modifier") modifier:String): Response<Shop>
+    suspend fun buyBonus(@Header("Authorization") token:String, @Url url:String, @Query("modifier") modifier:String): Response<List<Shop>>
 }
 
 fun getRetrofit(): Retrofit {
