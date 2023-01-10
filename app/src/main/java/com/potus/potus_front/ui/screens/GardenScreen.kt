@@ -76,8 +76,8 @@ fun GardenScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, 
             username = user.username,
             addedWater = 0,
             addedLeaves = 0,
-            onNavigateToProfile = { onNavigateToProfile() }
-            //onNavigateToShop = { onNavigateToShop() }
+            onNavigateToProfile = { onNavigateToProfile() },
+            onNavigateToShop = { onNavigateToShop() }
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             Spacer(modifier = Modifier.size(8.dp))

@@ -82,10 +82,14 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
             onNavigateToShop = { }
         )
 
+        Spacer(modifier = Modifier.height(32.dp))
 
-
+        Image(
+            painter = painterResource(id = R.drawable.bubble_text), "",
+            modifier = Modifier.fillMaxWidth()
+        )
             Image(
-                painter = painterResource(id = R.drawable.newtext), "",
+                painter = painterResource(id = R.drawable.botiga_venedora), "",
                 modifier = Modifier.aspectRatio(16f / 9f)
                     .fillMaxWidth()
             )
@@ -99,7 +103,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                 Column()
                 {
                     Image(
-                        painter = painterResource(id = R.drawable.fertilizer_bonus), "",
+                        painter = painterResource(id = R.drawable.botiga_fertilitzant), "",
                         modifier = Modifier
                             .weight(1f)
                     )
@@ -107,53 +111,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                         .align(Alignment.CenterHorizontally)
                         .weight(0.25f))
                     {
-                        Text(text = "Price: 500")
-                        Image(
-                            modifier = Modifier
-                                .size(24.dp),
-                            painter = painterResource(id = R.drawable.icona_currency),
-                            contentDescription = "")
-                    }
-                    Button(
-                        modifier = Modifier
-                            .weight(0.25f),
-                        onClick = {
-                            CoroutineScope(Dispatchers.Main).launch {
-                                val buyBonusRequest = username?.let { BuyBonusRequest(it) }
-                                val call = buyBonusRequest?.let {
-                                    getRetrofit().create(APIService::class.java)
-                                        .buyBonus(
-                                            "Bearer " + tokenState.token,
-                                            "potus/store/buy/" +
-                                                    "WATER_PERMANENT_INCREASE",
-                                            modifier = "WATER_PERMANENT_INCREASE"
-                                        )
-                                }
-                                if (call.isSuccessful) {
-                                    notification.value = "Fertilizer bought"
-                                } else {
-                                    notification.value = "ERROR"
-                                }
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
-                    ) {
-                        Text(text = "Buy fertilizer")
-                    }
-                    Spacer(modifier = Modifier.weight(0.05f))
-                }
-                Column()
-                {
-                    Image(
-                        painter = painterResource(id = R.drawable.fertilizer_bonus), "",
-                        modifier = Modifier
-                            .weight(1f)
-                    )
-                    Row(modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .weight(0.25f))
-                    {
-                        Text(text = "Price: 500")
+                        Text(text = "Price: 240")
                         Image(
                             modifier = Modifier
                                 .size(24.dp),
@@ -178,7 +136,11 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                                 if (call.isSuccessful) {
                                     notification.value = "Fertilizer bought!"
                                 } else {
-                                    notification.value = "ERROR"
+                                    val Ebody = call.errorBody()
+                                    if (Ebody != null) {
+                                        var jObjErr = JSONObject(Ebody.string())
+                                        notification.value = jObjErr.getString("message")
+                                    }
                                 }
                             }
                         },
@@ -191,7 +153,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                 Column()
                 {
                     Image(
-                        painter = painterResource(id = R.drawable.fertilizer_bonus), "",
+                        painter = painterResource(id = R.drawable.botiga_fertilitzant_blau), "",
                         modifier = Modifier
                             .weight(1f)
                     )
@@ -199,7 +161,57 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                         .align(Alignment.CenterHorizontally)
                         .weight(0.25f))
                     {
-                        Text(text = "Price: 500")
+                        Text(text = "Price: 120")
+                        Image(
+                            modifier = Modifier
+                                .size(24.dp),
+                            painter = painterResource(id = R.drawable.icona_currency),
+                            contentDescription = "")
+                    }
+                    Button(
+                        modifier = Modifier
+                            .weight(0.25f),
+                        onClick = {
+                            CoroutineScope(Dispatchers.Main).launch {
+                                val buyBonusRequest = username?.let { BuyBonusRequest(it) }
+                                val call = buyBonusRequest?.let {
+                                    getRetrofit().create(APIService::class.java)
+                                        .buyBonus(
+                                            "Bearer " + tokenState.token,
+                                            "potus/store/buy/" +
+                                                    "WATER_PERMANENT_INCREASE",
+                                            modifier = "WATER_PERMANENT_INCREASE"
+                                        )
+                                }
+                                if (call.isSuccessful) {
+                                    notification.value = "Fertilizer bought!"
+                                } else {
+                                    val Ebody = call.errorBody()
+                                    if (Ebody != null) {
+                                        var jObjErr = JSONObject(Ebody.string())
+                                        notification.value = jObjErr.getString("message")
+                                    }
+                                }
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
+                    ) {
+                        Text(text = "Buy fertilizer")
+                    }
+                    Spacer(modifier = Modifier.weight(0.05f))
+                }
+                Column()
+                {
+                    Image(
+                        painter = painterResource(id = R.drawable.botiga_fertilitzant_vermell), "",
+                        modifier = Modifier
+                            .weight(1f)
+                    )
+                    Row(modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .weight(0.25f))
+                    {
+                        Text(text = "Price: 120")
                         Image(
                             modifier = Modifier
                                 .size(24.dp),
