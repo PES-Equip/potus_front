@@ -206,7 +206,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                             Image(
                                 painter = painterResource(id = R.drawable.icona_convidar_jardi), "",
                                 modifier = Modifier
-                                    .size(64.dp)
+                                    .weight(0.1f)
                                     .align(CenterVertically)
                                     .padding(start = 8.dp)
                             )
@@ -215,7 +215,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                 onValueChange = { invitedUser.value = it },
                                 label = { Text(text = "Invite User") },
                                 modifier = Modifier
-                                    .width(200.dp)
+                                    .weight(0.3f)
                                     .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
                                     .align(CenterVertically)
                             )
@@ -237,7 +237,7 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
                                 },
                                 colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen),
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .weight(0.15f)
                                     .padding(8.dp)
                                     .align(CenterVertically),
                                 shape = MaterialTheme.shapes.medium

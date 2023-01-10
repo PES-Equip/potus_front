@@ -36,7 +36,16 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                         tokenState.signUser(call.body())
                         when(tokenState.getState()) {
                             "NEW" -> navController.navigate(RegisterScreen.route)
-                            "CONFIRMED" -> navController.navigate(HomeScreen.route)
+                            "CONFIRMED" -> {
+                                when (tokenState.user?.user?.potus?.alive) {
+                                    true -> {
+                                        navController.navigate(HomeScreen.route)
+                                    }
+                                    false -> {
+                                        navController.navigate(RevivePopup.route)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -48,13 +57,12 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             RegisterScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
         composable(HomeScreen.route) {
-            if (TokenState.current.user?.user?.potus?.alive == true) HomeScreen(
+            HomeScreen(
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) },
                 onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }
             )
-            else navController.navigate(RevivePopup.route)
-        }
+            }
         composable(RevivePopup.route) {
             RevivePopup(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }

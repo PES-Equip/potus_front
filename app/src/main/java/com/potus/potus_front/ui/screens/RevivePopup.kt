@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -92,8 +93,8 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                             .weight(0.2f)
                             .fillMaxWidth(),
                         value = textState.value,
-                        onValueChange = { textState.value = it },
                         label = { Text(text = "New name") },
+                        onValueChange = { textState.setValue(thisObj = TextFieldValue(), property=TextFieldValue::text, value=it) },
                         maxLines = 1,
                         shape = MaterialTheme.shapes.medium,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -120,7 +121,7 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                             CoroutineScope(Dispatchers.IO).launch {
 
                                 val newRevivePotusRequest =
-                                    PotusReviveRequest(textState.value.toString())
+                                    PotusReviveRequest(textState.value.text)
                                 val call = getRetrofit()
                                     .create(APIService::class.java)
                                     .revivePotus(
@@ -134,7 +135,7 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                                 if (call.isSuccessful && body != null) {
                                     tokenState.user?.let {
                                         tokenState.user!!.user.potus = body
-                                        onNavigateToHome
+                                        onNavigateToHome()
                                     }
                                 } else {
                                     if (ebody != null) {
