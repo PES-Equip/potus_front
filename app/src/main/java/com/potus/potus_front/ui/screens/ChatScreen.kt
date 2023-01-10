@@ -1,8 +1,5 @@
 package com.potus.potus_front.ui.screens
 
-import android.view.WindowManager
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,9 +14,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.potus.potus_front.API.APIService
-import com.potus.potus_front.API.getRetrofit
-import com.potus.potus_front.API.requests.InformLocationRequest
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.GardenBottomBar
 import com.potus.potus_front.composables.TopBar
@@ -32,11 +26,7 @@ import com.potus.potus_front.websocket.StompMessageListener
 import com.potus.potus_front.websocket.StompMessageSerializer
 import com.potus.potus_front.websocket.TopicHandler
 import com.potus.potus_front.websocket.model.ChatMessage
-import com.potus.potus_front.websocket.socketclient.ChatDeliver
 import com.potus.potus_front.websocket.socketclient.ChatListener
-import kotlinx.coroutines.Dispatchers
-import org.json.JSONObject
-import java.util.*
 
 
 @Composable
@@ -49,10 +39,10 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
 
     // test -> user garden id room = garden id
     val room = "test"
-    var chatListener: ChatListener = ChatListener(user.username)
+    val chatListener: ChatListener = ChatListener(user.username)
     val topicHandler: TopicHandler = chatListener.subscribe("/chatroom/$room")
 
-    var message = remember { mutableStateOf("Please?")  }
+    val message = remember { mutableStateOf("")  }
 
     StompMessageSerializer.joinChat(user.username, room)
 
@@ -71,7 +61,6 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
 
     val sml : StompMessageListener = object : StompMessageListener {
         override fun onMessage(message: StompMessage) {
-
             StompMessageSerializer.handleMessage(message,chats)
 
             //println("------")
@@ -108,11 +97,13 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                 )
                 Button(
                     onClick = {
-                        StompMessageSerializer.sendMessage(
-                            message = message.value,
-                            user.username,
-                            room
-                        )
+                        if (message.value != "") {
+                            StompMessageSerializer.sendMessage(
+                                message = message.value,
+                                user.username,
+                                room
+                            )
+                        }
                         //chats += chats.size.toString() to ChatMessage("Them", "Hello!", "JOIN", "10/01/2023")
                         //onNavigateToChat()
                     },
