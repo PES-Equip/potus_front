@@ -60,6 +60,10 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             ShopScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) })
         }
+        composable(MeetingsScreen.route) {
+            MeetingsScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                onNavigateToProfile = { navController.navigate(ProfileScreen.route) })
+        }
         composable(route = ProfileScreen.route) {
             ProfileScreen(
                     onNavigateToHome = { navController.navigate(HomeScreen.route) },
@@ -109,7 +113,7 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                 onNavigateToManagement = { navController.navigate(GardenManagementScreen.route) },
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) },
                 //TO BE IMPLEMENTED (CURRENTLY LEADING BACK TO GARDEN SCREEN)
-                onNavigateToMeetings = { navController.navigate(GardenScreen.route) },
+                onNavigateToMeetings = { navController.navigate(MeetingsScreen.route) },
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
                 onNavigateToChat = { navController.navigate(ChatScreen.route) }
             )
