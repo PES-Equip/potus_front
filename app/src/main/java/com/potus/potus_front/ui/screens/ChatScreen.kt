@@ -121,11 +121,11 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedTextField(
-                value = "",
+                value = message.value,
                 onValueChange = { message.value = it },
                 label = { Text(text = "New message...") },
                 modifier = Modifier
-                    .weight(0.7f)
+                    .weight(0.8f)
                     .padding(horizontal = 16.dp),
                 shape = MaterialTheme.shapes.medium
             )
