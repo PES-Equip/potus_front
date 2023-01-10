@@ -61,6 +61,6 @@ Underway Sprint 3 tasks and issues:
 - Chat List View - Frontend [#256, BF]
 - Update responsiveness [#261, MH]
 - Frontend - Show block user button [#265, BF]
-- 
+- Frontend - Load Chat messages [#298, BF]
 
 [This is the develop branch]

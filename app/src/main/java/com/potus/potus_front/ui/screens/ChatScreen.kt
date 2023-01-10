@@ -6,8 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +47,8 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
     val room = "test"
     var chatListener: ChatListener = ChatListener(user.username)
     val topicHandler: TopicHandler = chatListener.subscribe("/chatroom/$room")
+
+    var message = remember { mutableStateOf("")  }
 
     StompMessageSerializer.joinChat(user.username, room)
 
@@ -114,14 +115,31 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                     }
                 }
             }}
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Spacer(modifier = Modifier.weight(1f))
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
+            OutlinedTextField(
+                value = "",
+                onValueChange = { message.value = it },
+                label = { Text(text = "New message...") },
+                modifier = Modifier
+                    .weight(0.7f)
+                    .padding(horizontal = 16.dp),
+                shape = MaterialTheme.shapes.medium
+            )
             Button(
                 onClick = {
-                    StompMessageSerializer.sendMessage("YEPA", user.username, room)
+                    StompMessageSerializer.sendMessage(message.value, user.username, room)
                 },
+                colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
+                modifier = Modifier
+                    .weight(0.3f)
+                    .height(80.dp)
+                    .padding(16.dp)
+                    .align(Alignment.CenterVertically),
+                shape = MaterialTheme.shapes.medium
             ) {
                 Text("SEND")
             }
