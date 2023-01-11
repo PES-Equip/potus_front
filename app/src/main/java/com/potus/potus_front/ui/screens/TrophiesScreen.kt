@@ -2,6 +2,7 @@ package com.potus.potus_front.ui.screens
 
 import android.support.v4.os.IResultReceiver.Stub
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -67,6 +69,11 @@ fun TrophiesScreen(onNavigateToProfile: () -> Unit) {
             }
             openDialog.value = true
         }
+    }
+
+    if (openDialog.value) {
+        Toast.makeText(LocalContext.current, error.value, Toast.LENGTH_SHORT).show()
+        openDialog.value = false
     }
 
     Column() {
@@ -154,8 +161,8 @@ fun TrophyItem(trophy: UserTrophy) {
 
                 var level: Int? = 0
                 if(trophy.level!! > 0) {
-                    level = trophy.level
-                    //level = (trophy.current / trophy.trophy.base) + 1
+                    //level = trophy.level
+                    level = (trophy.current / trophy.trophy.base) + 1
                 }
                 val nextLevel = trophy.trophy.base - (trophy.current % trophy.trophy.base)
 
