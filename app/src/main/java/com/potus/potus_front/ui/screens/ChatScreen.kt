@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -18,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
-import com.potus.potus_front.API.requests.ChangeMemberRoleRequest
 import com.potus.potus_front.API.response.ChatResponse
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.GardenBottomBar
@@ -37,13 +37,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 @Composable
 fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  onNavigateToChat: () -> Unit, onNavigateToMeetings: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    var actionString = remember { mutableStateOf("")  }
+    val actionString = remember { mutableStateOf("")  }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
@@ -95,9 +96,10 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
     }
 
     val chats = mutableMapOf<String,ChatMessage>()
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     var i = 0
     historicChat.value.forEach { chatResponse ->
-        chats += i.toString() to ChatMessage(sender = chatResponse.sender.username, message = chatResponse.message, "MESSAGE", chatResponse.date.toString())
+        chats += i.toString() to ChatMessage(sender = chatResponse.sender.username, message = chatResponse.message, "MESSAGE", date = dateFormat.format(chatResponse.date).toString())
         i += 1
     }
     println(chats)
@@ -166,7 +168,7 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                                 }
                             }
 
-                            chats += chats.size.toString() to ChatMessage(sender = user.username, message = message.value, "MESSAGE", Date().toString())
+                            chats += chats.size.toString() to ChatMessage(sender = user.username, message = message.value, "MESSAGE", Date().time.toString())
                         }
                         //onNavigateToChat()
                     },
@@ -181,6 +183,9 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                     Text("SEND")
                 }
             }
+
+            //FALTA: ORDRE LÒGIC I DATA LLEGIBLE (+ SCROLL SI DONA TEMPS)
+
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(8.dp),
@@ -198,18 +203,30 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        //val invertedPosition = chats.size - chat - 1
+                        val invertedPosition = chats.size - chat - 1
                         Column (modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-                            Text(
-                                //text = chats[invertedPosition.toString()]?.sender.toString(),
-                                text = chats[chat.toString()]?.sender.toString(),
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black,
-                                modifier = Modifier
-                                    .padding(start = 8.dp, bottom = 8.dp)
-                                    .align(Alignment.Start)
-                            )
+                            Row() {
+                                Text(
+                                    //text = chats[invertedPosition.toString()]?.sender.toString(),
+                                    text = chats[chat.toString()]?.sender.toString(),
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black,
+                                    modifier = Modifier
+                                        .padding(start = 8.dp, bottom = 8.dp)
+                                        .align(CenterVertically)
+                                )
+                                Text(
+                                    //text = chats[invertedPosition.toString()]?.date.toString(),
+                                    text = chats[chat.toString()]?.date.toString(),
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Gray,
+                                    modifier = Modifier
+                                        .padding(start = 8.dp, bottom = 8.dp)
+                                        .align(CenterVertically)
+                                )
+                            }
                             Text(
                                 //text = chats[invertedPosition.toString()]?.message.toString(),
                                 text = chats[chat.toString()]?.message.toString(),
