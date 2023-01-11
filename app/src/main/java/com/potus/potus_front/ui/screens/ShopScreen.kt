@@ -129,12 +129,18 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                                         .buyBonus(
                                             "Bearer " + tokenState.token,
                                             "potus/store/buy/" +
-                                                    "WATER_PERMANENT_INCREASE",
-                                            modifier = "WATER_PERMANENT_INCREASE"
+                                                    "PRUNE_MAX_CURRENCY_PERMANENT_BUFF",
+                                            modifier = "PRUNE_MAX_CURRENCY_PERMANENT_BUFF"
                                         )
                                 }
+
                                 if (call.isSuccessful) {
+                                    val currencycall = getRetrofit().create(APIService::class.java)
+                                        .getUser("Bearer " + tokenState.token, "user")
+                                    tokenState.signUser(currencycall.body())
+                                    collection = tokenState.user?.user?.currency!!
                                     notification.value = "Fertilizer bought!"
+
                                 } else {
                                     val Ebody = call.errorBody()
                                     if (Ebody != null) {
@@ -179,11 +185,15 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                                         .buyBonus(
                                             "Bearer " + tokenState.token,
                                             "potus/store/buy/" +
-                                                    "WATER_PERMANENT_INCREASE",
-                                            modifier = "WATER_PERMANENT_INCREASE"
+                                                    "PRUNE_CURRENCY_PERMANENT_BUFF",
+                                            modifier = "PRUNE_CURRENCY_PERMANENT_BUFF"
                                         )
                                 }
                                 if (call.isSuccessful) {
+                                    val currencycall = getRetrofit().create(APIService::class.java)
+                                        .getUser("Bearer " + tokenState.token, "user")
+                                    tokenState.signUser(currencycall.body())
+                                    collection = tokenState.user?.user?.currency!!
                                     notification.value = "Fertilizer bought!"
                                 } else {
                                     val Ebody = call.errorBody()
@@ -243,6 +253,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                                     }
                                 }
                             }
+
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
                     ) {
