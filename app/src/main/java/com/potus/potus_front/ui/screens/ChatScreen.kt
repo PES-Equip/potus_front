@@ -45,14 +45,14 @@ import java.util.*
 
 @Composable
 fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, onNavigateToMeetings: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
-    val openDialog = remember { mutableStateOf(false)  }
-    val actionString = remember { mutableStateOf("")  }
+    val openDialog = remember { mutableStateOf(false) }
+    val actionString = remember { mutableStateOf("") }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
     val garden = user.garden_info?.garden?.name.toString()
 
-    val room = user.garden_info?.garden?.id.toString() //"test"
+    val room = user.garden_info?.garden?.id.toString()
     val chatListener = ChatListener(user.username)
     val topicHandler: TopicHandler = chatListener.subscribe("/chatroom/$room")
 
@@ -61,7 +61,10 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
     StompMessageSerializer.joinChat(user.username, room)
 
     chatListener.connect(StompMessageSerializer.url)
-    val historicChat = remember { mutableStateOf<List<ChatResponse>>(listOf()) }
+
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    val chats = remember { mutableMapOf<String, ChatMessage>() }
+    val ids = remember { mutableMapOf<String, String>() }
 
     LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()
@@ -75,7 +78,21 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
 
         val eBody = call.errorBody()
         if (call.isSuccessful) {
-            call.body()?.let { historicChat.value = it }
+            call.body()?.let {
+                var i = 0
+                it.forEach { chatResponse ->
+                    if (chatResponse.status == "MESSAGE") {
+                        chats += chatResponse.id to ChatMessage(
+                            sender = chatResponse.sender.username,
+                            message = chatResponse.message,
+                            "MESSAGE",
+                            date = dateFormat.format(chatResponse.date).toString()
+                        )
+                        ids += i.toString() to chatResponse.id
+                        i += 1
+                    }
+                }
+            }
         } else {
             //ERROR MESSAGES, IF ANY
             openDialog.value = true
@@ -85,18 +102,9 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
         }
     }
 
-    val chats = mutableMapOf<String,ChatMessage>()
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-    var i = 0
-    historicChat.value.forEach { chatResponse ->
-        //if (chatResponse.message != "")
-            chats += i.toString() to ChatMessage(sender = chatResponse.sender.username, message = chatResponse.message, "MESSAGE", date = dateFormat.format(chatResponse.date).toString())
-        i += 1
-    }
-
     val sml : StompMessageListener = object : StompMessageListener {
         override fun onMessage(message: StompMessage) {
-            StompMessageSerializer.handleMessage(message,chats)
+            StompMessageSerializer.handleMessage(message, chats, ids)
         }
     }
     topicHandler.addListener(sml)
@@ -135,31 +143,8 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
                                 user.username,
                                 room
                             )
-
-                            CoroutineScope(Dispatchers.IO).launch {
-                                val call = getRetrofit()
-                                    .create(APIService::class.java)
-                                    .sendChatMessage(
-                                        "Bearer " + tokenState.token,
-                                        "gardens/$garden/chat/$letter",
-                                        garden = garden,
-                                        message = letter
-                                    )
-
-                                val eBody = call.errorBody()
-                                if (call.isSuccessful) {
-                                    call.body()?.let { historicChat.value += it }
-                                } else {
-                                    //ERROR MESSAGES, IF ANY
-                                    openDialog.value = true
-                                    if (eBody != null) {
-                                        actionString.value = JSONObject(eBody.string()).getString("message")
-                                    }
-                                }
-                            }
-
-                            chats += chats.size.toString() to ChatMessage(sender = user.username, message = message.value, "MESSAGE", Date().time.toString())
                         }
+                        message.value = ""
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                     modifier = Modifier
@@ -178,12 +163,12 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-                //reverseLayout = true
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                reverseLayout = true
             ) {
                 items(chats.size) { chat ->
                     var toggled by remember { mutableStateOf(false) }
-                    val message = chats[chat.toString()]?.message.toString()
+                    val chatKey = ids[chat.toString()]
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -196,12 +181,10 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        val invertedPosition = chats.size - chat - 1
                         Column (modifier = Modifier.fillMaxWidth().padding(8.dp)) {
                             Row() {
                                 Text(
-                                    //text = chats[invertedPosition.toString()]?.sender.toString(),
-                                    text = chats[chat.toString()]?.sender.toString(),
+                                    text = chats[chatKey]?.sender.toString(),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = Color.Black,
@@ -210,8 +193,7 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
                                         .align(CenterVertically)
                                 )
                                 Text(
-                                    //text = chats[invertedPosition.toString()]?.date.toString(),
-                                    text = chats[chat.toString()]?.date.toString(),
+                                    text = chats[chatKey]?.date.toString(),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = Color.Gray,
@@ -221,8 +203,7 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
                                 )
                             }
                             Text(
-                                //text = chats[invertedPosition.toString()]?.message.toString(),
-                                text = message,
+                                text = chats[chatKey]?.message.toString(),
                                 fontSize = 20.sp,
                                 color = BraveGreen,
                                 modifier = Modifier
@@ -237,16 +218,18 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
                                         builder.setMessage("Are you sure you want to report this user?")
                                         builder.setPositiveButton("REPORT") { dialog, which ->
                                             CoroutineScope(Dispatchers.IO).launch {
-                                                val call = getRetrofit()
-                                                    .create(APIService::class.java)
-                                                    .sendReport(
-                                                        "Bearer " + tokenState.token,
-                                                        "gardens/$garden/profile/report/$message",
-                                                        garden = garden,
-                                                        message = message
-                                                    )
+                                                val call = chatKey?.let {
+                                                    getRetrofit()
+                                                        .create(APIService::class.java)
+                                                        .sendReport(
+                                                            "Bearer " + tokenState.token,
+                                                            "gardens/$garden/profile/report/$chatKey",
+                                                            garden = garden,
+                                                            message = it
+                                                        )
+                                                }
 
-                                                val eBody = call.errorBody()
+                                                val eBody = call!!.errorBody()
                                                 if (!call.isSuccessful) {
                                                     //ERROR MESSAGES, IF ANY
                                                     openDialog.value = true
