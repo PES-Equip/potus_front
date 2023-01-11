@@ -68,13 +68,17 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
         }
         composable(route = ProfileScreen.route) {
             ProfileScreen(
-                    onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                    onNavigateToAuth = { navController.navigate(AuthScreen.route) },
-                    onNavigateToHistory = { navController.navigate(HistoryScreen.route) }
+                onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                onNavigateToAuth = { navController.navigate(AuthScreen.route) },
+                onNavigateToHistory = { navController.navigate(HistoryScreen.route) },
+                onNavigateToTrophies = { navController.navigate(TrophiesScreen.route) }
             )
         }
         composable(HistoryScreen.route) {
             HistoryScreen(onNavigateToProfile = { navController.navigate(ProfileScreen.route) })
+        }
+        composable(TrophiesScreen.route) {
+            TrophiesScreen { navController.navigate(ProfileScreen.route) }
         }
         composable(route = SelectGardenScreen.route) {
             SelectGardenScreen(
