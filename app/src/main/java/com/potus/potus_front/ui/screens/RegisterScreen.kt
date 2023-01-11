@@ -101,9 +101,6 @@ fun RegisterScreen(onNavigateToHome: () -> Unit) {
                             //Timber.d("BAD")
                         }
                     }
-
-
-
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen),
                 modifier = Modifier
@@ -140,8 +137,6 @@ fun RegisterScreen(onNavigateToHome: () -> Unit) {
                 )
             }
         }
-
-
     }
 }
 /*
