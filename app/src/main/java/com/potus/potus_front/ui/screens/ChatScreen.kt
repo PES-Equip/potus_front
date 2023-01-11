@@ -1,9 +1,11 @@
 package com.potus.potus_front.ui.screens
 
 import android.widget.Toast
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -42,7 +44,7 @@ import java.util.*
 
 
 @Composable
-fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  onNavigateToChat: () -> Unit, onNavigateToMeetings: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
+fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, onNavigateToMeetings: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val actionString = remember { mutableStateOf("")  }
 
@@ -50,9 +52,8 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
     val user = tokenState.user!!.user
     val garden = user.garden_info?.garden?.name.toString()
 
-    // test -> user garden id room = garden id
-    val room = "test"
-    val chatListener: ChatListener = ChatListener(user.username)
+    val room = user.garden_info?.garden?.id.toString() //"test"
+    val chatListener = ChatListener(user.username)
     val topicHandler: TopicHandler = chatListener.subscribe("/chatroom/$room")
 
     val message = remember { mutableStateOf("")  }
@@ -61,17 +62,6 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
 
     chatListener.connect(StompMessageSerializer.url)
     val historicChat = remember { mutableStateOf<List<ChatResponse>>(listOf()) }
-    /*val chats = mutableMapOf<String,ChatMessage>(
-        "0" to ChatMessage("Spartacus 0", "Hello!", "JOIN", "10/01/2023"),
-        "1" to ChatMessage("Spartacus 1", "Hello!", "JOIN", "10/01/2023"),
-        "2" to ChatMessage("Spartacus 2", "Hello!", "JOIN", "10/01/2023"),
-        "3" to ChatMessage("Spartacus 3", "Hello!", "JOIN", "10/01/2023"),
-        "4" to ChatMessage("Spartacus 4", "Hello!", "JOIN", "10/01/2023"),
-        "5" to ChatMessage("Spartacus 5", "Hello!", "JOIN", "10/01/2023"),
-        "6" to ChatMessage("Spartacus 6", "Hello!", "JOIN", "10/01/2023"),
-        "7" to ChatMessage("Spartacus 7", "Hello!", "JOIN", "10/01/2023"),
-        "8" to ChatMessage("Spartacus 8", "Hello!", "JOIN", "10/01/2023"),
-        "9" to ChatMessage("Spartacus 9", "Hello!", "JOIN", "10/01/2023"))*/
 
     LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()
@@ -99,16 +89,16 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
     val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     var i = 0
     historicChat.value.forEach { chatResponse ->
-        chats += i.toString() to ChatMessage(sender = chatResponse.sender.username, message = chatResponse.message, "MESSAGE", date = dateFormat.format(chatResponse.date).toString())
+        //if (chatResponse.message != "")
+            chats += i.toString() to ChatMessage(sender = chatResponse.sender.username, message = chatResponse.message, "MESSAGE", date = dateFormat.format(chatResponse.date).toString())
         i += 1
     }
-    println(chats)
 
     val sml : StompMessageListener = object : StompMessageListener {
         override fun onMessage(message: StompMessage) {
             StompMessageSerializer.handleMessage(message,chats)
-            }
         }
+    }
     topicHandler.addListener(sml)
 
     chatListener.connect(StompMessageSerializer.url)
@@ -124,7 +114,7 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
         )
         Column (modifier = Modifier.weight(1f)) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 OutlinedTextField(
@@ -170,21 +160,20 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
 
                             chats += chats.size.toString() to ChatMessage(sender = user.username, message = message.value, "MESSAGE", Date().time.toString())
                         }
-                        //onNavigateToChat()
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                     modifier = Modifier
                         .weight(0.25f)
                         .height(80.dp)
                         .padding(8.dp)
-                        .align(Alignment.CenterVertically),
+                        .align(CenterVertically),
                     shape = MaterialTheme.shapes.medium
                 ) {
                     Text("SEND")
                 }
             }
 
-            //FALTA: ORDRE LÒGIC I DATA LLEGIBLE (+ SCROLL SI DONA TEMPS)
+            val popUpContext = LocalContext.current
 
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
@@ -193,13 +182,17 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                 //reverseLayout = true
             ) {
                 items(chats.size) { chat ->
+                    var toggled by remember { mutableStateOf(false) }
+                    val message = chats[chat.toString()]?.message.toString()
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
                             .defaultMinSize(minHeight = 64.dp)
                             .clip(RoundedCornerShape(10.dp))
-                            .background(Daffodil),
+                            .background(Daffodil)
+                            .toggleable(value = toggled, onValueChange = { toggled = it })
+                            .animateContentSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -229,13 +222,55 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                             }
                             Text(
                                 //text = chats[invertedPosition.toString()]?.message.toString(),
-                                text = chats[chat.toString()]?.message.toString(),
+                                text = message,
                                 fontSize = 20.sp,
                                 color = BraveGreen,
                                 modifier = Modifier
                                     .padding(start = 8.dp)
                                     .align(Alignment.Start)
                             )
+                            if (toggled) {
+                                Button(
+                                    onClick = {
+                                        val builder = android.app.AlertDialog.Builder(popUpContext)
+                                        builder.setTitle("REPORT USER")
+                                        builder.setMessage("Are you sure you want to report this user?")
+                                        builder.setPositiveButton("REPORT") { dialog, which ->
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                val call = getRetrofit()
+                                                    .create(APIService::class.java)
+                                                    .sendReport(
+                                                        "Bearer " + tokenState.token,
+                                                        "gardens/$garden/profile/report/$message",
+                                                        garden = garden,
+                                                        message = message
+                                                    )
+
+                                                val eBody = call.errorBody()
+                                                if (!call.isSuccessful) {
+                                                    //ERROR MESSAGES, IF ANY
+                                                    openDialog.value = true
+                                                    if (eBody != null) {
+                                                        actionString.value = JSONObject(eBody.string()).getString("message")
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        builder.setNegativeButton("CANCEL") { dialog, which ->
+                                            dialog.dismiss()
+                                        }
+                                        val dialog = builder.create()
+                                        dialog.show()
+                                    },
+                                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                    shape = MaterialTheme.shapes.medium
+                                ) {
+                                    Text(text = "REPORT USER", color = Color.White)
+                                }
+                            }
                         }
                     }
                 }

@@ -68,6 +68,9 @@ interface APIService {
     @POST
     suspend fun sendChatMessage(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden : String, @Query("message") message : String): Response<ChatResponse>
 
+    @POST
+    suspend fun sendReport(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden : String, @Query("message") message : String): Response<ReportResponse>
+
     @PUT
     suspend fun joinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenResponse>
 
