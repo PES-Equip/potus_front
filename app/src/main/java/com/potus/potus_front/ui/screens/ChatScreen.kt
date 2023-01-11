@@ -1,5 +1,6 @@
 package com.potus.potus_front.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,10 +11,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.potus.potus_front.API.APIService
+import com.potus.potus_front.API.getRetrofit
+import com.potus.potus_front.API.requests.ChangeMemberRoleRequest
+import com.potus.potus_front.API.response.ChatResponse
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.GardenBottomBar
 import com.potus.potus_front.composables.TopBar
@@ -27,6 +33,11 @@ import com.potus.potus_front.websocket.StompMessageSerializer
 import com.potus.potus_front.websocket.TopicHandler
 import com.potus.potus_front.websocket.model.ChatMessage
 import com.potus.potus_front.websocket.socketclient.ChatListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.util.*
 
 
 @Composable
@@ -36,6 +47,7 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
+    val garden = user.garden_info?.garden?.name.toString()
 
     // test -> user garden id room = garden id
     val room = "test"
@@ -47,7 +59,8 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
     StompMessageSerializer.joinChat(user.username, room)
 
     chatListener.connect(StompMessageSerializer.url)
-    val chats = mutableMapOf<String,ChatMessage>(
+    val historicChat = remember { mutableStateOf<List<ChatResponse>>(listOf()) }
+    /*val chats = mutableMapOf<String,ChatMessage>(
         "0" to ChatMessage("Spartacus 0", "Hello!", "JOIN", "10/01/2023"),
         "1" to ChatMessage("Spartacus 1", "Hello!", "JOIN", "10/01/2023"),
         "2" to ChatMessage("Spartacus 2", "Hello!", "JOIN", "10/01/2023"),
@@ -57,15 +70,41 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
         "6" to ChatMessage("Spartacus 6", "Hello!", "JOIN", "10/01/2023"),
         "7" to ChatMessage("Spartacus 7", "Hello!", "JOIN", "10/01/2023"),
         "8" to ChatMessage("Spartacus 8", "Hello!", "JOIN", "10/01/2023"),
-        "9" to ChatMessage("Spartacus 9", "Hello!", "JOIN", "10/01/2023"))
+        "9" to ChatMessage("Spartacus 9", "Hello!", "JOIN", "10/01/2023"))*/
+
+    LaunchedEffect(Dispatchers.IO) {
+        val call = getRetrofit()
+            .create(APIService::class.java)
+            .getHistoricChat(
+                "Bearer " + tokenState.token,
+                "gardens/$garden/chats",
+                garden = garden,
+                page = 0
+            )
+
+        val eBody = call.errorBody()
+        if (call.isSuccessful) {
+            call.body()?.let { historicChat.value = it }
+        } else {
+            //ERROR MESSAGES, IF ANY
+            openDialog.value = true
+            if (eBody != null) {
+                actionString.value = JSONObject(eBody.string()).getString("message")
+            }
+        }
+    }
+
+    val chats = mutableMapOf<String,ChatMessage>()
+    var i = 0
+    historicChat.value.forEach { chatResponse ->
+        chats += i.toString() to ChatMessage(sender = chatResponse.sender.username, message = chatResponse.message, "MESSAGE", chatResponse.date.toString())
+        i += 1
+    }
+    println(chats)
 
     val sml : StompMessageListener = object : StompMessageListener {
         override fun onMessage(message: StompMessage) {
             StompMessageSerializer.handleMessage(message,chats)
-
-            //println("------")
-            //println(chats)
-            //println("------")
             }
         }
     topicHandler.addListener(sml)
@@ -97,14 +136,38 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                 )
                 Button(
                     onClick = {
-                        if (message.value != "") {
+                        val letter = message.value
+                        if (letter != "") {
                             StompMessageSerializer.sendMessage(
-                                message = message.value,
+                                message = letter,
                                 user.username,
                                 room
                             )
+
+                            CoroutineScope(Dispatchers.IO).launch {
+                                val call = getRetrofit()
+                                    .create(APIService::class.java)
+                                    .sendChatMessage(
+                                        "Bearer " + tokenState.token,
+                                        "gardens/$garden/chat/$letter",
+                                        garden = garden,
+                                        message = letter
+                                    )
+
+                                val eBody = call.errorBody()
+                                if (call.isSuccessful) {
+                                    call.body()?.let { historicChat.value += it }
+                                } else {
+                                    //ERROR MESSAGES, IF ANY
+                                    openDialog.value = true
+                                    if (eBody != null) {
+                                        actionString.value = JSONObject(eBody.string()).getString("message")
+                                    }
+                                }
+                            }
+
+                            chats += chats.size.toString() to ChatMessage(sender = user.username, message = message.value, "MESSAGE", Date().toString())
                         }
-                        //chats += chats.size.toString() to ChatMessage("Them", "Hello!", "JOIN", "10/01/2023")
                         //onNavigateToChat()
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
@@ -121,8 +184,8 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                reverseLayout = true
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+                //reverseLayout = true
             ) {
                 items(chats.size) { chat ->
                     Column(
@@ -135,11 +198,11 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        val invertedPosition = chats.size - chat - 1
+                        //val invertedPosition = chats.size - chat - 1
                         Column (modifier = Modifier.fillMaxWidth().padding(8.dp)) {
                             Text(
-                                text = chats[invertedPosition.toString()]?.sender.toString(),
-                                //text = chats[chat.toString()]?.sender.toString(),
+                                //text = chats[invertedPosition.toString()]?.sender.toString(),
+                                text = chats[chat.toString()]?.sender.toString(),
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black,
@@ -148,8 +211,8 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                                     .align(Alignment.Start)
                             )
                             Text(
-                                text = chats[invertedPosition.toString()]?.message.toString(),
-                                //text = chats[chat.toString()]?.message.toString(),
+                                //text = chats[invertedPosition.toString()]?.message.toString(),
+                                text = chats[chat.toString()]?.message.toString(),
                                 fontSize = 20.sp,
                                 color = BraveGreen,
                                 modifier = Modifier
@@ -160,6 +223,10 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                     }
                 }
             }
+        }
+        if (openDialog.value) {
+            Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_SHORT).show()
+            openDialog.value = false
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_meetings), onNavigateToMeetings, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_jardi), onNavigateToGarden)
     }
