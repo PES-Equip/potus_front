@@ -32,6 +32,7 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, 
     var addedWater by remember { mutableStateOf(0) }
     var addedLeaves by remember { mutableStateOf(0) }
     var plantState by remember { mutableStateOf("DEFAULT") }
+    var toggleText by remember { mutableStateOf(true) }
     //var thematicEvent by remember { mutableStateOf("DEFAULT") }
 
     LaunchedEffect(Dispatchers.IO) {
@@ -63,10 +64,10 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, 
             addedLeaves = addedLeaves,
             onNavigateToProfile = { onNavigateToProfile() }
         )
-        GasesWindow()
+        GasesWindow(onToggleText = { toggleText = !(toggleText) })
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
             //CenterArea(thematicEvent, plantState)
-            CenterArea(plantState)
+            CenterArea(plantState, toggleText)
         }
         BottomBar(
             updateWaterLevel = { newWaterLevel ->

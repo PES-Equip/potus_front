@@ -38,11 +38,11 @@ import java.util.*
 fun HistoryScreen(onNavigateToProfile: () -> Unit) {
     val openDialog = remember { mutableStateOf(false) }
     val error = remember { mutableStateOf("") }
-    var anyPotusDead = remember { mutableStateOf(true) }
+    val anyPotusDead = remember { mutableStateOf(true) }
 
     val user = TokenState.current.user!!.user
 
-    var histEntries = remember {
+    val histEntries = remember {
         mutableStateOf(listOf(HistoryResponse(createdDate = Date(22/11/2022), deathDate = Date(24/11/2022), ""))) }
 
     val tokenState = TokenState.current
@@ -60,8 +60,7 @@ fun HistoryScreen(onNavigateToProfile: () -> Unit) {
             }
             else { anyPotusDead.value = false }
         } else {
-            //ERROR MESSAGES, IF ANY
-            var jObjErr = call.errorBody()?.string()?.let { JSONObject(it) }
+            val jObjErr = call.errorBody()?.string()?.let { JSONObject(it) }
             if (jObjErr != null) {
                 error.value = jObjErr.getString("message")
             }
@@ -71,14 +70,16 @@ fun HistoryScreen(onNavigateToProfile: () -> Unit) {
 
     Column(Modifier.background(color = EarthBrown)) {
         TopBar(
-            waterLevel = user.potus.waterLevel, //waterLevelState,
-            collection = user.currency, //collection,
-            username = "Mr. Simon", //user.username,
-            addedWater = 0, //addedWater,
-            addedLeaves = 0, //addedLeaves
+            waterLevel = user.potus.waterLevel,
+            collection = user.currency,
+            username = "Mr. Simon",
+            addedWater = 0,
+            addedLeaves = 0,
             onNavigateToProfile = { onNavigateToProfile() }
         )
+        Spacer(modifier = Modifier.weight(0.1f))
         Historial(entries = histEntries.value, anyPotusDead.value)
+        Spacer(modifier = Modifier.weight(0.1f))
     }
 
     if (openDialog.value) {
@@ -97,32 +98,38 @@ fun Historial(entries: List<HistoryResponse>, print: Boolean) {
             contentPadding = PaddingValues(16.dp),
             horizontalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            //var entries = arrayListOf<String>("Mr.Simon", "Mr.Simon the II", "Mr.Simon the III")
             items(entries.size) { arrayItem ->
                 RowItem(item = entries[arrayItem])
             }
         }
     }
     else {
-        Surface(
-            color = GraveStoneGray,
-            modifier = Modifier.clip(RoundedCornerShape(16.dp))) {
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .padding(all = 16.dp)
-            ) {
-                Text(
-                    text = "No Dead Potus Found",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center),
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic,
-                    textAlign = TextAlign.Center,
-                    color = Color.DarkGray
-                )
+        Column {
+            Spacer(modifier = Modifier.weight(0.1f))
+            Surface(
+                color = GraveStoneGray,
+                modifier = Modifier
+                    .weight(0.8f)
+                    .padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(16.dp))) {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(all = 16.dp)
+                ) {
+                    Text(
+                        text = "No Dead Potus Found",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Center),
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Italic,
+                        textAlign = TextAlign.Center,
+                        color = Color.DarkGray
+                    )
+                }
             }
+            Spacer(modifier = Modifier.weight(0.1f))
         }
     }
 }
@@ -131,7 +138,7 @@ fun Historial(entries: List<HistoryResponse>, print: Boolean) {
 fun RowItem(item: HistoryResponse) {
     Surface(
         color = GraveStoneGray,
-        modifier = Modifier.clip(RoundedCornerShape(16.dp))) {
+        modifier = Modifier.clip(RoundedCornerShape(16.dp)).padding(horizontal = 16.dp)) {
         LazyColumn(modifier = Modifier
             .fillMaxHeight()
             .width(360.dp)
@@ -142,7 +149,7 @@ fun RowItem(item: HistoryResponse) {
                         .fillMaxWidth()
                         .padding(all = 16.dp)
                 ) {
-                    CenterArea(plantState = "DEFAULT")
+                    CenterArea(plantState = "DEFAULT", true)
                 }
                 Text(
                     text = item.name,
@@ -153,7 +160,6 @@ fun RowItem(item: HistoryResponse) {
                     fontStyle = FontStyle.Italic,
                     textAlign = TextAlign.Center
                 )
-
                 Text(
                     text = "Adoption Date: " + item.createdDate + "\n\n"
                             + "Death Date: " + item.deathDate,

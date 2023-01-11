@@ -2,7 +2,7 @@ package com.potus.potus_front.composables
 
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,25 +13,20 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.runtime.*
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,15 +35,8 @@ import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ActionRequest
 import com.potus.potus_front.R
 import com.potus.potus_front.google.models.TokenState
-import com.potus.potus_front.ui.theme.BraveGreen
-import com.potus.potus_front.ui.theme.Daffodil
-import com.potus.potus_front.ui.theme.SoothingGreen
-import kotlinx.coroutines.*
 import com.potus.potus_front.ui.theme.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
@@ -129,7 +117,7 @@ fun TopBar(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun GasesWindow() {
+fun GasesWindow(onToggleText: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -167,7 +155,10 @@ fun GasesWindow() {
                 .width(360.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(color = Daffodil)
-                .toggleable(value = toggled, onValueChange = { toggled = it })
+                .toggleable(value = toggled, onValueChange = {
+                    toggled = it
+                    onToggleText()
+                })
                 .animateContentSize(),
             verticalArrangement = Arrangement.Center,
             horizontalArrangement = Arrangement.Center,
@@ -218,7 +209,7 @@ fun GasesWindow() {
 
 @Composable
 //fun CenterArea(thematicEvent:String, plantState:String) {
-fun CenterArea(plantState:String) {
+fun CenterArea(plantState:String, textDisplay:Boolean) {
     //val plant = PlantEvents(plantState)
     //val test = ThematicEvents(thematicEvent)
     val overallState = JoinedEvents(plantState)
@@ -232,7 +223,8 @@ fun CenterArea(plantState:String) {
     ) {
         //Spacer(modifier = Modifier.height(16.dp))
         Box(modifier = Modifier
-            .align(Alignment.CenterHorizontally))
+            .align(Alignment.CenterHorizontally)
+            .weight(0.8f))
         {
             Image(
                 painter = test,
@@ -257,11 +249,20 @@ fun CenterArea(plantState:String) {
                         .align(Alignment.Center)
                 )
             }
-            Text(
-                modifier = Modifier.align(BottomCenter),
-                text = TokenState.current.user?.user?.potus?.name.toString(), fontWeight = FontWeight.Bold, fontSize = 30.sp, color = BraveGreen, textAlign = TextAlign.Center
-            )
         }
+        if(textDisplay){
+            Box(modifier = Modifier.weight(0.125f)){
+                Text(
+                    modifier = Modifier.align(BottomCenter),
+                    text = TokenState.current.user?.user?.potus?.name.toString(),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    color = BraveGreen,
+                    textAlign = Center
+                )
+            }
+        }
+        Spacer(modifier = Modifier.weight(0.075f))
     }
 }
 
@@ -276,8 +277,7 @@ fun BottomBar(
     val heightBottomBar = 192.dp
     val heightCircle = 125.dp
     val heightTotal = heightBottomBar+heightCircle/2
-    val heightButton = 125.dp
-    val widthButton = 140.dp
+    val heightButton = (heightBottomBar.value * 0.7).dp
 
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = ""
@@ -306,7 +306,7 @@ fun BottomBar(
                     modifier = Modifier
                         .padding(start = 8.dp)
                         .align(Alignment.CenterVertically)
-                        .width(widthButton)
+                        .weight(0.25f)
                         .height(heightButton)
                         .clip(RoundedCornerShape(10.dp))
                 ) {
@@ -330,7 +330,11 @@ fun BottomBar(
                                     val Ebody = call.errorBody()
                                     if (call.isSuccessful) {
                                         tokenState.signUser(body)
-                                        tokenState.user?.user?.currency?.let { updateLeaveRecollection(it) }
+                                        tokenState.user?.user?.currency?.let {
+                                            updateLeaveRecollection(
+                                                it
+                                            )
+                                        }
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
@@ -348,13 +352,13 @@ fun BottomBar(
                     Toast.makeText(LocalContext.current, actionString, Toast.LENGTH_SHORT).show()
                     openDialog.value = false
                 }
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(0.25f))
                 Surface(
                     color = SoothingGreen,
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .align(Alignment.CenterVertically)
-                        .width(widthButton)
+                        .weight(0.25f)
                         .height(heightButton)
                         .clip(RoundedCornerShape(10.dp))
                 ) {
@@ -376,14 +380,14 @@ fun BottomBar(
                                             newUpdateActionRequest
                                         )
 
-                                    val Ebody = call.errorBody()
+                                    val ebody = call.errorBody()
                                     if (call.isSuccessful) {
                                         tokenState.signUser(call.body())
                                         tokenState.user?.user?.potus?.let { updateWaterLevel(it.waterLevel) }
                                     } else {
                                         openDialog.value = true
-                                        if (Ebody != null) {
-                                            val jObjErr = JSONObject(Ebody.string())
+                                        if (ebody != null) {
+                                            val jObjErr = JSONObject(ebody.string())
                                             actionString = jObjErr.getString("message")
                                         }
                                     }
@@ -409,10 +413,12 @@ fun BottomBar(
                     .clickable(onClick = {
 
                         CoroutineScope(Dispatchers.IO).launch {
-                            val call = getRetrofit().create(APIService::class.java)
+                            val call = getRetrofit()
+                                .create(APIService::class.java)
                                 .getUser(
                                     "Bearer " + tokenState.token,
-                                    "user/profile")
+                                    "user/profile"
+                                )
 
                             if (call.isSuccessful) {
                                 tokenState.signUser(call.body())
@@ -466,7 +472,7 @@ fun GardenBottomBar(
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .align(Alignment.CenterVertically)
-                            .width(widthButton)
+                            .weight(0.3f)
                             .height(heightButton)
                             .clip(RoundedCornerShape(10.dp))
                     ) {
@@ -480,13 +486,13 @@ fun GardenBottomBar(
                                 .align(Alignment.CenterVertically)
                         )
                     }
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(0.5f))
                     Surface(
                         color = SoothingGreen,
                         modifier = Modifier
                             .padding(end = 8.dp)
                             .align(Alignment.CenterVertically)
-                            .width(widthButton)
+                            .weight(0.3f)
                             .height(heightButton)
                             .clip(RoundedCornerShape(10.dp))
                     ) {
@@ -505,7 +511,11 @@ fun GardenBottomBar(
             Surface(
                 color = BraveGreen,
                 modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp, bottom = (heightBottomBar - heightCircle / 2))
+                    .padding(
+                        start = 10.dp,
+                        end = 10.dp,
+                        bottom = (heightBottomBar - heightCircle / 2)
+                    )
                     .align(Alignment.TopCenter)
                     .size(heightCircle)
                     .clip(CircleShape)
@@ -516,10 +526,11 @@ fun GardenBottomBar(
                     modifier = Modifier
                         .clickable(onClick = { onNavigateToCenter() })
                         .padding(8.dp)
-                        .size(heightCircle - 32.dp)
+                        .fillMaxSize()
                         .align(Alignment.Center)
                         .clip(CircleShape)
-                        .background(color = SoothingGreen))
+                        .background(color = SoothingGreen)
+                        )
             }
         }
 }

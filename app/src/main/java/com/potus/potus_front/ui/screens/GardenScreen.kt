@@ -146,7 +146,7 @@ fun MemberItem(member: SimplifiedGardenMember, onNavigateToGarden: () -> Unit) {
                     .size(64.dp)
                     .align(CenterVertically)
                     .padding(start = 8.dp)
-            ) { CenterArea(randomAvatar) }
+            ) { CenterArea(randomAvatar, false) }
             if (!toggled) {
                 Text(
                     text = username,
