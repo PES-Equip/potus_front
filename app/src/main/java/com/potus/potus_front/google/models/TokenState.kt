@@ -56,7 +56,7 @@ class TokenStateViewModel: ViewModel(){
 
     fun myGarden(garden: NewGardenResponse?){
         if (garden != null) {
-            this.user?.user?.garden_info = UserGardenInfo(garden = garden, role = "OWNER")
+            this.user?.user?.garden_info = UserGardenInfo(createdDate = Date(), garden = garden, role = "OWNER")
         }
     }
 

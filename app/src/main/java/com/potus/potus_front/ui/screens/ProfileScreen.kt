@@ -1,35 +1,23 @@
 package com.potus.potus_front.ui.screens
-import android.net.Uri
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.potus.potus_front.composables.TopBar
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavController
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ChangeUsernameRequest
 import com.potus.potus_front.API.requests.DeleteAccountRequest
-import com.potus.potus_front.API.requests.RegisterUserRequest
-import com.potus.potus_front.MainActivity
-import com.potus.potus_front.R
 import com.potus.potus_front.composables.CenterArea
 import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
@@ -79,6 +67,7 @@ fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit, on
         ) {
             Button(
                 onClick = {
+                    notification.value = "Cancelled"
                     onNavigateToHome()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
@@ -118,7 +107,7 @@ fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit, on
             }
         }
 
-        CenterArea(plantState)
+        CenterArea(plantState = plantState, textDisplay = true)
 
         Row(
             modifier = Modifier
@@ -166,7 +155,7 @@ fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit, on
         ) {
             Text(text = "See Potus Memorial")
         }
-        
+
         Spacer(modifier = Modifier.height(64.dp))
 
         Button(

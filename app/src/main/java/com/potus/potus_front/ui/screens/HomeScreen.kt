@@ -21,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 
 
 @Composable
-fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToSelection: () -> Unit, onNavigateToShop: () -> Unit) {
+fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToSelection: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -31,7 +31,8 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, 
     var collection by remember { mutableStateOf(user.currency) }
     var addedWater by remember { mutableStateOf(0) }
     var addedLeaves by remember { mutableStateOf(0) }
-    var plantState by remember { mutableStateOf(    "DEFAULT") }
+    var plantState by remember { mutableStateOf("DEFAULT") }
+    var toggleText by remember { mutableStateOf(true) }
     //var thematicEvent by remember { mutableStateOf("DEFAULT") }
 
     LaunchedEffect(Dispatchers.IO) {
@@ -61,13 +62,12 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, 
             username = user.username,
             addedWater = addedWater,
             addedLeaves = addedLeaves,
-            onNavigateToProfile = { onNavigateToProfile() },
-            onNavigateToShop = { onNavigateToShop()}
+            onNavigateToProfile = { onNavigateToProfile() }
         )
-        GasesWindow()
+        GasesWindow(onToggleText = { toggleText = !(toggleText) })
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
             //CenterArea(thematicEvent, plantState)
-            CenterArea(plantState)
+            CenterArea(plantState, toggleText)
         }
         BottomBar(
             updateWaterLevel = { newWaterLevel ->

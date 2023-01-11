@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -48,34 +49,42 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
             onNavigateToShop = { onNavigateToShop()}
 
         )
-        Column(modifier = Modifier.weight(1f).background(color = Daffodil)) {
+        Column(modifier = Modifier
+            .weight(1f)
+            .background(color = Daffodil)) {
             val newGardenName = remember { mutableStateOf(TextFieldValue()) }
 
-            Spacer(modifier = Modifier.size(96.dp))
-            Image(
-                painter = painterResource(id = R.drawable.icona_nou_jardi), "",
-                modifier = Modifier
-                    .size(180.dp)
-                    .align(CenterHorizontally)
-            )
-            Spacer(modifier = Modifier.size(64.dp))
+            Spacer(modifier = Modifier.weight(0.2f))
+            Box(modifier = Modifier
+                .weight(0.45f)
+                .align(CenterHorizontally)){
+                Image(
+                    painter = painterResource(id = R.drawable.icona_nou_jardi), "",
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+            }
+            Spacer(modifier = Modifier.weight(0.15f))
             OutlinedTextField(
                 value = newGardenName.value,
                 onValueChange = { newGardenName.value = it },
                 label = { Text(text = "Your New Garden's Name") },
                 leadingIcon = {
                     Icon(
-                        modifier = Modifier.size(50.dp),
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(start = 8.dp),
                         painter = painterResource(id = R.drawable.icona_jardi),
                         contentDescription = null
                     )
                 },
                 modifier = Modifier
+                    .weight(0.175f)
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 shape = MaterialTheme.shapes.medium
             )
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.weight(0.075f))
             Button(
                 onClick = {
                     GlobalScope.launch(Dispatchers.IO) {
@@ -105,7 +114,7 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                 colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                 modifier = Modifier
                     .width(240.dp)
-                    .height(80.dp)
+                    .weight(0.25f)
                     .padding(16.dp)
                     .align(CenterHorizontally),
                 shape = MaterialTheme.shapes.medium
@@ -121,6 +130,7 @@ fun CreateGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -
                 openDialog.value = false
             }
         }
+        Spacer(modifier = Modifier.weight(0.025f))
         GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), onNavigateToInvitations, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_seleccio_jardi), onNavigateToSelection)
     }
 }
