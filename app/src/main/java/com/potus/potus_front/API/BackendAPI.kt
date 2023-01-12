@@ -105,8 +105,8 @@ interface APIService {
 
 fun getRetrofit(): Retrofit {
     return Retrofit.Builder()
-        //.baseUrl("https://potusback-production-b295.up.railway.app/api/")
-        .baseUrl("http://10.0.2.2:8080/api/")
+        .baseUrl("https://potusback-production.up.railway.app/api/")
+        //.baseUrl("http://10.0.2.2:8080/api/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 }

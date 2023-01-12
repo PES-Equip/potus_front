@@ -55,8 +55,9 @@ fun HistoryScreen(onNavigateToProfile: () -> Unit) {
             )
 
         if (call.isSuccessful) {
-            if (call.body()?.size!! > 0) {
+            if (call.body()?.isNotEmpty()!!) {
                 histEntries.value = call.body()!!
+                anyPotusDead.value = true
             }
             else { anyPotusDead.value = false }
         } else {
@@ -155,7 +156,7 @@ fun RowItem(item: HistoryResponse) {
                     text = item.name,
                     modifier = Modifier
                         .fillMaxWidth(),
-                    fontSize = 50.sp,
+                    fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Italic,
                     textAlign = TextAlign.Center
@@ -166,7 +167,7 @@ fun RowItem(item: HistoryResponse) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 64.dp, start = 32.dp, end = 32.dp),
-                    fontSize = 25.sp,
+                    fontSize = 15.sp,
                     fontStyle = FontStyle.Italic,
                     textAlign = TextAlign.Center
                 )
