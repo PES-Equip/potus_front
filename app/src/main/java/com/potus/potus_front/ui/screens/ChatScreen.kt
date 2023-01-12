@@ -1,9 +1,12 @@
 package com.potus.potus_front.ui.screens
 
+import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -42,17 +45,16 @@ import java.util.*
 
 
 @Composable
-fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  onNavigateToChat: () -> Unit, onNavigateToMeetings: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
-    val openDialog = remember { mutableStateOf(false)  }
-    val actionString = remember { mutableStateOf("")  }
+fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, onNavigateToMeetings: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
+    val openDialog = remember { mutableStateOf(false) }
+    val actionString = remember { mutableStateOf("") }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
     val garden = user.garden_info?.garden?.name.toString()
 
-    // test -> user garden id room = garden id
-    val room = "test"
-    val chatListener: ChatListener = ChatListener(user.username)
+    val room = user.garden_info?.garden?.id.toString()
+    val chatListener = ChatListener(user.username)
     val topicHandler: TopicHandler = chatListener.subscribe("/chatroom/$room")
 
     val message = remember { mutableStateOf("")  }
@@ -60,18 +62,11 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
     StompMessageSerializer.joinChat(user.username, room)
 
     chatListener.connect(StompMessageSerializer.url)
-    val historicChat = remember { mutableStateOf<List<ChatResponse>>(listOf()) }
-    /*val chats = mutableMapOf<String,ChatMessage>(
-        "0" to ChatMessage("Spartacus 0", "Hello!", "JOIN", "10/01/2023"),
-        "1" to ChatMessage("Spartacus 1", "Hello!", "JOIN", "10/01/2023"),
-        "2" to ChatMessage("Spartacus 2", "Hello!", "JOIN", "10/01/2023"),
-        "3" to ChatMessage("Spartacus 3", "Hello!", "JOIN", "10/01/2023"),
-        "4" to ChatMessage("Spartacus 4", "Hello!", "JOIN", "10/01/2023"),
-        "5" to ChatMessage("Spartacus 5", "Hello!", "JOIN", "10/01/2023"),
-        "6" to ChatMessage("Spartacus 6", "Hello!", "JOIN", "10/01/2023"),
-        "7" to ChatMessage("Spartacus 7", "Hello!", "JOIN", "10/01/2023"),
-        "8" to ChatMessage("Spartacus 8", "Hello!", "JOIN", "10/01/2023"),
-        "9" to ChatMessage("Spartacus 9", "Hello!", "JOIN", "10/01/2023"))*/
+
+    //val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss 'CET' yyyy", Locale.ENGLISH)
+    val chats = remember { mutableMapOf<String, ChatMessage>() }
+    val ids = remember { mutableMapOf<String, String>() }
 
     LaunchedEffect(Dispatchers.IO) {
         val call = getRetrofit()
@@ -85,7 +80,21 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
 
         val eBody = call.errorBody()
         if (call.isSuccessful) {
-            call.body()?.let { historicChat.value = it }
+            call.body()?.let {
+                var i = 0
+                it.forEach { chatResponse ->
+                    if (chatResponse.status == "MESSAGE") {
+                        chats += chatResponse.id to ChatMessage(
+                            sender = chatResponse.sender.username,
+                            message = chatResponse.message,
+                            "MESSAGE",
+                            date = dateFormat.format(chatResponse.date).toString()
+                        )
+                        ids += i.toString() to chatResponse.id
+                        i += 1
+                    }
+                }
+            }
         } else {
             //ERROR MESSAGES, IF ANY
             openDialog.value = true
@@ -95,20 +104,11 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
         }
     }
 
-    val chats = mutableMapOf<String,ChatMessage>()
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-    var i = 0
-    historicChat.value.forEach { chatResponse ->
-        chats += i.toString() to ChatMessage(sender = chatResponse.sender.username, message = chatResponse.message, "MESSAGE", date = dateFormat.format(chatResponse.date).toString())
-        i += 1
-    }
-    println(chats)
-
     val sml : StompMessageListener = object : StompMessageListener {
         override fun onMessage(message: StompMessage) {
-            StompMessageSerializer.handleMessage(message,chats)
-            }
+            StompMessageSerializer.handleMessage(message, chats, ids)
         }
+    }
     topicHandler.addListener(sml)
 
     chatListener.connect(StompMessageSerializer.url)
@@ -124,7 +124,7 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
         )
         Column (modifier = Modifier.weight(1f)) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 OutlinedTextField(
@@ -145,97 +145,123 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit,  o
                                 user.username,
                                 room
                             )
-
-                            CoroutineScope(Dispatchers.IO).launch {
-                                val call = getRetrofit()
-                                    .create(APIService::class.java)
-                                    .sendChatMessage(
-                                        "Bearer " + tokenState.token,
-                                        "gardens/$garden/chat/$letter",
-                                        garden = garden,
-                                        message = letter
-                                    )
-
-                                val eBody = call.errorBody()
-                                if (call.isSuccessful) {
-                                    call.body()?.let { historicChat.value += it }
-                                } else {
-                                    //ERROR MESSAGES, IF ANY
-                                    openDialog.value = true
-                                    if (eBody != null) {
-                                        actionString.value = JSONObject(eBody.string()).getString("message")
-                                    }
-                                }
-                            }
-
-                            chats += chats.size.toString() to ChatMessage(sender = user.username, message = message.value, "MESSAGE", Date().time.toString())
                         }
-                        //onNavigateToChat()
+                        message.value = ""
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
                     modifier = Modifier
                         .weight(0.25f)
                         .height(80.dp)
                         .padding(8.dp)
-                        .align(Alignment.CenterVertically),
+                        .align(CenterVertically),
                     shape = MaterialTheme.shapes.medium
                 ) {
                     Text("SEND")
                 }
             }
 
-            //FALTA: ORDRE LÒGIC I DATA LLEGIBLE (+ SCROLL SI DONA TEMPS)
+            val popUpContext = LocalContext.current
 
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-                //reverseLayout = true
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                reverseLayout = true
             ) {
                 items(chats.size) { chat ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .defaultMinSize(minHeight = 64.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Daffodil),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        val invertedPosition = chats.size - chat - 1
-                        Column (modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-                            Row() {
+                    var toggled by remember { mutableStateOf(false) }
+                    val chatKey = ids[chat.toString()]
+                    if (chats[chatKey] != null) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .defaultMinSize(minHeight = 64.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(Daffodil)
+                                .toggleable(value = toggled, onValueChange = { toggled = it })
+                                .animateContentSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                                Row() {
+                                    Text(
+                                        text = chats[chatKey]?.sender.toString(),
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.Black,
+                                        modifier = Modifier
+                                            .padding(start = 8.dp, bottom = 8.dp)
+                                            .align(CenterVertically)
+                                    )
+                                    Text(
+                                        text = chats[chatKey]?.date.toString(),
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.Gray,
+                                        modifier = Modifier
+                                            .padding(start = 8.dp, bottom = 8.dp)
+                                            .align(CenterVertically)
+                                    )
+                                }
                                 Text(
-                                    //text = chats[invertedPosition.toString()]?.sender.toString(),
-                                    text = chats[chat.toString()]?.sender.toString(),
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
+                                    text = chats[chatKey]?.message.toString(),
+                                    fontSize = 20.sp,
+                                    color = BraveGreen,
                                     modifier = Modifier
-                                        .padding(start = 8.dp, bottom = 8.dp)
-                                        .align(CenterVertically)
+                                        .padding(start = 8.dp)
+                                        .align(Alignment.Start)
                                 )
-                                Text(
-                                    //text = chats[invertedPosition.toString()]?.date.toString(),
-                                    text = chats[chat.toString()]?.date.toString(),
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Gray,
-                                    modifier = Modifier
-                                        .padding(start = 8.dp, bottom = 8.dp)
-                                        .align(CenterVertically)
-                                )
+                                if (toggled) {
+                                    Button(
+                                        onClick = {
+                                            val builder =
+                                                android.app.AlertDialog.Builder(popUpContext)
+                                            builder.setTitle("REPORT USER")
+                                            builder.setMessage("Are you sure you want to report this user?")
+                                            builder.setPositiveButton("REPORT") { dialog, which ->
+                                                CoroutineScope(Dispatchers.IO).launch {
+                                                    val call = chatKey?.let {
+                                                        getRetrofit()
+                                                            .create(APIService::class.java)
+                                                            .sendReport(
+                                                                "Bearer " + tokenState.token,
+                                                                "gardens/$garden/profile/report/$chatKey",
+                                                                garden = garden,
+                                                                message = it
+                                                            )
+                                                    }
+
+                                                    val eBody = call!!.errorBody()
+                                                    if (!call.isSuccessful) {
+                                                        //ERROR MESSAGES, IF ANY
+                                                        openDialog.value = true
+                                                        if (eBody != null) {
+                                                            actionString.value =
+                                                                JSONObject(eBody.string()).getString(
+                                                                    "message"
+                                                                )
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            builder.setNegativeButton("CANCEL") { dialog, which ->
+                                                dialog.dismiss()
+                                            }
+                                            val dialog = builder.create()
+                                            dialog.show()
+                                        },
+                                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp),
+                                        shape = MaterialTheme.shapes.medium
+                                    ) {
+                                        Text(text = "REPORT USER", color = Color.White)
+                                    }
+                                }
                             }
-                            Text(
-                                //text = chats[invertedPosition.toString()]?.message.toString(),
-                                text = chats[chat.toString()]?.message.toString(),
-                                fontSize = 20.sp,
-                                color = BraveGreen,
-                                modifier = Modifier
-                                    .padding(start = 8.dp)
-                                    .align(Alignment.Start)
-                            )
                         }
                     }
                 }
