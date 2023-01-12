@@ -30,8 +30,10 @@ import com.potus.potus_front.composables.TopBar
 import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.EarthBrown
 import com.potus.potus_front.ui.theme.GraveStoneGray
+import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONObject
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
@@ -72,7 +74,7 @@ fun HistoryScreen(onNavigateToProfile: () -> Unit,onNavigateToShop: () -> Unit) 
         TopBar(
             waterLevel = user.potus.waterLevel,
             collection = user.currency,
-            username = "Mr. Simon",
+            username = user.username,
             addedWater = 0,
             addedLeaves = 0,
             onNavigateToProfile = { onNavigateToProfile() },
@@ -144,13 +146,15 @@ fun RowItem(item: HistoryResponse) {
             .fillMaxHeight()
             .width(360.dp)
         ) {
-            items(3) {
+            item {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(all = 16.dp)
                 ) {
-                    CenterArea(plantState = "DEFAULT", true)
+                    Surface(color = SoothingGreen, modifier = Modifier.fillMaxSize()) {
+                        CenterArea("DEFAULT", false)
+                    }
                 }
                 Text(
                     text = item.name,
@@ -161,9 +165,16 @@ fun RowItem(item: HistoryResponse) {
                     fontStyle = FontStyle.Italic,
                     textAlign = TextAlign.Center
                 )
+
+                val date = item.createdDate
+                val date2 = item.deathDate
+                val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                val formattedDate = dateFormat.format(date)
+                val formattedDate2 = dateFormat.format(date2)
+
                 Text(
-                    text = "Adoption Date: " + item.createdDate + "\n\n"
-                            + "Death Date: " + item.deathDate,
+                    text = "Adoption Date: " + formattedDate + "\n\n"
+                            + "Death Date: " + formattedDate2,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 64.dp, start = 32.dp, end = 32.dp),
