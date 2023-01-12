@@ -32,7 +32,12 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 @ExperimentalMaterialApi
 @Composable
-fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit, onNavigateToHistory: () -> Unit) {
+fun ProfileScreen(
+    onNavigateToHome: () -> Unit,
+    onNavigateToAuth: () -> Unit,
+    onNavigateToHistory: () -> Unit,
+    onNavigateToTrophies: () -> Unit)
+{
     val tokenState = TokenState.current
     val user = TokenState.current.user?.user
     var username by remember { mutableStateOf(user?.username) }
@@ -144,6 +149,16 @@ fun ProfileScreen(onNavigateToHome: () -> Unit, onNavigateToAuth: () -> Unit, on
                     )
                 )
             }
+        }
+
+        Button(onClick = onNavigateToTrophies,
+            colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Text(text = "See trophies")
         }
 
         Button(onClick = onNavigateToHistory,

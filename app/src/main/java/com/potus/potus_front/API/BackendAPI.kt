@@ -4,6 +4,7 @@ import com.potus.potus_front.API.requests.*
 import com.potus.potus_front.API.response.*
 import com.potus.potus_front.API.response.data_models.SimplifiedGardenMember
 import com.potus.potus_front.API.response.data_models.UserGardenInfo
+import com.potus.potus_front.API.response.data_models.UserTrophy
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -97,6 +98,12 @@ interface APIService {
 
     @DELETE
     suspend fun removeGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<Unit>
+
+    @PUT
+    suspend fun removeGardenMember(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String, @Query("user") user:String): Response<Unit>
+
+    @GET
+    suspend fun getTrophies(@Header("Authorization") token: String, @Url url: String): Response<List<UserTrophy>>
 }
 
 fun getRetrofit(): Retrofit {

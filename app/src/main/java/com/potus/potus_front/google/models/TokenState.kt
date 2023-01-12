@@ -10,6 +10,7 @@ import com.potus.potus_front.API.response.PotusResponse
 import com.potus.potus_front.API.response.UserResponse
 import com.potus.potus_front.API.response.data_models.GasRegistry
 import com.potus.potus_front.API.response.data_models.UserGardenInfo
+import com.potus.potus_front.API.response.data_models.UserTrophy
 
 class TokenStateViewModel: ViewModel(){
 
@@ -85,6 +86,12 @@ class TokenStateViewModel: ViewModel(){
     fun myPetitions(petitions: List<GardenMemberResponse>?){
         if (petitions != null) {
             this.petitions = petitions
+        }
+    }
+
+    fun myTrophies(trophies: List<UserTrophy>?){
+        if (trophies != null) {
+            this.user?.trophies = trophies
         }
     }
 }
