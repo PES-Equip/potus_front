@@ -4,7 +4,9 @@ import com.potus.potus_front.websocket.model.Chat
 import com.potus.potus_front.websocket.model.ChatMessage
 import com.potus.potus_front.websocket.model.User
 import com.potus.potus_front.websocket.socketclient.ChatDeliver
+import okhttp3.internal.http.HttpDate.format
 import org.json.JSONObject
+import java.lang.String.format
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -144,8 +146,6 @@ class StompMessageSerializer {
     }
 
     fun handleMessage(message: StompMessage, chats: MutableMap<String, ChatMessage>, ids: MutableMap<String, String>){
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-
         if(message.getContent() == "[]")
             return;
 
@@ -153,16 +153,22 @@ class StompMessageSerializer {
         val type = json.get("status") as String
         val id = json.get("id") as String
         if(! chats.containsKey(id) && json.get("status").equals("MESSAGE")){
-            println(json)
             var messageContent = ""
             if(! json.get("message").equals(null)) {
                 messageContent = json.get("message").toString()
             }
-            val result = ChatMessage(json.get("senderName").toString(), messageContent,json.get("status").toString(),dateFormat.format(json.get("date")).toString())
+
+            val normalDate = json.get("date").toString()
+
+            //val inputFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+            //val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+            //val date = inputFormat.parse(json.get("date").toString())
+            //val formattedDate = date?.let { dateFormat.format(it) }.toString()
+
+            val result = ChatMessage(json.get("senderName").toString(), messageContent,json.get("status").toString(), normalDate)
 
             chats[id] = result
             ids[chats.size.toString()] = id
-            println(chats)
         }
     }
 

@@ -1,5 +1,6 @@
 package com.potus.potus_front.ui.screens
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -62,7 +63,8 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
 
     chatListener.connect(StompMessageSerializer.url)
 
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    //val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss 'CET' yyyy", Locale.ENGLISH)
     val chats = remember { mutableMapOf<String, ChatMessage>() }
     val ids = remember { mutableMapOf<String, String>() }
 
@@ -169,89 +171,95 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
                 items(chats.size) { chat ->
                     var toggled by remember { mutableStateOf(false) }
                     val chatKey = ids[chat.toString()]
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .defaultMinSize(minHeight = 64.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Daffodil)
-                            .toggleable(value = toggled, onValueChange = { toggled = it })
-                            .animateContentSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Column (modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-                            Row() {
+                    if (chats[chatKey] != null) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .defaultMinSize(minHeight = 64.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(Daffodil)
+                                .toggleable(value = toggled, onValueChange = { toggled = it })
+                                .animateContentSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                                Row() {
+                                    Text(
+                                        text = chats[chatKey]?.sender.toString(),
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.Black,
+                                        modifier = Modifier
+                                            .padding(start = 8.dp, bottom = 8.dp)
+                                            .align(CenterVertically)
+                                    )
+                                    Text(
+                                        text = chats[chatKey]?.date.toString(),
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.Gray,
+                                        modifier = Modifier
+                                            .padding(start = 8.dp, bottom = 8.dp)
+                                            .align(CenterVertically)
+                                    )
+                                }
                                 Text(
-                                    text = chats[chatKey]?.sender.toString(),
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
+                                    text = chats[chatKey]?.message.toString(),
+                                    fontSize = 20.sp,
+                                    color = BraveGreen,
                                     modifier = Modifier
-                                        .padding(start = 8.dp, bottom = 8.dp)
-                                        .align(CenterVertically)
+                                        .padding(start = 8.dp)
+                                        .align(Alignment.Start)
                                 )
-                                Text(
-                                    text = chats[chatKey]?.date.toString(),
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Gray,
-                                    modifier = Modifier
-                                        .padding(start = 8.dp, bottom = 8.dp)
-                                        .align(CenterVertically)
-                                )
-                            }
-                            Text(
-                                text = chats[chatKey]?.message.toString(),
-                                fontSize = 20.sp,
-                                color = BraveGreen,
-                                modifier = Modifier
-                                    .padding(start = 8.dp)
-                                    .align(Alignment.Start)
-                            )
-                            if (toggled) {
-                                Button(
-                                    onClick = {
-                                        val builder = android.app.AlertDialog.Builder(popUpContext)
-                                        builder.setTitle("REPORT USER")
-                                        builder.setMessage("Are you sure you want to report this user?")
-                                        builder.setPositiveButton("REPORT") { dialog, which ->
-                                            CoroutineScope(Dispatchers.IO).launch {
-                                                val call = chatKey?.let {
-                                                    getRetrofit()
-                                                        .create(APIService::class.java)
-                                                        .sendReport(
-                                                            "Bearer " + tokenState.token,
-                                                            "gardens/$garden/profile/report/$chatKey",
-                                                            garden = garden,
-                                                            message = it
-                                                        )
-                                                }
+                                if (toggled) {
+                                    Button(
+                                        onClick = {
+                                            val builder =
+                                                android.app.AlertDialog.Builder(popUpContext)
+                                            builder.setTitle("REPORT USER")
+                                            builder.setMessage("Are you sure you want to report this user?")
+                                            builder.setPositiveButton("REPORT") { dialog, which ->
+                                                CoroutineScope(Dispatchers.IO).launch {
+                                                    val call = chatKey?.let {
+                                                        getRetrofit()
+                                                            .create(APIService::class.java)
+                                                            .sendReport(
+                                                                "Bearer " + tokenState.token,
+                                                                "gardens/$garden/profile/report/$chatKey",
+                                                                garden = garden,
+                                                                message = it
+                                                            )
+                                                    }
 
-                                                val eBody = call!!.errorBody()
-                                                if (!call.isSuccessful) {
-                                                    //ERROR MESSAGES, IF ANY
-                                                    openDialog.value = true
-                                                    if (eBody != null) {
-                                                        actionString.value = JSONObject(eBody.string()).getString("message")
+                                                    val eBody = call!!.errorBody()
+                                                    if (!call.isSuccessful) {
+                                                        //ERROR MESSAGES, IF ANY
+                                                        openDialog.value = true
+                                                        if (eBody != null) {
+                                                            actionString.value =
+                                                                JSONObject(eBody.string()).getString(
+                                                                    "message"
+                                                                )
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
-                                        builder.setNegativeButton("CANCEL") { dialog, which ->
-                                            dialog.dismiss()
-                                        }
-                                        val dialog = builder.create()
-                                        dialog.show()
-                                    },
-                                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp),
-                                    shape = MaterialTheme.shapes.medium
-                                ) {
-                                    Text(text = "REPORT USER", color = Color.White)
+                                            builder.setNegativeButton("CANCEL") { dialog, which ->
+                                                dialog.dismiss()
+                                            }
+                                            val dialog = builder.create()
+                                            dialog.show()
+                                        },
+                                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp),
+                                        shape = MaterialTheme.shapes.medium
+                                    ) {
+                                        Text(text = "REPORT USER", color = Color.White)
+                                    }
                                 }
                             }
                         }
