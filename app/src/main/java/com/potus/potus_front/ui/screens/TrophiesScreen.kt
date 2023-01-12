@@ -36,7 +36,8 @@ import org.json.JSONObject
 
 @Composable
 fun TrophiesScreen(
-    onNavigateToProfile: () -> Unit
+    onNavigateToProfile: () -> Unit,
+    onNavigateToShop: () -> Unit
 ) {
     // onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit,
     val tokenState = TokenState.current
@@ -80,7 +81,8 @@ fun TrophiesScreen(
                 username = it.username,
                 addedWater = 0,
                 addedLeaves = 0,
-                onNavigateToProfile = { onNavigateToProfile() }
+                onNavigateToProfile = { onNavigateToProfile() },
+                onNavigateToShop = { onNavigateToShop() }
             )
         }
 

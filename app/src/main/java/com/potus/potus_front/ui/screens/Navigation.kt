@@ -1,4 +1,6 @@
 package com.potus.potus_front.ui.screens
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
@@ -14,6 +16,7 @@ import com.potus.potus_front.ui.screens.Screen.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalCoroutinesApi
@@ -105,7 +108,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
         }
         composable(TrophiesScreen.route) {
             TrophiesScreen(
-                onNavigateToProfile = { navController.navigate(ProfileScreen.route) }
+                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) }
             )
         }
         composable(route = SelectGardenScreen.route) {
