@@ -5,11 +5,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 data class UserTrophy(
-    var trophy: Trophy,
-    var user: UserResponse,
-    var level: Int,
     var current: Int,
-    var levelDates: ArrayList<Date>,
-    var updateDate: Date,
+    var dates: ArrayList<Date>,
+    var level: Int,
+    var next: Boolean,
+    var next_level: Int,
+    var trophy: Trophy,
+    var updatedDate: Date,
     var upgraded: Boolean
 )

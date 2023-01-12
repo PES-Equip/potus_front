@@ -324,31 +324,6 @@ fun MemberItem(member: SimplifiedGardenMember, onNavigateToGarden: () -> Unit) {
                                     }
                                 }
                             }
-
-                            Button(
-                                onClick = {
-                                    val builder = android.app.AlertDialog.Builder(popUpContext)
-                                    builder.setTitle("REPORT USER")
-                                    builder.setMessage("Are you sure you want to report this user?")
-                                    builder.setPositiveButton("REPORT") { dialog, which ->
-                                        // TODO
-                                        println("REPORTED!")
-                                        onNavigateToGarden()
-                                    }
-                                    builder.setNegativeButton("CANCEL") { dialog, which ->
-                                        dialog.dismiss()
-                                    }
-                                    val dialog = builder.create()
-                                    dialog.show()
-                                },
-                                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
-                                shape = MaterialTheme.shapes.medium
-                            ) {
-                                Text(text = "REPORT USER", color = Color.White)
-                            }
                         }
                     }
                 }

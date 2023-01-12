@@ -85,7 +85,6 @@ fun RegisterScreen(onNavigateToHome: () -> Unit) {
             )
             Spacer(modifier = Modifier.size(16.dp))
             Button(
-
                 onClick = {
                     CoroutineScope(Dispatchers.Main).launch {
 
@@ -93,17 +92,14 @@ fun RegisterScreen(onNavigateToHome: () -> Unit) {
                         val call = getRetrofit().create(APIService::class.java)
                             .registerUser("Bearer " + tokenState.token, "user", registerUserRequest)
 
+                        val body = call.body()
                         if (call.isSuccessful) {
-                            tokenState.signUser(call.body())
+                            tokenState.signUser(body)
                             onNavigateToHome()
                         } else {
-                            openDialog.value =true
-                            //Timber.d("BAD")
+                            openDialog.value = true
                         }
                     }
-
-
-
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen),
                 modifier = Modifier
@@ -114,7 +110,6 @@ fun RegisterScreen(onNavigateToHome: () -> Unit) {
                 Text(text = "Register")
             }
             if (openDialog.value) {
-
                 AlertDialog(
                     onDismissRequest = {
                         // Dismiss the dialog when the user clicks outside the dialog or on the back
@@ -140,8 +135,6 @@ fun RegisterScreen(onNavigateToHome: () -> Unit) {
                 )
             }
         }
-
-
     }
 }
 /*

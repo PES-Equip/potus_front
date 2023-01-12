@@ -6,6 +6,7 @@ import com.potus.potus_front.API.response.data_models.Meeting
 import com.potus.potus_front.API.response.data_models.Shop
 import com.potus.potus_front.API.response.data_models.SimplifiedGardenMember
 import com.potus.potus_front.API.response.data_models.UserGardenInfo
+import com.potus.potus_front.API.response.data_models.UserTrophy
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -70,6 +71,9 @@ interface APIService {
     @POST
     suspend fun sendChatMessage(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden : String, @Query("message") message : String): Response<ChatResponse>
 
+    @POST
+    suspend fun sendReport(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden : String, @Query("message") message : String): Response<ReportResponse>
+
     @PUT
     suspend fun joinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenResponse>
 
@@ -105,6 +109,9 @@ interface APIService {
 
     @POST
     suspend fun addFavouriteMeetingsList(@Header("Authorization") token:String, @Url url:String, @Query("meetingId") meetingId:Long): Response<Unit>
+
+    @GET
+    suspend fun getTrophies(@Header("Authorization") token: String, @Url url: String): Response<List<UserTrophy>>
 }
 
 fun getRetrofit(): Retrofit {

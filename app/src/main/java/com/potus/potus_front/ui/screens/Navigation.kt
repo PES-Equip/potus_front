@@ -81,10 +81,11 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
         }
         composable(route = ProfileScreen.route) {
             ProfileScreen(
-                    onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                    onNavigateToAuth = { navController.navigate(AuthScreen.route) },
-                    onNavigateToHistory = { navController.navigate(HistoryScreen.route)},
-                    onNavigateToFavourite = { navController.navigate(MeetingsScreen.route)}
+                onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                onNavigateToAuth = { navController.navigate(AuthScreen.route) },
+                onNavigateToHistory = { navController.navigate(HistoryScreen.route)},
+                onNavigateToFavourite = { navController.navigate(MeetingsScreen.route)},
+                onNavigateToTrophies = { navController.navigate(TrophiesScreen.route) }
             )
         }
         composable(FavouriteMeetingsScreen.route) {
@@ -101,6 +102,11 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
         composable(HistoryScreen.route) {
             HistoryScreen(onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToShop = { navController.navigate(ShopScreen.route) })
+        }
+        composable(TrophiesScreen.route) {
+            TrophiesScreen(
+                onNavigateToProfile = { navController.navigate(ProfileScreen.route) }
+            )
         }
         composable(route = SelectGardenScreen.route) {
             SelectGardenScreen(
@@ -168,7 +174,6 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             ChatScreen(
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToShop = { navController.navigate(GardenScreen.route) },
-                onNavigateToChat = { navController.navigate(ChatScreen.route) },
                 //TO BE IMPLEMENTED (CURRENTLY LEADING BACK TO GARDEN SCREEN)
                 onNavigateToMeetings = { navController.navigate(GardenScreen.route) },
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
