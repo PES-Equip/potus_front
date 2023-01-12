@@ -1,23 +1,25 @@
 package com.potus.potus_front.ui.screens
 import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ChangeUsernameRequest
 import com.potus.potus_front.API.requests.DeleteAccountRequest
+import com.potus.potus_front.R
 import com.potus.potus_front.composables.CenterArea
 import com.potus.potus_front.composables.GasesWindow
 import com.potus.potus_front.google.models.TokenState
@@ -114,7 +116,10 @@ fun ProfileScreen(
             }
         }
 
-        CenterArea(plantState = plantState, textDisplay = true)
+        Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
+            //CenterArea(thematicEvent, plantState)
+            CenterArea(plantState, false)
+        }
 
         Row(
             modifier = Modifier
@@ -182,12 +187,7 @@ fun ProfileScreen(
             Text(text = "See Favourite Meetings")
         }
 
-        Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
-            //CenterArea(thematicEvent, plantState)
-            CenterArea(plantState, true)
-        }
-
-        Spacer(modifier = Modifier.height(64.dp))
+        Spacer(modifier = Modifier.weight(0.075f))
 
         Button(
             onClick = {

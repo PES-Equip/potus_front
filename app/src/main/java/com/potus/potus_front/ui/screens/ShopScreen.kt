@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.BuyBonusRequest
@@ -100,12 +101,12 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                     .weight(1f)
 
             ) {
-                Column()
+                Column(Modifier.weight(0.3f))
                 {
                     Image(
                         painter = painterResource(id = R.drawable.botiga_fertilitzant), "",
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(0.75f)
                     )
                     Row(modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -152,16 +153,16 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
                     ) {
-                        Text(text = "Buy fertilizer")
+                        Text(text = "Buy fertilizer", fontSize = 12.sp)
                     }
                     Spacer(modifier = Modifier.weight(0.05f))
                 }
-                Column()
+                Column(Modifier.weight(0.3f))
                 {
                     Image(
                         painter = painterResource(id = R.drawable.botiga_fertilitzant_blau), "",
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(0.75f)
                     )
                     Row(modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -206,16 +207,16 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
                     ) {
-                        Text(text = "Buy fertilizer")
+                        Text(text = "Buy fertilizer", fontSize = 12.sp)
                     }
                     Spacer(modifier = Modifier.weight(0.05f))
                 }
-                Column()
+                Column(Modifier.weight(0.3f))
                 {
                     Image(
                         painter = painterResource(id = R.drawable.botiga_fertilitzant_vermell), "",
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(0.75f)
                     )
                     Row(modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -257,7 +258,7 @@ fun ShopScreen(onNavigateToHome: () -> Unit, onNavigateToProfile: () -> Unit) {
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen)
                     ) {
-                        Text(text = "Buy fertilizer")
+                        Text(text = "Buy fertilizer", fontSize = 12.sp)
                     }
                     Spacer(modifier = Modifier.weight(0.05f))
                 }
