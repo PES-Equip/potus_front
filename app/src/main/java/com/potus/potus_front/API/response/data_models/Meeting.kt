@@ -7,7 +7,7 @@ data class Meeting(
     var address: String,
     var city: String,
     var end_date: Date,
-    var id: Int,
+    var id: Long,
     var region: GasesResponse,
     var start_date: Date,
     var subtitle: String,

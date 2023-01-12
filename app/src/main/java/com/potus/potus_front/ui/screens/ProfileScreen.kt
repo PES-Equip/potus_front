@@ -19,6 +19,7 @@ import com.potus.potus_front.API.getRetrofit
 import com.potus.potus_front.API.requests.ChangeUsernameRequest
 import com.potus.potus_front.API.requests.DeleteAccountRequest
 import com.potus.potus_front.composables.CenterArea
+import com.potus.potus_front.composables.GasesWindow
 import com.potus.potus_front.google.models.TokenState
 import com.potus.potus_front.ui.theme.BraveGreen
 import com.potus.potus_front.ui.theme.SoothingGreen
@@ -36,7 +37,8 @@ fun ProfileScreen(
     onNavigateToHome: () -> Unit,
     onNavigateToAuth: () -> Unit,
     onNavigateToHistory: () -> Unit,
-    onNavigateToTrophies: () -> Unit)
+    onNavigateToTrophies: () -> Unit, 
+    onNavigateToFavourite: () -> Unit)
 {
     val tokenState = TokenState.current
     val user = TokenState.current.user?.user
@@ -169,6 +171,20 @@ fun ProfileScreen(
             shape = MaterialTheme.shapes.medium
         ) {
             Text(text = "See Potus Memorial")
+        }
+        Button(onClick = onNavigateToFavourite,
+            colors = ButtonDefaults.buttonColors(backgroundColor = BraveGreen),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Text(text = "See Favourite Meetings")
+        }
+
+        Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {
+            //CenterArea(thematicEvent, plantState)
+            CenterArea(plantState, true)
         }
 
         Spacer(modifier = Modifier.height(64.dp))

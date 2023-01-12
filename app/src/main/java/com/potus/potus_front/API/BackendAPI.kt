@@ -2,6 +2,8 @@ package com.potus.potus_front.API
 
 import com.potus.potus_front.API.requests.*
 import com.potus.potus_front.API.response.*
+import com.potus.potus_front.API.response.data_models.Meeting
+import com.potus.potus_front.API.response.data_models.Shop
 import com.potus.potus_front.API.response.data_models.SimplifiedGardenMember
 import com.potus.potus_front.API.response.data_models.UserGardenInfo
 import com.potus.potus_front.API.response.data_models.UserTrophy
@@ -101,6 +103,15 @@ interface APIService {
 
     @DELETE
     suspend fun removeGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<Unit>
+
+    @POST
+    suspend fun buyBonus(@Header("Authorization") token:String, @Url url:String, @Query("modifier") modifier:String): Response<List<Shop>>
+
+    @GET
+    suspend fun getMeetingsList(@Header("Authorization") token:String, @Url url:String, @Query("end_date") end_date:String, @Query("latitude") latitude:Double, @Query("length") length:Double, @Query("start_date") start_date:String): Response<List<Meeting>>
+
+    @POST
+    suspend fun addFavouriteMeetingsList(@Header("Authorization") token:String, @Url url:String, @Query("meetingId") meetingId:Long): Response<Unit>
 
     @GET
     suspend fun getTrophies(@Header("Authorization") token: String, @Url url: String): Response<List<UserTrophy>>

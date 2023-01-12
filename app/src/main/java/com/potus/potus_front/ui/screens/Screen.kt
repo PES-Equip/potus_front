@@ -6,6 +6,8 @@ sealed class Screen(val route: String){
     object HomeScreen : Screen("home_screen")
     object RegisterScreen : Screen("register_screen")
     object SwitcherScreen : Screen("switcher_screen")
+    object ShopScreen : Screen("shop_screen")
+    object MeetingsScreen : Screen("meetings_screen")
     object RevivePopup : Screen("revive_popup")
     object TrophiesScreen : Screen("trophies_screen")
     object HistoryScreen : Screen("history_screen")
@@ -16,4 +18,5 @@ sealed class Screen(val route: String){
     object GardenManagementScreen : Screen("garden_management_screen")
     object PetitionsToGardensScreen : Screen("petitions_to_gardens_screen")
     object ChatScreen : Screen("chat_screen")
+    object FavouriteMeetingsScreen : Screen("favourite_meetings_screen")
 }

@@ -47,7 +47,8 @@ fun TopBar(
     username: String,
     addedWater: Int,
     addedLeaves: Int,
-    onNavigateToProfile: () -> Unit
+    onNavigateToProfile: () -> Unit,
+    onNavigateToShop: () -> Unit
 ) {
     Row(
         Modifier
@@ -104,7 +105,14 @@ fun TopBar(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .padding(start = 4.dp)
-                    .size(24.dp),
+                    .size(24.dp)
+                    .clickable(
+                        enabled = true,
+                        onClickLabel = "Clickable image",
+                        onClick = {
+                            onNavigateToShop()
+                        }
+                    ),
                 painter = painterResource(id = R.drawable.icona_currency),
                 contentDescription = "")
             Text(modifier = Modifier
@@ -547,7 +555,6 @@ fun GardenBottomBar(
 fun GardenBottomBar(
     centerImage: Painter,
     onNavigateToCenter : () -> Unit,
-
     ) {
     val heightBottomBar = 96.dp
     val heightCircle = 160.dp
@@ -688,3 +695,4 @@ fun ThematicEvents(event:String): Painter {
         else -> { return painterResource(id = R.drawable.test_basic) }
     }
 }
+

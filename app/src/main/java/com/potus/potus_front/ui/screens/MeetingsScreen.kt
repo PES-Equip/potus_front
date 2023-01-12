@@ -1,6 +1,9 @@
 package com.potus.potus_front.ui.screens
 
+import android.os.Build
+import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -23,7 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.potus.potus_front.API.APIService
 import com.potus.potus_front.API.getRetrofit
+import com.potus.potus_front.API.response.GasesResponse
 import com.potus.potus_front.API.response.NewGardenResponse
+import com.potus.potus_front.API.response.data_models.GasRegistry
+import com.potus.potus_front.API.response.data_models.Meeting
 import com.potus.potus_front.R
 import com.potus.potus_front.composables.*
 import com.potus.potus_front.google.models.TokenState
@@ -35,32 +42,51 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit, onNavigateToShop: () -> Unit) {
+fun MeetingsScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    val actionString = remember { mutableStateOf("")  }
+    val error = remember { mutableStateOf(200)  }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
 
+    val notification = rememberSaveable { mutableStateOf("") }
+    if (notification.value.isNotEmpty()) {
+        Toast.makeText(LocalContext.current, notification.value, Toast.LENGTH_LONG).show()
+        notification.value = ""
+    }
+
     LaunchedEffect(Dispatchers.IO) {
+
         val call = getRetrofit()
             .create(APIService::class.java)
-            .getGardenList(
+            .getMeetingsList(
                 "Bearer " + tokenState.token,
-                "gardens"
+                "meetings",
+                "01-02-2023",
+                41.4,
+                2.16,
+                "01-01-2023"
             )
 
-        val eBody = call.errorBody()
         if (call.isSuccessful) {
-            call.body()?.let { tokenState.allGardens(it) }
+            //Timber.tag("HERE!").d(call.body()?.toString())
+            call.body()?.let { tokenState.allMeetings(it) }
         } else {
             //ERROR MESSAGES, IF ANY
+            error.value = call.code()
             openDialog.value = true
-            if (eBody != null) {
-                actionString.value = JSONObject(eBody.string()).getString("message")
+            val Ebody = call.errorBody()
+            if (Ebody != null) {
+                var jObjErr = JSONObject(Ebody.string())
+                notification.value = jObjErr.getString("message")
+                print(jObjErr.getString("message"))
             }
         }
     }
@@ -77,33 +103,38 @@ fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations:
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             //GardenList(listOf(NewGardenResponse("We Are The Champions", 3, "You should ask to join us."), NewGardenResponse("#1 GARDEN IN THE WORLD", 0, "Admire us!"), NewGardenResponse("WOOOHOOOOOOO", 0, "HEEEEY"), NewGardenResponse("Christmas gang :)", 156, "Fum, fum, fum"), NewGardenResponse("Developer's corner", 1, "So tired..."), NewGardenResponse("Knights of the PIC Table", 0, "Hehe."), NewGardenResponse("NO-NAME", 0, "Join us! We do bite ;)"), NewGardenResponse("Bosc", 6, "Els originals!")))
-            GardenList(tokenState.gardens)
-        }
-        if (openDialog.value) {
-            Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_LONG).show()
-            openDialog.value = false
+
+            //MeetingsList(listOf(Meeting("Carrer PotusLand","Barcelona", Date(),1, GasesResponse("codigas",1.0,2.0,"nom",registry = mapOf(Pair("", GasRegistry("", "NO DATA", "mg_m3", 0.0)))),Date(),"Veniu tots!","Quedada de potutus")))
+            MeetingsList(tokenState.meetings)
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), onNavigateToInvitations, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_nou_jardi), onNavigateToCreation)
     }
 }
 
 @Composable
-fun GardenList (gardens: List<NewGardenResponse>) {
+fun MeetingsList (meetings: List<Meeting>) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(gardens.size) {
-            arrayItem -> GardenItem(garden = gardens[arrayItem])
+        items(meetings.size) {
+                arrayItem -> MeetingsItem(meeting = meetings[arrayItem])
         }
     }
 }
 
 @Composable
-fun GardenItem(garden: NewGardenResponse) {
+fun MeetingsItem(meeting: Meeting) {
     val tokenState = TokenState.current
     var toggled by remember { mutableStateOf(false) }
+
+    val notification = rememberSaveable { mutableStateOf("") }
+    if (notification.value.isNotEmpty()) {
+        Toast.makeText(LocalContext.current, notification.value, Toast.LENGTH_LONG).show()
+        notification.value = ""
+    }
+
 
     Column(
         modifier = Modifier
@@ -117,12 +148,12 @@ fun GardenItem(garden: NewGardenResponse) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (!toggled) Text(text = garden.name, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
+        if (!toggled) Text(text = meeting.title, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = BraveGreen)
         else {
             Column() {
                 Row(modifier = Modifier.align(Alignment.Start)) {
                     Text(
-                        text = "\n" + garden.name + "\n\nMembers: " + garden.members_num.toString() + "\nAbout: " + garden.description + "\n",
+                        text = "\n" + meeting.title + "\n\nCiutat: " + meeting.city + "\nData inici: " + meeting.start_date + "\n" + "\nAdreça: " + meeting.address + "\n",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 16.dp).align(CenterVertically)
@@ -132,19 +163,21 @@ fun GardenItem(garden: NewGardenResponse) {
                     color = BraveGreen,
                     modifier = Modifier
                         .clickable(onClick = {
-                                val askedGardenName = garden.name
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    getRetrofit()
-                                        .create(APIService::class.java)
-                                        .askToJoinGarden(
-                                            "Bearer " + tokenState.token,
-                                            "gardens/profile/requests/$askedGardenName",
-                                            garden = askedGardenName
-                                        )
-                                }
+                            val askedGardenName = meeting.id
 
-                                /* POP-UP? */
-                            })
+                            CoroutineScope(Dispatchers.IO).launch {
+                                getRetrofit()
+                                    .create(APIService::class.java)
+                                    .addFavouriteMeetingsList(
+                                        "Bearer " + tokenState.token,
+                                        "user/meeting/$askedGardenName",
+                                        meetingId = askedGardenName
+                                    )
+                            }
+
+                            notification.value = "Meeting added to favourite!"
+                            /* POP-UP? */
+                        })
                         .padding(8.dp)
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth()
@@ -152,7 +185,7 @@ fun GardenItem(garden: NewGardenResponse) {
                         .clip(RoundedCornerShape(10.dp))
                 ) {
                     Text(
-                        text = "Send Join Request!",
+                        text = "Add to favourites",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Daffodil,

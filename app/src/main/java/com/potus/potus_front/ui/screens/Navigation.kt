@@ -60,22 +60,48 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             HomeScreen(
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) },
-                onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }
+                onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) }
             )
             }
         composable(RevivePopup.route) {
             RevivePopup(onNavigateToHome = { navController.navigate(HomeScreen.route) })
         }
+        composable(ShopScreen.route) {
+            ShopScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                onNavigateToProfile = { navController.navigate(ProfileScreen.route) })
+        }
+        composable(MeetingsScreen.route) {
+            MeetingsScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
+                onNavigateToInvitations = { navController.navigate(InvitationsToGardensScreen.route) },
+                onNavigateToCreation = { navController.navigate(CreateGardenScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) }
+            )
+        }
         composable(route = ProfileScreen.route) {
             ProfileScreen(
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
                 onNavigateToAuth = { navController.navigate(AuthScreen.route) },
-                onNavigateToHistory = { navController.navigate(HistoryScreen.route) },
+                onNavigateToHistory = { navController.navigate(HistoryScreen.route)},
+                onNavigateToFavourite = { navController.navigate(MeetingsScreen.route)},
                 onNavigateToTrophies = { navController.navigate(TrophiesScreen.route) }
             )
         }
+        composable(FavouriteMeetingsScreen.route) {
+            FavoriteMeetingsScreen(
+                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
+                onNavigateToGarden = { navController.navigate(GardenScreen.route) },
+                onNavigateToInvitations = { navController.navigate(InvitationsToGardensScreen.route) },
+                onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) },
+                onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                onNavigateToCreation = { navController.navigate(CreateGardenScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) }
+            )
+        }
         composable(HistoryScreen.route) {
-            HistoryScreen(onNavigateToProfile = { navController.navigate(ProfileScreen.route) })
+            HistoryScreen(onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) })
         }
         composable(TrophiesScreen.route) {
             TrophiesScreen(
@@ -87,7 +113,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToInvitations = { navController.navigate(InvitationsToGardensScreen.route) },
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToCreation = { navController.navigate(CreateGardenScreen.route) }
+                onNavigateToCreation = { navController.navigate(CreateGardenScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) }
             )
         }
         composable(route = CreateGardenScreen.route) {
@@ -96,7 +123,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) },
                 onNavigateToInvitations = { navController.navigate(InvitationsToGardensScreen.route) },
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) }
+                onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) }
             )
         }
         composable(route = InvitationsToGardensScreen.route) {
@@ -106,18 +134,19 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                 onNavigateToInvitations = { navController.navigate(InvitationsToGardensScreen.route) },
                 onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) },
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToCreation = { navController.navigate(CreateGardenScreen.route) }
+                onNavigateToCreation = { navController.navigate(CreateGardenScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) }
             )
         }
         composable(route = GardenScreen.route) {
             GardenScreen(
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 //TO BE IMPLEMENTED (CURRENTLY LEADING BACK TO GARDEN SCREEN)
-                onNavigateToShop = { navController.navigate(GardenScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) },
                 onNavigateToManagement = { navController.navigate(GardenManagementScreen.route) },
                 onNavigateToGarden = { navController.navigate(GardenScreen.route) },
                 //TO BE IMPLEMENTED (CURRENTLY LEADING BACK TO GARDEN SCREEN)
-                onNavigateToMeetings = { navController.navigate(GardenScreen.route) },
+                onNavigateToMeetings = { navController.navigate(MeetingsScreen.route) },
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
                 onNavigateToChat = { navController.navigate(ChatScreen.route) }
             )
@@ -127,7 +156,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
                 onNavigateToPetitions = { navController.navigate(PetitionsToGardensScreen.route) },
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToGarden = { navController.navigate(GardenScreen.route) }
+                onNavigateToGarden = { navController.navigate(GardenScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) }
             )
         }
         composable(route = PetitionsToGardensScreen.route) {
@@ -136,7 +166,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
                 onNavigateToPetitions = { navController.navigate(PetitionsToGardensScreen.route) },
                 onNavigateToManagement = { navController.navigate(GardenManagementScreen.route) },
                 onNavigateToHome = { navController.navigate(HomeScreen.route) },
-                onNavigateToGarden = { navController.navigate(GardenScreen.route) }
+                onNavigateToGarden = { navController.navigate(GardenScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) }
             )
         }
         composable(route = ChatScreen.route){

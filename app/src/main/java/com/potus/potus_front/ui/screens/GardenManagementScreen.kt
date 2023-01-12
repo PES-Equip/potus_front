@@ -38,7 +38,7 @@ import org.json.JSONObject
 
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
-fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetitions: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit) {
+fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetitions: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     var actionString = remember { mutableStateOf("") }
     val popUpContext = LocalContext.current
@@ -79,7 +79,8 @@ fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetition
             username = user.username,
             addedWater = 0,
             addedLeaves = 0,
-            onNavigateToProfile = { onNavigateToProfile() }
+            onNavigateToProfile = { onNavigateToProfile() },
+            onNavigateToShop = { onNavigateToShop()}
         )
         Column(modifier = Modifier
             .weight(1f)
