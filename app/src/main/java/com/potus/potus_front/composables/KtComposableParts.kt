@@ -60,7 +60,6 @@ fun TopBar(
             .width((username.length * 10).dp)
             .height(30.dp)
             .clip(RoundedCornerShape(15.dp))
-            //.clickable { onNavigateToProfile }
             .background(color = Color(0x0CFFFFFF))){
             ClickableText(
                 modifier = Modifier

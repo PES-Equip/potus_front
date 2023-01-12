@@ -36,6 +36,9 @@ interface APIService {
     @GET
     suspend fun getHistory(@Header("Authorization") token:String, @Url url:String): Response<List<HistoryResponse>>
 
+    @GET
+    suspend fun getHistoricChat(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden : String, @Query("page") page : Int): Response<List<ChatResponse>>
+
     @POST
     suspend fun registerUser(@Header("Authorization") token:String, @Url url:String, @Body requestModel: RegisterUserRequest): Response<UserResponse>
 
@@ -63,6 +66,12 @@ interface APIService {
     @POST
     suspend fun acceptGardenPetition(@Header("Authorization") token:String, @Url url:String, @Body requestModel: GardenInvitationRequest): Response<List<GardenMemberResponse>>
 
+    @POST
+    suspend fun sendChatMessage(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden : String, @Query("message") message : String): Response<ChatResponse>
+
+    @POST
+    suspend fun sendReport(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden : String, @Query("message") message : String): Response<ReportResponse>
+
     @PUT
     suspend fun joinGarden(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String): Response<GardenResponse>
 
@@ -71,6 +80,9 @@ interface APIService {
 
     @PUT
     suspend fun changeMemberRole(@Header("Authorization") token:String, @Url url:String, @Body requestModel: ChangeMemberRoleRequest, @Query("garden") garden:String, @Query("user") user:String): Response<Unit>
+
+    @PUT
+    suspend fun removeGardenMember(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden:String, @Query("user") user:String): Response<Unit>
 
     @DELETE
     suspend fun deleteAccount(@Header("Authorization") token:String, @Url url:String): Response<UserResponse>
