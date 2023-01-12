@@ -83,7 +83,19 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             ProfileScreen(
                     onNavigateToHome = { navController.navigate(HomeScreen.route) },
                     onNavigateToAuth = { navController.navigate(AuthScreen.route) },
-                    onNavigateToHistory = { navController.navigate(HistoryScreen.route) }
+                    onNavigateToHistory = { navController.navigate(HistoryScreen.route)},
+                    onNavigateToFavourite = { navController.navigate(MeetingsScreen.route)}
+            )
+        }
+        composable(FavouriteMeetingsScreen.route) {
+            FavoriteMeetingsScreen(
+                onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
+                onNavigateToGarden = { navController.navigate(GardenScreen.route) },
+                onNavigateToInvitations = { navController.navigate(InvitationsToGardensScreen.route) },
+                onNavigateToSelection = { navController.navigate(SelectGardenScreen.route) },
+                onNavigateToHome = { navController.navigate(HomeScreen.route) },
+                onNavigateToCreation = { navController.navigate(CreateGardenScreen.route) },
+                onNavigateToShop = { navController.navigate(ShopScreen.route) }
             )
         }
         composable(HistoryScreen.route) {

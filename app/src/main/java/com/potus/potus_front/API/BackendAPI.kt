@@ -102,6 +102,9 @@ interface APIService {
 
     @GET
     suspend fun getMeetingsList(@Header("Authorization") token:String, @Url url:String, @Query("end_date") end_date:String, @Query("latitude") latitude:Double, @Query("length") length:Double, @Query("start_date") start_date:String): Response<List<Meeting>>
+
+    @POST
+    suspend fun addFavouriteMeetingsList(@Header("Authorization") token:String, @Url url:String, @Query("meetingId") meetingId:Long): Response<Unit>
 }
 
 fun getRetrofit(): Retrofit {

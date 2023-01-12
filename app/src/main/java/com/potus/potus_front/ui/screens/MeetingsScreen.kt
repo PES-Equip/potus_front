@@ -153,7 +153,7 @@ fun MeetingsItem(meeting: Meeting) {
             Column() {
                 Row(modifier = Modifier.align(Alignment.Start)) {
                     Text(
-                        text = "\n" + meeting.title + "\n\nCiutat: " + meeting.city.toString() + "\nData inici: " + meeting.start_date + "\n",
+                        text = "\n" + meeting.title + "\n\nCiutat: " + meeting.city + "\nData inici: " + meeting.start_date + "\n" + "\nAdreça: " + meeting.address + "\n",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 16.dp).align(CenterVertically)
@@ -163,8 +163,17 @@ fun MeetingsItem(meeting: Meeting) {
                     color = BraveGreen,
                     modifier = Modifier
                         .clickable(onClick = {
-                            val askedGardenName = meeting.title
-                            notification.value = "Meeting afegit a preferits!"
+                            val askedGardenName = meeting.id
+                            CoroutineScope(Dispatchers.IO).launch {
+                                getRetrofit()
+                                    .create(APIService::class.java)
+                                    .addFavouriteMeetingsList(
+                                        "Bearer " + tokenState.token,
+                                        "user/meeting/$askedGardenName",
+                                        meetingId = askedGardenName
+                                    )
+                            }
+                            notification.value = "Meeting added to favourite!"
                             /* POP-UP? */
                         })
                         .padding(8.dp)
@@ -174,7 +183,7 @@ fun MeetingsItem(meeting: Meeting) {
                         .clip(RoundedCornerShape(10.dp))
                 ) {
                     Text(
-                        text = "Afegir a preferits!",
+                        text = "Add to favourites",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Daffodil,

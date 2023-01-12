@@ -17,4 +17,5 @@ sealed class Screen(val route: String){
     object GardenManagementScreen : Screen("garden_management_screen")
     object PetitionsToGardensScreen : Screen("petitions_to_gardens_screen")
     object ChatScreen : Screen("chat_screen")
+    object FavouriteMeetingsScreen : Screen("favourite_meetings_screen")
 }
