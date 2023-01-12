@@ -21,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 
 
 @Composable
-fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToSelection: () -> Unit) {
+fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToSelection: () -> Unit,onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -62,7 +62,8 @@ fun HomeScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, 
             username = user.username,
             addedWater = addedWater,
             addedLeaves = addedLeaves,
-            onNavigateToProfile = { onNavigateToProfile() }
+            onNavigateToProfile = { onNavigateToProfile() },
+            onNavigateToShop = {onNavigateToShop()}
         )
         GasesWindow(onToggleText = { toggleText = !(toggleText) })
         Surface(color = SoothingGreen, modifier = Modifier.weight(1f)) {

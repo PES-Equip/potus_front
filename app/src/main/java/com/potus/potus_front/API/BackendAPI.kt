@@ -2,6 +2,7 @@ package com.potus.potus_front.API
 
 import com.potus.potus_front.API.requests.*
 import com.potus.potus_front.API.response.*
+import com.potus.potus_front.API.response.data_models.Meeting
 import com.potus.potus_front.API.response.data_models.Shop
 import com.potus.potus_front.API.response.data_models.SimplifiedGardenMember
 import com.potus.potus_front.API.response.data_models.UserGardenInfo
@@ -98,6 +99,9 @@ interface APIService {
 
     @POST
     suspend fun buyBonus(@Header("Authorization") token:String, @Url url:String, @Query("modifier") modifier:String): Response<List<Shop>>
+
+    @GET
+    suspend fun getMeetingsList(@Header("Authorization") token:String, @Url url:String, @Query("end_date") end_date:String, @Query("latitude") latitude:Double, @Query("length") length:Double, @Query("start_date") start_date:String): Response<List<Meeting>>
 }
 
 fun getRetrofit(): Retrofit {

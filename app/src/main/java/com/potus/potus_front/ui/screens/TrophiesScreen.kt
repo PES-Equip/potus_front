@@ -24,7 +24,8 @@ fun TrophiesScreen() {
             collection = 0,
             username = "Mr.Simon",
             addedWater = 0,
-            addedLeaves = 0
+            addedLeaves = 0,
+            onNavigateToProfile = {}
         ) {}
 
         Surface(
