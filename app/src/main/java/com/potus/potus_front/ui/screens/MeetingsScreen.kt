@@ -164,6 +164,7 @@ fun MeetingsItem(meeting: Meeting) {
                     modifier = Modifier
                         .clickable(onClick = {
                             val askedGardenName = meeting.id
+
                             CoroutineScope(Dispatchers.IO).launch {
                                 getRetrofit()
                                     .create(APIService::class.java)
@@ -173,6 +174,7 @@ fun MeetingsItem(meeting: Meeting) {
                                         meetingId = askedGardenName
                                     )
                             }
+
                             notification.value = "Meeting added to favourite!"
                             /* POP-UP? */
                         })
