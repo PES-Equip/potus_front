@@ -78,7 +78,9 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
             HistoryScreen(onNavigateToProfile = { navController.navigate(ProfileScreen.route) })
         }
         composable(TrophiesScreen.route) {
-            TrophiesScreen { navController.navigate(ProfileScreen.route) }
+            TrophiesScreen(
+                onNavigateToProfile = { navController.navigate(ProfileScreen.route) }
+            )
         }
         composable(route = SelectGardenScreen.route) {
             SelectGardenScreen(

@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_EXPRESSION")
+
 package com.potus.potus_front.ui.screens
 
 import android.widget.Toast
@@ -145,7 +147,7 @@ fun RevivePopup(onNavigateToHome: () -> Unit) {
                                     }
                                 }
                             }
-                            // navigate
+                            if (tokenState.user?.user?.potus?.alive == true) onNavigateToHome
                         },
                         colors = ButtonDefaults.buttonColors(backgroundColor = SoothingGreen)
                     ) {

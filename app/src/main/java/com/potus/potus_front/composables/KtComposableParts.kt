@@ -336,6 +336,10 @@ fun BottomBar(
                                                 it
                                             )
                                         }
+                                        if(body?.trophies?.isEmpty() == false) {
+                                            openDialog.value = true
+                                            actionString = "You have earned the " + body.trophies.first().trophy.name + " trophy!"
+                                        }
                                     } else {
                                         openDialog.value = true
                                         if (Ebody != null) {
@@ -385,6 +389,11 @@ fun BottomBar(
                                     if (call.isSuccessful) {
                                         tokenState.signUser(call.body())
                                         tokenState.user?.user?.potus?.let { updateWaterLevel(it.waterLevel) }
+
+                                        if(call.body()?.trophies?.isEmpty() == false) {
+                                            openDialog.value = true
+                                            actionString = "You have earned the " + call.body()!!.trophies.first().trophy.name + " trophy!"
+                                        }
                                     } else {
                                         openDialog.value = true
                                         if (ebody != null) {
