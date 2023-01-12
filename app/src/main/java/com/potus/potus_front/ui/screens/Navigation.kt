@@ -77,8 +77,8 @@ fun Navigation(navController : NavHostController = rememberNavController()) {
         composable(MeetingsScreen.route) {
             MeetingsScreen(onNavigateToHome = { navController.navigate(HomeScreen.route) },
                 onNavigateToProfile = { navController.navigate(ProfileScreen.route) },
-                onNavigateToInvitations = { navController.navigate(InvitationsToGardensScreen.route) },
-                onNavigateToCreation = { navController.navigate(CreateGardenScreen.route) },
+                onNavigateToChat = { navController.navigate(ChatScreen.route) },
+                onNavigateToGarden = { navController.navigate(GardenScreen.route) },
                 onNavigateToShop = { navController.navigate(ShopScreen.route) }
             )
         }

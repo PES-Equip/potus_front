@@ -49,7 +49,7 @@ import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MeetingsScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit, onNavigateToShop: () -> Unit) {
+fun MeetingsScreen(onNavigateToProfile: () -> Unit, onNavigateToChat: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
     val error = remember { mutableStateOf(200)  }
 
@@ -107,7 +107,7 @@ fun MeetingsScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations: () 
             //MeetingsList(listOf(Meeting("Carrer PotusLand","Barcelona", Date(),1, GasesResponse("codigas",1.0,2.0,"nom",registry = mapOf(Pair("", GasRegistry("", "NO DATA", "mg_m3", 0.0)))),Date(),"Veniu tots!","Quedada de potutus")))
             MeetingsList(tokenState.meetings)
         }
-        GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), onNavigateToInvitations, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_nou_jardi), onNavigateToCreation)
+        GardenBottomBar(painterResource(id = R.drawable.icona_jardi), onNavigateToGarden, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_xat), onNavigateToChat)
     }
 }
 

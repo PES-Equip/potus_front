@@ -170,14 +170,6 @@ fun TrophyItem(trophy: UserTrophy) {
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
-            Button(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .weight(0.25f),
-                onClick = { TODO() }
-            ) {
-                Icon(Icons.Filled.List, contentDescription = "", modifier = Modifier.fillMaxWidth())
-            }
         }
     }
 }
