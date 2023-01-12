@@ -1,5 +1,6 @@
 package com.potus.potus_front.ui.screens
 
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,13 +33,14 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import timber.log.Timber
 
 
 @Composable
 fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    val error = remember { mutableStateOf(200)  }
+    val actionString = remember { mutableStateOf("")  }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
@@ -50,13 +53,15 @@ fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations:
                 "gardens"
             )
 
+        val eBody = call.errorBody()
         if (call.isSuccessful) {
-            //Timber.tag("HERE!").d(call.body()?.toString())
             call.body()?.let { tokenState.allGardens(it) }
         } else {
             //ERROR MESSAGES, IF ANY
-            error.value = call.code()
             openDialog.value = true
+            if (eBody != null) {
+                actionString.value = JSONObject(eBody.string()).getString("message")
+            }
         }
     }
 
@@ -72,6 +77,10 @@ fun SelectGardenScreen(onNavigateToProfile: () -> Unit, onNavigateToInvitations:
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             //GardenList(listOf(NewGardenResponse("We Are The Champions", 3, "You should ask to join us."), NewGardenResponse("#1 GARDEN IN THE WORLD", 0, "Admire us!"), NewGardenResponse("WOOOHOOOOOOO", 0, "HEEEEY"), NewGardenResponse("Christmas gang :)", 156, "Fum, fum, fum"), NewGardenResponse("Developer's corner", 1, "So tired..."), NewGardenResponse("Knights of the PIC Table", 0, "Hehe."), NewGardenResponse("NO-NAME", 0, "Join us! We do bite ;)"), NewGardenResponse("Bosc", 6, "Els originals!")))
             GardenList(tokenState.gardens)
+        }
+        if (openDialog.value) {
+            Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_LONG).show()
+            openDialog.value = false
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_invitacions_jardins), onNavigateToInvitations, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_nou_jardi), onNavigateToCreation)
     }

@@ -17,7 +17,7 @@ class StompMessageSerializer {
     companion object {
 
 
-        const val url = "ws://10.0.2.2:8080/ws/websocket"
+        const val url = "ws://potusback-production.up.railway.app/ws/websocket"
 
     fun serialize(message: StompMessage): String {
 
