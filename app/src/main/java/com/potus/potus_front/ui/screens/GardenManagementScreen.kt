@@ -40,7 +40,7 @@ import org.json.JSONObject
 @Composable
 fun GardenManagementScreen(onNavigateToProfile: () -> Unit, onNavigateToPetitions: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    var actionString = remember { mutableStateOf("") }
+    val actionString = remember { mutableStateOf("") }
     val popUpContext = LocalContext.current
 
     val tokenState = TokenState.current

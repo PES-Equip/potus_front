@@ -127,7 +127,7 @@ fun TopBar(
 @Composable
 fun GasesWindow(onToggleText: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    val error = remember { mutableStateOf(200)  }
+    var actionString = remember { mutableStateOf("") }
 
     val tokenState = TokenState.current
 
@@ -141,19 +141,22 @@ fun GasesWindow(onToggleText: () -> Unit) {
                 length = tokenState.location.second
             )
 
+        val eBody = call.errorBody()
         if (call.isSuccessful) {
             tokenState.regionalGases(call.body())
         } else {
             //ERROR MESSAGES, IF ANY
-            error.value = call.code()
             openDialog.value = true
+            if (eBody != null) {
+                actionString.value = JSONObject(eBody.string()).getString("message")
+            }
         }
     }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         //var gases = arrayOf("C6H6", "Cl2", "CO", "H2S", "HCl", "HCNM", "HCT", "Hg", "NO2", "NO", "NOX", "O3", "PM1", "PM2_5", "PM10", "PS", "SO2")
         val gasesInfo = tokenState.gases.registry
-        var gases = gasesInfo.keys
+        val gases = gasesInfo.keys
         var toggled by remember { mutableStateOf(false) }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -212,6 +215,11 @@ fun GasesWindow(onToggleText: () -> Unit) {
                 }
             }
         }
+    }
+
+    if (openDialog.value) {
+        Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_SHORT).show()
+        openDialog.value = false
     }
 }
 

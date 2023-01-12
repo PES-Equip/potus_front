@@ -125,8 +125,8 @@ fun MemberItem(member: SimplifiedGardenMember, onNavigateToGarden: () -> Unit) {
     val garden = tokenState.user!!.user.garden_info!!.garden.name
     val ownRole = tokenState.user!!.user.garden_info!!.role
     val username = member.username
-    val role =  if (member.role != "NORMAL") member.role
-                else "MEMBER"
+    val role =  if (member.role == "NORMAL") "MEMBER"
+                else member.role
 
     Column(
         modifier = Modifier
@@ -173,8 +173,8 @@ fun MemberItem(member: SimplifiedGardenMember, onNavigateToGarden: () -> Unit) {
                         )
 
                         if (tokenState.user!!.user.username != username) {
-                            if (ownRole != "MEMBER") {
-                                if (role != "MEMBER" && role != "OWNER") {
+                            if (ownRole != "NORMAL") {
+                                if (role == "ADMIN") {
                                     Button(
                                         onClick = {
                                             val builder =
@@ -212,7 +212,7 @@ fun MemberItem(member: SimplifiedGardenMember, onNavigateToGarden: () -> Unit) {
                                         Text(text = "TURN MEMBER", color = BraveGreen)
                                     }
                                 }
-                                if (role != "ADMIN" && role != "OWNER") {
+                                if (role == "MEMBER") {
                                     Button(
                                         onClick = {
                                             val builder =

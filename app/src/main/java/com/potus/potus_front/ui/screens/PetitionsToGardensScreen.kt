@@ -1,5 +1,6 @@
 package com.potus.potus_front.ui.screens
 
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,12 +36,13 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 
 @Composable
 fun PetitionsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToPetitions: () -> Unit, onNavigateToManagement: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false) }
-    val error = remember { mutableStateOf(200) }
+    val actionString = remember { mutableStateOf("") }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
@@ -54,12 +57,15 @@ fun PetitionsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToPetiti
                 garden = garden
             )
 
+        val eBody = call.errorBody()
         if (call.isSuccessful) {
             call.body()?.let { tokenState.myPetitions(it) }
         } else {
             //ERROR MESSAGES, IF ANY
-            error.value = call.code()
             openDialog.value = true
+            if (eBody != null) {
+                actionString.value = JSONObject(eBody.string()).getString("message")
+            }
         }
     }
 
@@ -75,6 +81,10 @@ fun PetitionsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToPetiti
         )
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             PetitionsList(tokenState.petitions, onNavigateToPetitions)
+        }
+        if (openDialog.value) {
+            Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_SHORT).show()
+            openDialog.value = false
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_gestio_jardi), onNavigateToManagement, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_jardi), onNavigateToGarden)
     }
@@ -95,8 +105,10 @@ fun PetitionsList (petitions: List<GardenMemberResponse>, onNavigateToPetitions:
 
 @Composable
 fun PetitionItem(petition: GardenMemberResponse, onNavigateToPetitions: () -> Unit) {
-    val openDialog = remember { mutableStateOf(false)  }
-    val error = remember { mutableStateOf(200)  }
+    val openDialog = remember { mutableStateOf(false) }
+    val actionString = remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
@@ -170,8 +182,10 @@ fun PetitionItem(petition: GardenMemberResponse, onNavigateToPetitions: () -> Un
                                         call.body()?.let { tokenState.myPetitions(it) }
                                     } else {
                                         //ERROR MESSAGES, IF ANY
-                                        error.value = call.code()
-                                        openDialog.value = true
+                                        if (openDialog.value) {
+                                            Toast.makeText(context, actionString.value, Toast.LENGTH_SHORT).show()
+                                            openDialog.value = false
+                                        }
                                     }
                                 }
 
@@ -226,6 +240,10 @@ fun PetitionItem(petition: GardenMemberResponse, onNavigateToPetitions: () -> Un
                     }
                 }
             }
+        }
+        if (openDialog.value) {
+            Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_SHORT).show()
+            openDialog.value = false
         }
     }
 }

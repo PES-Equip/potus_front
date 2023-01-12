@@ -1,5 +1,6 @@
 package com.potus.potus_front.ui.screens
 
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,12 +35,13 @@ import com.potus.potus_front.ui.theme.SoothingGreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 
 @Composable
 fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit, onNavigateToSelection: () -> Unit, onNavigateToHome: () -> Unit, onNavigateToCreation: () -> Unit, onNavigateToShop: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    val error = remember { mutableStateOf(200)  }
+    val actionString = remember { mutableStateOf("") }
 
     val tokenState = TokenState.current
     val user = tokenState.user!!.user
@@ -51,12 +54,15 @@ fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGard
                 "gardens/profile/requests"
             )
 
+        val eBody = call.errorBody()
         if (call.isSuccessful) {
             call.body()?.let { tokenState.myInvitations(it) }
         } else {
             //ERROR MESSAGES, IF ANY
-            error.value = call.code()
             openDialog.value = true
+            if (eBody != null) {
+                actionString.value = JSONObject(eBody.string()).getString("message")
+            }
         }
     }
 
@@ -73,6 +79,14 @@ fun InvitationsToGardensScreen(onNavigateToProfile: () -> Unit, onNavigateToGard
         Column(modifier = Modifier.weight(1f).background(Daffodil)) {
             InvitationsList(tokenState.invitations, onNavigateToGarden, onNavigateToInvitations)
             //InvitationsList(listOf(NewGardenResponse("Christmas gang :)", 100000, "Fum, fum, fum"), NewGardenResponse("Developer's corner", 100000, "So tired..."), NewGardenResponse("Bosc", 100000, "Els originals!")), onNavigateToGarden, onNavigateToInvitations)
+        }
+        if (openDialog.value) {
+            Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_SHORT).show()
+            openDialog.value = false
+        }
+        if (openDialog.value) {
+            Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_SHORT).show()
+            openDialog.value = false
         }
         GardenBottomBar(painterResource(id = R.drawable.icona_seleccio_jardi), onNavigateToSelection, painterResource(id = R.drawable.basic), onNavigateToHome, painterResource(id = R.drawable.icona_nou_jardi), onNavigateToCreation)
     }
@@ -94,7 +108,7 @@ fun InvitationsList (invitations: List<NewGardenResponse>, onNavigateToGarden: (
 @Composable
 fun InvitationItem(invitation: NewGardenResponse, onNavigateToGarden: () -> Unit, onNavigateToInvitations: () -> Unit) {
     val openDialog = remember { mutableStateOf(false)  }
-    val error = remember { mutableStateOf(200)  }
+    val actionString = remember { mutableStateOf("") }
 
     val tokenState = TokenState.current
     var joinedGarden = remember { mutableStateOf(Triple("You do not have any pending invitations.", 0, "NO INVITATIONS")) }
@@ -162,12 +176,15 @@ fun InvitationItem(invitation: NewGardenResponse, onNavigateToGarden: () -> Unit
                                             garden = askedGardenName
                                         )
 
+                                    val eBody = call.errorBody()
                                     if (call.isSuccessful) {
                                         call.body()?.let { joinedGarden.value = Triple(it.garden.name, it.garden.members_num, it.garden.description) }
                                     } else {
                                         //ERROR MESSAGES, IF ANY (OpenDialog not present because error messages have been changed)
-                                        error.value = call.code()
                                         openDialog.value = true
+                                        if (eBody != null) {
+                                            actionString.value = JSONObject(eBody.string()).getString("message")
+                                        }
                                     }
                                 }
 
@@ -231,6 +248,10 @@ fun InvitationItem(invitation: NewGardenResponse, onNavigateToGarden: () -> Unit
                     }
                 }
             }
+        }
+        if (openDialog.value) {
+            Toast.makeText(LocalContext.current, actionString.value, Toast.LENGTH_SHORT).show()
+            openDialog.value = false
         }
     }
 }

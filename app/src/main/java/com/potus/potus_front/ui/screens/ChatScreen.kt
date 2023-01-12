@@ -59,7 +59,7 @@ fun ChatScreen(onNavigateToProfile: () -> Unit, onNavigateToShop: () -> Unit, on
 
     val message = remember { mutableStateOf("")  }
 
-    StompMessageSerializer.joinChat(user.username, room)
+    //StompMessageSerializer.joinChat(user.username, room)
 
     chatListener.connect(StompMessageSerializer.url)
 
