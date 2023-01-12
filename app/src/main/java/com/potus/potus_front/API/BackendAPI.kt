@@ -39,6 +39,9 @@ interface APIService {
     @GET
     suspend fun getHistoricChat(@Header("Authorization") token:String, @Url url:String, @Query("garden") garden : String, @Query("page") page : Int): Response<List<ChatResponse>>
 
+    @GET
+    suspend fun getRanking(@Header("Authorization") token:String, @Url url:String, @Query("ranking") ranking : String): Response<RankingResponse>
+
     @POST
     suspend fun registerUser(@Header("Authorization") token:String, @Url url:String, @Body requestModel: RegisterUserRequest): Response<UserResponse>
 
@@ -105,8 +108,8 @@ interface APIService {
 
 fun getRetrofit(): Retrofit {
     return Retrofit.Builder()
-        //.baseUrl("https://potusback-production-b295.up.railway.app/api/")
-        .baseUrl("http://10.0.2.2:8080/api/")
+        .baseUrl("https://potusback-production.up.railway.app/api/")
+        //.baseUrl("http://10.0.2.2:8080/api/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 }
